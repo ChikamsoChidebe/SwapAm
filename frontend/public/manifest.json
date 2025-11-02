@@ -1,0 +1,67 @@
+{
+  "short_name": "Swapam",
+  "name": "Swapam - Campus Circular Economy Platform",
+  "description": "Turn student waste into wealth. Swap, sell, or donate used items on campus.",
+  "icons": [
+    {
+      "src": "favicon.ico",
+      "sizes": "64x64 32x32 24x24 16x16",
+      "type": "image/x-icon"
+    },
+    {
+      "src": "logo192.png",
+      "type": "image/png",
+      "sizes": "192x192"
+    },
+    {
+      "src": "logo512.png",
+      "type": "image/png",
+      "sizes": "512x512"
+    },
+    {
+      "src": "maskable-icon-192.png",
+      "type": "image/png",
+      "sizes": "192x192",
+      "purpose": "maskable"
+    },
+    {
+      "src": "maskable-icon-512.png",
+      "type": "image/png",
+      "sizes": "512x512",
+      "purpose": "maskable"
+    }
+  ],
+  "start_url": ".",
+  "display": "standalone",
+  "theme_color": "#00C853",
+  "background_color": "#ffffff",
+  "orientation": "portrait-primary",
+  "categories": ["shopping", "lifestyle", "education"],
+  "lang": "en",
+  "dir": "ltr",
+  "scope": "/",
+  "prefer_related_applications": false,
+  "shortcuts": [
+    {
+      "name": "Browse Items",
+      "short_name": "Browse",
+      "description": "Browse available items for swap",
+      "url": "/browse",
+      "icons": [{ "src": "/icons/browse-96.png", "sizes": "96x96" }]
+    },
+    {
+      "name": "Upload Item",
+      "short_name": "Upload",
+      "description": "Upload an item to swap",
+      "url": "/upload",
+      "icons": [{ "src": "/icons/upload-96.png", "sizes": "96x96" }]
+    },
+    {
+      "name": "My Profile",
+      "short_name": "Profile",
+      "description": "View your profile and points",
+      "url": "/profile",
+      "icons": [{ "src": "/icons/profile-96.png", "sizes": "96x96" }]
+    }
+  ]
+}
