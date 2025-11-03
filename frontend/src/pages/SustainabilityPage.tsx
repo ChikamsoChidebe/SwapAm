@@ -1,6 +1,6 @@
 import React from 'react';
 import { Container, Typography, Box, Grid, Card, CardContent, LinearProgress, Chip } from '@mui/material';
-import { Eco, Recycling, TrendingUp, People, LocalFlorist, WaterDrop } from '@mui/icons-material';
+import { Nature, Recycling, TrendingUp, People, LocalFlorist, WaterDrop } from '@mui/icons-material';
 
 const SustainabilityPage: React.FC = () => {
   const impactStats = [
@@ -138,7 +138,7 @@ const SustainabilityPage: React.FC = () => {
         p: 6, 
         borderRadius: 3 
       }}>
-        <Eco sx={{ fontSize: 64, mb: 2 }} />
+        <Nature sx={{ fontSize: 64, mb: 2 }} />
         <Typography variant="h4" sx={{ fontWeight: 700, mb: 2 }}>
           Join the Movement
         </Typography>

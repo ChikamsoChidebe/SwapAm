@@ -49,7 +49,7 @@ const EditProfilePage: React.FC = () => {
         <Box sx={{ display: 'flex', alignItems: 'center', mb: 4 }}>
           <Box sx={{ position: 'relative' }}>
             <Avatar
-              src={user.avatar}
+              src={user.avatar || undefined}
               sx={{ width: 100, height: 100 }}
             >
               {user.firstName[0]}{user.lastName[0]}

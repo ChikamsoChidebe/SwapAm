@@ -30,7 +30,7 @@ import {
   Edit,
   Star,
   TrendingUp,
-  Eco,
+  Nature,
   SwapHoriz,
   Share,
   PhotoCamera,
@@ -151,7 +151,10 @@ const ProfilePage: React.FC = () => {
 
   const handleEditSave = async () => {
     try {
-      await updateProfile(editForm);
+      await updateProfile({
+        ...editForm,
+        location: typeof editForm.location === 'string' ? { name: editForm.location } as any : editForm.location
+      });
       setEditDialogOpen(false);
     } catch (error) {
       console.error('Failed to update profile:', error);
@@ -231,7 +234,7 @@ const ProfilePage: React.FC = () => {
                   }
                 >
                   <Avatar
-                    src={user.avatar}
+                    src={user.avatar || undefined}
                     sx={{
                       width: 120,
                       height: 120,
@@ -530,7 +533,7 @@ const ProfilePage: React.FC = () => {
               <Grid container spacing={3}>
                 <Grid item xs={12} md={6}>
                   <Card sx={{ p: 3, textAlign: 'center' }}>
-                    <Eco sx={{ fontSize: 48, color: 'success.main', mb: 2 }} />
+                    <Nature sx={{ fontSize: 48, color: 'success.main', mb: 2 }} />
                     <Typography variant="h4" color="success.main" gutterBottom>
                       {user.sustainabilityImpact?.co2Saved || 0}kg
                     </Typography>

@@ -17,7 +17,7 @@ import {
   Email,
   Phone,
   LocationOn,
-  Eco,
+  Nature,
 } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
 
@@ -120,7 +120,6 @@ const Footer: React.FC = () => {
                     sx={{
                       color: 'text.secondary',
                       '&:hover': {
-                        color: 'primary.main',
                         backgroundColor: 'primary.main',
                         color: 'white',
                       },
@@ -237,7 +236,7 @@ const Footer: React.FC = () => {
           </Typography>
 
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-            <Eco sx={{ fontSize: 16, color: 'success.main' }} />
+            <Nature sx={{ fontSize: 16, color: 'success.main' }} />
             <Typography variant="body2" color="text.secondary">
               Proudly carbon neutral since 2024
             </Typography>

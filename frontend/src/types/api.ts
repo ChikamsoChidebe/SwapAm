@@ -1,3 +1,28 @@
+// Import statements for types from main index
+import {
+  User,
+  Item,
+  ItemCategory,
+  ItemCondition,
+  Swap,
+  SwapStatus,
+  Location,
+  PriceRange,
+  LocationFilter,
+  SortOption,
+  Pagination,
+  SearchFilters,
+  MessageType,
+  MessageAttachment,
+  RatingCategory,
+  ValuationFactor,
+  MarketComparison,
+  DisputeReason,
+  DisputeEvidence,
+  DeliveryInfo,
+  ApiError
+} from './index';
+
 // API Endpoint Types
 export interface ApiEndpoints {
   // Authentication
@@ -388,27 +413,3 @@ export interface CacheConfig {
   maxSize: number;
   strategy: 'LRU' | 'FIFO' | 'TTL';
 }
-
-// Import statements for types from main index
-import {
-  User,
-  Item,
-  ItemCategory,
-  ItemCondition,
-  Swap,
-  SwapStatus,
-  Location,
-  PriceRange,
-  LocationFilter,
-  SortOption,
-  Pagination,
-  SearchFilters,
-  MessageType,
-  MessageAttachment,
-  RatingCategory,
-  ValuationFactor,
-  MarketComparison,
-  DisputeReason,
-  DisputeEvidence,
-  ApiError
-} from './index';

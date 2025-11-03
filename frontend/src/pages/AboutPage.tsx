@@ -1,10 +1,10 @@
 import React from 'react';
 import { Container, Typography, Box, Grid, Card, CardContent, Avatar } from '@mui/material';
-import { Eco, People, TrendingUp, School } from '@mui/icons-material';
+import { Nature, People, TrendingUp, School } from '@mui/icons-material';
 
 const AboutPage: React.FC = () => {
   const features = [
-    { icon: <Eco />, title: 'Sustainable', description: 'Reduce waste and promote circular economy' },
+    { icon: <Nature />, title: 'Sustainable', description: 'Reduce waste and promote circular economy' },
     { icon: <People />, title: 'Community', description: 'Connect students across campuses' },
     { icon: <TrendingUp />, title: 'Profitable', description: 'Turn waste into wealth' },
     { icon: <School />, title: 'Educational', description: 'Learn about sustainability' },

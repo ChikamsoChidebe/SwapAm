@@ -5,7 +5,9 @@ export interface User {
   username: string;
   firstName: string;
   lastName: string;
-  avatar?: string;
+  name?: string; // For backward compatibility
+  bio?: string;
+  avatar?: string | null;
   phone?: string;
   campus: string;
   department?: string;
@@ -19,6 +21,8 @@ export interface User {
   location: Location;
   badges: Badge[];
   sustainabilityScore: number;
+  sustainabilityImpact?: SustainabilityImpact;
+  role?: 'student' | 'admin' | 'agent';
 }
 
 export interface UserPreferences {
@@ -127,11 +131,15 @@ export interface Swap {
   id: string;
   initiator: User;
   recipient: User;
+  initiatorId?: string; // For backward compatibility
   initiatorItems: Item[];
   recipientItems: Item[];
+  initiatorItem?: Item; // For backward compatibility
+  recipientItem?: Item; // For backward compatibility
   pointsDifference: number;
   status: SwapStatus;
   messages: SwapMessage[];
+  message?: string; // For backward compatibility
   timeline: SwapTimeline[];
   deliveryInfo: DeliveryInfo;
   createdAt: Date;
@@ -296,7 +304,10 @@ export enum SwapStatus {
   DELIVERED = 'delivered',
   COMPLETED = 'completed',
   CANCELLED = 'cancelled',
-  DISPUTED = 'disputed'
+  DISPUTED = 'disputed',
+  PENDING = 'pending',
+  ACCEPTED = 'accepted',
+  REJECTED = 'rejected'
 }
 
 export enum SwapEvent {
@@ -401,6 +412,9 @@ export interface ChatMessage {
   isEdited: boolean;
   editedAt?: Date;
 }
+
+// Alias for backward compatibility
+export type Message = ChatMessage;
 
 export enum MessageType {
   TEXT = 'text',
@@ -582,8 +596,17 @@ export interface ItemForm {
   videos?: File[];
   tags: string[];
   specifications: Record<string, any>;
-  location: Location;
+  location: string | Location;
   estimatedValue?: number;
+}
+
+export interface ItemFormData {
+  title: string;
+  description: string;
+  category: string;
+  condition: string;
+  location: string;
+  estimatedValue: number;
 }
 
 export interface SwapOfferForm {
@@ -713,4 +736,3 @@ export interface SwapHistory {
 // Export all types
 export * from './api';
 export * from './components';
-export * from './hooks';

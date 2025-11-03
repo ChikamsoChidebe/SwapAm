@@ -37,7 +37,7 @@ const initialState: ItemsState = {
 
 export const fetchItems = createAsyncThunk(
   'items/fetchItems',
-  async (params: { page?: number; limit?: number; filters?: SearchFilters }) => {
+  async (params: { page?: number; limit?: number; filters?: SearchFilters; owner?: string }) => {
     const response = await itemsAPI.getItems(params);
     return response.data;
   }

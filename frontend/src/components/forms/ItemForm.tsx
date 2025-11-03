@@ -92,7 +92,7 @@ const ItemForm: React.FC<ItemFormProps> = ({
         category: initialValues?.category || '',
         condition: initialValues?.condition || '',
         estimatedValue: initialValues?.estimatedValue || 0,
-        location: initialValues?.location || '',
+        location: typeof initialValues?.location === 'string' ? initialValues.location : initialValues?.location?.name || '',
       }}
       validationSchema={validationSchema}
       onSubmit={(values) => {

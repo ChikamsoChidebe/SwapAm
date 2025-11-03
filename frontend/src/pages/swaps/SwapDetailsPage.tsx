@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
-import { Container, Card, CardContent, Typography, Button, Box, Chip, Grid, Timeline, TimelineItem, TimelineSeparator, TimelineConnector, TimelineContent, TimelineDot } from '@mui/material';
+import { Container, Card, CardContent, Typography, Button, Box, Chip, Grid } from '@mui/material';
+import { Timeline, TimelineItem, TimelineSeparator, TimelineConnector, TimelineContent, TimelineDot } from '@mui/lab';
 import { CheckCircle, Cancel, SwapHoriz, LocalShipping } from '@mui/icons-material';
 import { useParams } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../../store';
@@ -38,7 +39,7 @@ const SwapDetailsPage: React.FC = () => {
             <Chip
               label={swap.status}
               color={swap.status === SwapStatus.COMPLETED ? 'success' : 'primary'}
-              size="large"
+
             />
           </Box>
 

@@ -2,8 +2,8 @@ import React, { Suspense, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import { CssBaseline, GlobalStyles } from '@mui/material';
-import { QueryClient, QueryClientProvider } from 'react-query';
-import { ReactQueryDevtools } from 'react-query/devtools';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { Provider } from 'react-redux';
 import { Toaster } from 'react-hot-toast';
 import { HelmetProvider } from 'react-helmet-async';
@@ -427,30 +427,37 @@ const App: React.FC = () => {
 
                                 {/* Protected Routes - Only accessible when authenticated */}
                                 <Route element={<ProtectedRoute />}>
+                                  {/* Redirect shortcuts */}
+                                  <Route path="/upload" element={<Navigate to="/dashboard/upload" replace />} />
+                                  <Route path="/my-items" element={<Navigate to="/dashboard/my-items" replace />} />
+                                  <Route path="/swaps" element={<Navigate to="/dashboard/swaps" replace />} />
+                                  <Route path="/chat" element={<Navigate to="/dashboard/chat" replace />} />
+                                  <Route path="/profile" element={<Navigate to="/dashboard/profile" replace />} />
+                                  
                                   <Route path="/dashboard" element={<Layout />}>
-                                    <Route index element={<Navigate to="/profile" replace />} />
+                                    <Route index element={<Navigate to="profile" replace />} />
                                     
                                     {/* Profile Routes */}
-                                    <Route path="/profile" element={<ProfilePage />} />
-                                    <Route path="/profile/edit" element={<EditProfilePage />} />
-                                    <Route path="/settings" element={<SettingsPage />} />
+                                    <Route path="profile" element={<ProfilePage />} />
+                                    <Route path="profile/edit" element={<EditProfilePage />} />
+                                    <Route path="settings" element={<SettingsPage />} />
                                     
                                     {/* Item Management Routes */}
-                                    <Route path="/upload" element={<UploadItemPage />} />
-                                    <Route path="/my-items" element={<MyItemsPage />} />
-                                    <Route path="/items/:id/edit" element={<EditItemPage />} />
+                                    <Route path="upload" element={<UploadItemPage />} />
+                                    <Route path="my-items" element={<MyItemsPage />} />
+                                    <Route path="items/:id/edit" element={<EditItemPage />} />
                                     
                                     {/* Swap Routes */}
-                                    <Route path="/swaps" element={<SwapsPage />} />
-                                    <Route path="/swaps/:id" element={<SwapDetailsPage />} />
-                                    <Route path="/swaps/create" element={<CreateSwapPage />} />
+                                    <Route path="swaps" element={<SwapsPage />} />
+                                    <Route path="swaps/:id" element={<SwapDetailsPage />} />
+                                    <Route path="swaps/create" element={<CreateSwapPage />} />
                                     
                                     {/* Chat Routes */}
-                                    <Route path="/chat" element={<ChatPage />} />
-                                    <Route path="/chat/:roomId" element={<ChatRoomPage />} />
+                                    <Route path="chat" element={<ChatPage />} />
+                                    <Route path="chat/:roomId" element={<ChatRoomPage />} />
                                     
                                     {/* Notifications */}
-                                    <Route path="/notifications" element={<NotificationsPage />} />
+                                    <Route path="notifications" element={<NotificationsPage />} />
                                   </Route>
                                 </Route>
 

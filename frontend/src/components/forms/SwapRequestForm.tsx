@@ -57,7 +57,7 @@ const SwapRequestForm: React.FC<SwapRequestFormProps> = ({
             <Box sx={{ flex: 1, textAlign: 'center' }}>
               <Box
                 component="img"
-                src={myItem.images[0] || '/placeholder-image.jpg'}
+                src={myItem.images[0]?.url || '/placeholder-image.jpg'}
                 alt={myItem.title}
                 sx={{
                   width: 100,
@@ -82,7 +82,7 @@ const SwapRequestForm: React.FC<SwapRequestFormProps> = ({
             <Box sx={{ flex: 1, textAlign: 'center' }}>
               <Box
                 component="img"
-                src={theirItem.images[0] || '/placeholder-image.jpg'}
+                src={theirItem.images[0]?.url || '/placeholder-image.jpg'}
                 alt={theirItem.title}
                 sx={{
                   width: 100,
@@ -102,11 +102,11 @@ const SwapRequestForm: React.FC<SwapRequestFormProps> = ({
           </Box>
 
           <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', mb: 2 }}>
-            <Avatar src={theirItem.owner.avatar} sx={{ width: 32, height: 32, mr: 1 }}>
-              {theirItem.owner.name.charAt(0)}
+            <Avatar src={theirItem.owner.avatar || undefined} sx={{ width: 32, height: 32, mr: 1 }}>
+              {(theirItem.owner.name || theirItem.owner.firstName)?.charAt(0)}
             </Avatar>
             <Typography variant="body2">
-              Swap with {theirItem.owner.name}
+              Swap with {theirItem.owner.name || `${theirItem.owner.firstName} ${theirItem.owner.lastName}`}
             </Typography>
           </Box>
         </Box>

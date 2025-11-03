@@ -195,7 +195,7 @@ const Header: React.FC<HeaderProps> = ({ onMenuClick }) => {
               color="inherit"
             >
               <Avatar
-                src={user.avatar}
+                src={user.avatar || undefined}
                 alt={user.firstName}
                 sx={{ width: 32, height: 32 }}
               >

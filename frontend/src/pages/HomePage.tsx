@@ -15,7 +15,7 @@ import {
 } from '@mui/material';
 import {
   TrendingUp,
-  Eco,
+  Nature,
   SwapHoriz,
   People,
   Star,
@@ -34,7 +34,7 @@ const HomePage: React.FC = () => {
   const stats = [
     { icon: <SwapHoriz />, value: '10K+', label: 'Items Swapped' },
     { icon: <People />, value: '5K+', label: 'Active Users' },
-    { icon: <Eco />, value: '50T', label: 'CO₂ Saved' },
+    { icon: <Nature />, value: '50T', label: 'CO₂ Saved' },
     { icon: <TrendingUp />, value: '₦2M+', label: 'Value Created' },
   ];
 
@@ -42,22 +42,26 @@ const HomePage: React.FC = () => {
     {
       title: 'AI-Powered Valuation',
       description: 'Get instant, accurate valuations for your items using our advanced AI technology.',
-      icon: '🤖',
+      icon: <TrendingUp />,
+      color: '#2196F3',
     },
     {
       title: 'Campus Agents',
       description: 'Trusted local agents handle pickup, verification, and delivery for seamless swaps.',
-      icon: '🚚',
+      icon: <People />,
+      color: '#FF9800',
     },
     {
       title: 'Points System',
       description: 'Earn points for every item you list and use them to get items you need.',
-      icon: '💎',
+      icon: <Star />,
+      color: '#9C27B0',
     },
     {
       title: 'Sustainability Impact',
       description: 'Track your environmental impact and contribute to a circular economy.',
-      icon: '🌱',
+      icon: <Nature />,
+      color: '#4CAF50',
     },
   ];
 
@@ -150,21 +154,26 @@ const HomePage: React.FC = () => {
                     Make sustainability profitable.
                   </Typography>
 
-                  <Box sx={{ display: 'flex', gap: 2, flexWrap: 'wrap' }}>
+                  <Box sx={{ display: 'flex', gap: 2, flexWrap: 'wrap', mb: 3 }}>
                     <Button
                       variant="contained"
                       size="large"
                       onClick={() => navigate('/register')}
                       sx={{
                         bgcolor: 'white',
-                        color: 'primary.main',
+                        color: 'white',
                         px: 4,
                         py: 1.5,
                         fontSize: '1.1rem',
-                        fontWeight: 600,
+                        fontWeight: 700,
+                        boxShadow: '0 8px 32px rgba(0, 0, 0, 0.3)',
+                        border: '2px solid white',
                         '&:hover': {
-                          bgcolor: 'grey.100',
+                          bgcolor: '#f5f5f5',
+                          transform: 'translateY(-2px)',
+                          boxShadow: '0 12px 40px rgba(0, 0, 0, 0.4)',
                         },
+                        transition: 'all 0.3s ease',
                       }}
                     >
                       Get Started Free
@@ -174,21 +183,49 @@ const HomePage: React.FC = () => {
                       variant="outlined"
                       size="large"
                       startIcon={<PlayArrow />}
+                      onClick={() => navigate('/login')}
                       sx={{
                         borderColor: 'white',
+                        borderWidth: 2,
                         color: 'white',
                         px: 4,
                         py: 1.5,
                         fontSize: '1.1rem',
-                        fontWeight: 600,
+                        fontWeight: 700,
+                        boxShadow: '0 4px 20px rgba(0, 0, 0, 0.2)',
+                        backdropFilter: 'blur(10px)',
+                        bgcolor: 'rgba(255, 255, 255, 0.1)',
                         '&:hover': {
                           borderColor: 'white',
-                          bgcolor: 'rgba(255, 255, 255, 0.1)',
+                          bgcolor: 'rgba(255, 255, 255, 0.2)',
+                          transform: 'translateY(-2px)',
+                          boxShadow: '0 8px 30px rgba(0, 0, 0, 0.3)',
                         },
+                        transition: 'all 0.3s ease',
                       }}
                     >
-                      Watch Demo
+                      Try Demo
                     </Button>
+                  </Box>
+
+                  {/* Demo Info */}
+                  <Box
+                    sx={{
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      gap: 1,
+                      bgcolor: 'rgba(255, 255, 255, 0.15)',
+                      backdropFilter: 'blur(10px)',
+                      border: '1px solid rgba(255, 255, 255, 0.2)',
+                      borderRadius: 3,
+                      px: 3,
+                      py: 1.5,
+                    }}
+                  >
+                    <Star sx={{ color: '#FFD700', fontSize: '1.2rem' }} />
+                    <Typography variant="body2" sx={{ color: 'white', fontWeight: 500 }}>
+                      Try our demo account - no signup required!
+                    </Typography>
                   </Box>
                 </motion.div>
               </Grid>
@@ -205,17 +242,58 @@ const HomePage: React.FC = () => {
                       textAlign: 'center',
                     }}
                   >
-                    <img
-                      src="/hero-image.png"
-                      alt="Students using Swapam"
-                      style={{
+                    <Box
+                      sx={{
+                        position: 'relative',
                         width: '100%',
                         maxWidth: 500,
-                        height: 'auto',
-                        borderRadius: 16,
+                        height: 400,
+                        borderRadius: 4,
+                        overflow: 'hidden',
                         boxShadow: '0 20px 40px rgba(0, 0, 0, 0.2)',
                       }}
-                    />
+                    >
+                      <img
+                        src="/hero-mockup.svg"
+                        alt="Swapam App Interface"
+                        style={{
+                          width: '100%',
+                          height: '100%',
+                          objectFit: 'cover',
+                        }}
+                        onError={(e) => {
+                          // Fallback to glass morphism design if image fails to load
+                          const target = e.target as HTMLImageElement;
+                          target.style.display = 'none';
+                          const parent = target.parentElement;
+                          if (parent) {
+                            parent.innerHTML = `
+                              <div style="
+                                width: 100%;
+                                height: 100%;
+                                background: linear-gradient(135deg, rgba(255,255,255,0.2) 0%, rgba(255,255,255,0.1) 100%);
+                                backdrop-filter: blur(10px);
+                                border: 1px solid rgba(255,255,255,0.3);
+                                display: flex;
+                                align-items: center;
+                                justify-content: center;
+                                flex-direction: column;
+                                gap: 24px;
+                                border-radius: 16px;
+                              ">
+                                <div style="display: flex; gap: 16px; align-items: center;">
+                                  <div style="font-size: 4rem; color: white;">⇄</div>
+                                  <div style="font-size: 3rem; color: #FFD700;">🌱</div>
+                                  <div style="font-size: 3rem; color: white;">👥</div>
+                                </div>
+                                <h3 style="color: white; text-align: center; font-weight: 600; margin: 0;">Campus Circular Economy</h3>
+                                <p style="color: rgba(255,255,255,0.8); text-align: center; margin: 0;">Swap • Share • Sustain</p>
+                              </div>
+                            `;
+                          }
+                        }}
+                      />
+                    </Box>
                   </Box>
                 </motion.div>
               </Grid>
@@ -230,9 +308,10 @@ const HomePage: React.FC = () => {
               right: '10%',
               opacity: 0.1,
               fontSize: '8rem',
+              color: 'white',
             }}
           >
-            ♻️
+            <Nature sx={{ fontSize: 'inherit' }} />
           </Box>
           <Box
             sx={{
@@ -241,9 +320,10 @@ const HomePage: React.FC = () => {
               left: '5%',
               opacity: 0.1,
               fontSize: '6rem',
+              color: 'white',
             }}
           >
-            💚
+            <SwapHoriz sx={{ fontSize: 'inherit' }} />
           </Box>
         </Box>
 
@@ -345,7 +425,20 @@ const HomePage: React.FC = () => {
                       }}
                     >
                       <CardContent>
-                        <Box sx={{ fontSize: '3rem', mb: 2 }}>
+                        <Box
+                          sx={{
+                            display: 'inline-flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            width: 80,
+                            height: 80,
+                            borderRadius: '50%',
+                            bgcolor: feature.color,
+                            color: 'white',
+                            mb: 3,
+                            fontSize: '2rem',
+                          }}
+                        >
                           {feature.icon}
                         </Box>
                         <Typography variant="h5" sx={{ mb: 2, fontWeight: 600 }}>
@@ -500,14 +593,19 @@ const HomePage: React.FC = () => {
                   endIcon={<ArrowForward />}
                   sx={{
                     bgcolor: 'white',
-                    color: 'primary.main',
+                    color: 'white',
                     px: 4,
                     py: 1.5,
                     fontSize: '1.1rem',
-                    fontWeight: 600,
+                    fontWeight: 700,
+                    boxShadow: '0 8px 32px rgba(0, 0, 0, 0.3)',
+                    border: '2px solid white',
                     '&:hover': {
-                      bgcolor: 'grey.100',
+                      bgcolor: '#f5f5f5',
+                      transform: 'translateY(-2px)',
+                      boxShadow: '0 12px 40px rgba(0, 0, 0, 0.4)',
                     },
+                    transition: 'all 0.3s ease',
                   }}
                 >
                   Sign Up Now
@@ -519,15 +617,22 @@ const HomePage: React.FC = () => {
                   onClick={() => navigate('/browse')}
                   sx={{
                     borderColor: 'white',
+                    borderWidth: 2,
                     color: 'white',
                     px: 4,
                     py: 1.5,
                     fontSize: '1.1rem',
-                    fontWeight: 600,
+                    fontWeight: 700,
+                    boxShadow: '0 4px 20px rgba(0, 0, 0, 0.2)',
+                    backdropFilter: 'blur(10px)',
+                    bgcolor: 'rgba(255, 255, 255, 0.1)',
                     '&:hover': {
                       borderColor: 'white',
-                      bgcolor: 'rgba(255, 255, 255, 0.1)',
+                      bgcolor: 'rgba(255, 255, 255, 0.2)',
+                      transform: 'translateY(-2px)',
+                      boxShadow: '0 8px 30px rgba(0, 0, 0, 0.3)',
                     },
+                    transition: 'all 0.3s ease',
                   }}
                 >
                   Browse Items

@@ -32,13 +32,74 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   useEffect(() => {
     const initializeAuth = async () => {
       const token = localStorage.getItem('token');
+      const isDemo = localStorage.getItem('isDemo');
+      
       if (token) {
         try {
-          const response = await authAPI.getProfile();
-          dispatch(setUser(response.data));
+          if (isDemo === 'true') {
+            // Mock demo user
+            const mockUser = {
+              id: 'demo-user-1',
+              email: 'demo@swapam.com',
+              firstName: 'Demo',
+              lastName: 'User',
+              username: 'demouser',
+              avatar: null,
+              campus: 'University of Lagos',
+              department: 'Computer Science',
+              year: 3,
+              points: 1250,
+              rating: 4.8,
+              totalSwaps: 15,
+              joinedAt: new Date('2024-01-15'),
+              isVerified: true,
+              preferences: {
+                notifications: {
+                  email: true,
+                  push: true,
+                  sms: false,
+                  swapUpdates: true,
+                  newMatches: true,
+                  promotions: false,
+                  sustainability: true,
+                },
+                privacy: {
+                  showProfile: true,
+                  showLocation: true,
+                  showRating: true,
+                  allowMessages: true,
+                },
+                categories: ['Electronics', 'Books', 'Clothing'],
+                maxDistance: 10,
+                language: 'en',
+                theme: 'light' as const,
+              },
+              location: {
+                name: 'Akoka, Lagos',
+                address: 'University of Lagos, Akoka',
+                city: 'Lagos',
+                state: 'Lagos',
+                country: 'Nigeria',
+                zipCode: '101017',
+                coordinates: {
+                  latitude: 6.5158,
+                  longitude: 3.3894,
+                },
+                campus: 'University of Lagos',
+              },
+              badges: [],
+              sustainabilityScore: 85,
+              role: 'student' as const,
+            };
+            dispatch(setUser(mockUser));
+          } else {
+            const response = await authAPI.getProfile();
+            dispatch(setUser(response.data));
+          }
         } catch (error) {
           localStorage.removeItem('token');
           localStorage.removeItem('refreshToken');
+          localStorage.removeItem('isDemo');
         }
       }
       setInitialLoading(false);
@@ -59,7 +120,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   const logout = async () => {
-    await dispatch(logoutAction()).unwrap();
+    localStorage.removeItem('token');
+    localStorage.removeItem('refreshToken');
+    localStorage.removeItem('isDemo');
+    dispatch(setUser(null));
   };
 
   const updateProfile = async (data: Partial<User>) => {

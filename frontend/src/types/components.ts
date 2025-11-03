@@ -4,6 +4,7 @@ import {
   Item, 
   Swap, 
   ChatRoom, 
+  ChatMessage,
   Notification, 
   Agent,
   ItemCategory,
@@ -722,5 +723,3 @@ export interface ScrollConfig {
   y?: number | string;
 }
 
-// Import ChatMessage type
-import { ChatMessage } from './index';

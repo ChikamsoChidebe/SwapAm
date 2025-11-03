@@ -80,7 +80,7 @@ const ItemCard: React.FC<ItemCardProps> = ({
           <CardMedia
             component="img"
             sx={{ width: 120, objectFit: 'cover' }}
-            image={item.images[0] || '/placeholder-image.jpg'}
+            image={typeof item.images[0] === 'string' ? item.images[0] : item.images[0]?.url || '/placeholder-image.jpg'}
             alt={item.title}
           />
           <Box sx={{ display: 'flex', flexDirection: 'column', flex: 1, p: 1 }}>
@@ -99,7 +99,7 @@ const ItemCard: React.FC<ItemCardProps> = ({
             <Box sx={{ display: 'flex', alignItems: 'center', mt: 'auto' }}>
               <LocationOn fontSize="small" color="action" />
               <Typography variant="caption" color="text.secondary">
-                {item.location}
+                {typeof item.location === 'string' ? item.location : item.location.name}
               </Typography>
             </Box>
           </Box>
@@ -121,7 +121,7 @@ const ItemCard: React.FC<ItemCardProps> = ({
       <CardMedia
         component="img"
         height={variant === 'detailed' ? 250 : 200}
-        image={item.images[0] || '/placeholder-image.jpg'}
+        image={typeof item.images[0] === 'string' ? item.images[0] : item.images[0]?.url || '/placeholder-image.jpg'}
         alt={item.title}
         sx={{ objectFit: 'cover' }}
       />
@@ -165,7 +165,7 @@ const ItemCard: React.FC<ItemCardProps> = ({
           <Box sx={{ display: 'flex', alignItems: 'center' }}>
             <LocationOn fontSize="small" color="action" />
             <Typography variant="caption" color="text.secondary">
-              {item.location}
+              {typeof item.location === 'string' ? item.location : item.location.name}
             </Typography>
           </Box>
           
@@ -180,13 +180,13 @@ const ItemCard: React.FC<ItemCardProps> = ({
         {showOwner && (
           <Box sx={{ display: 'flex', alignItems: 'center', mt: 1 }}>
             <Avatar 
-              src={item.owner.avatar} 
+              src={item.owner.avatar || undefined} 
               sx={{ width: 24, height: 24, mr: 1 }}
             >
-              {item.owner.name.charAt(0)}
+              {(item.owner.name || item.owner.firstName)?.charAt(0)}
             </Avatar>
             <Typography variant="caption" color="text.secondary">
-              {item.owner.name}
+              {item.owner.name || `${item.owner.firstName} ${item.owner.lastName}`}
             </Typography>
           </Box>
         )}

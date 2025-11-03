@@ -22,7 +22,7 @@ import {
   Settings,
   Notifications,
   Category,
-  Eco,
+  Nature,
   Help,
   ExpandLess,
   ExpandMore,
@@ -67,7 +67,7 @@ const Sidebar: React.FC<SidebarProps> = ({ open, onClose, variant = 'temporary' 
     { text: 'Home', icon: <Home />, path: '/' },
     { text: 'Browse Items', icon: <Search />, path: '/browse' },
     { text: 'Categories', icon: <Category />, path: '/categories' },
-    { text: 'Sustainability', icon: <Eco />, path: '/sustainability' },
+    { text: 'Sustainability', icon: <Nature />, path: '/sustainability' },
     { text: 'Help', icon: <Help />, path: '/help' },
   ];
 

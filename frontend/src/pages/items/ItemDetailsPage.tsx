@@ -62,7 +62,7 @@ const ItemDetailsPage: React.FC = () => {
           <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }}>
             <Typography variant="h4" gutterBottom>{item.title}</Typography>
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
-              <Chip label={`${item.points} points`} color="primary" size="large" />
+              <Chip label={`${item.points} points`} color="primary" />
               <Chip label={item.condition} variant="outlined" />
               <Chip label={item.category} variant="outlined" />
             </Box>
@@ -70,7 +70,7 @@ const ItemDetailsPage: React.FC = () => {
             <Typography variant="body1" paragraph>{item.description}</Typography>
             
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 3 }}>
-              <Avatar src={item.owner.avatar}>{item.owner.firstName[0]}</Avatar>
+              <Avatar src={item.owner.avatar || undefined}>{item.owner.firstName[0]}</Avatar>
               <Box>
                 <Typography variant="subtitle1">{item.owner.firstName} {item.owner.lastName}</Typography>
                 <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>

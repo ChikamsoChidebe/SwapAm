@@ -30,10 +30,10 @@ const ChatBubble: React.FC<ChatBubbleProps> = ({
     >
       {!isOwn && showAvatar && (
         <Avatar
-          src={message.sender.avatar}
+          src={message.sender.avatar || undefined}
           sx={{ width: 32, height: 32, mr: 1 }}
         >
-          {message.sender.name.charAt(0)}
+          {(message.sender.name || message.sender.firstName)?.charAt(0)}
         </Avatar>
       )}
       
@@ -63,16 +63,16 @@ const ChatBubble: React.FC<ChatBubbleProps> = ({
             px: 1,
           }}
         >
-          {formatDistanceToNow(new Date(message.createdAt), { addSuffix: true })}
+          {formatDistanceToNow(new Date(message.timestamp), { addSuffix: true })}
         </Typography>
       </Box>
       
       {isOwn && showAvatar && (
         <Avatar
-          src={message.sender.avatar}
+          src={message.sender.avatar || undefined}
           sx={{ width: 32, height: 32, ml: 1 }}
         >
-          {message.sender.name.charAt(0)}
+          {(message.sender.name || message.sender.firstName)?.charAt(0)}
         </Avatar>
       )}
     </Box>

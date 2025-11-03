@@ -23,6 +23,7 @@ import {
   Apple,
   Email,
   Lock,
+  PlayArrow,
 } from '@mui/icons-material';
 import { useFormik } from 'formik';
 import * as yup from 'yup';
@@ -55,6 +56,19 @@ const LoginPage: React.FC = () => {
     onSubmit: async (values) => {
       try {
         setError('');
+        
+        // Handle demo login
+        if (values.email === 'demo@swapam.com' && values.password === 'demo123') {
+          // Store demo flag and tokens
+          localStorage.setItem('token', 'demo-token-123');
+          localStorage.setItem('refreshToken', 'demo-refresh-token-123');
+          localStorage.setItem('isDemo', 'true');
+          
+          // Navigate directly
+          navigate('/dashboard/profile', { replace: true });
+          return;
+        }
+        
         await login(values.email, values.password, values.rememberMe);
         navigate(from, { replace: true });
       } catch (error: any) {
@@ -77,10 +91,20 @@ const LoginPage: React.FC = () => {
       <Box
         sx={{
           minHeight: '100vh',
-          background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+          background: 'linear-gradient(135deg, #00C853 0%, #4CAF50 50%, #2E7D32 100%)',
           display: 'flex',
           alignItems: 'center',
           py: 4,
+          position: 'relative',
+          '&::before': {
+            content: '""',
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            background: 'url("data:image/svg+xml,%3Csvg width="60" height="60" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg"%3E%3Cg fill="none" fill-rule="evenodd"%3E%3Cg fill="%23ffffff" fill-opacity="0.05"%3E%3Ccircle cx="30" cy="30" r="4"/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")',
+          },
         }}
       >
         <Container maxWidth="sm">
@@ -278,20 +302,40 @@ const LoginPage: React.FC = () => {
                 </Box>
               </Box>
 
-              {/* Demo Credentials */}
-              {process.env.NODE_ENV === 'development' && (
-                <Box sx={{ mt: 3, p: 2, bgcolor: 'grey.100', borderRadius: 2 }}>
-                  <Typography variant="caption" color="text.secondary" sx={{ display: 'block', mb: 1 }}>
-                    Demo Credentials:
+              {/* Demo Login */}
+              <Box sx={{ mt: 3 }}>
+                <Divider sx={{ mb: 2 }}>
+                  <Typography variant="body2" color="text.secondary">
+                    Try Demo
                   </Typography>
-                  <Typography variant="caption" sx={{ display: 'block' }}>
-                    Email: demo@swapam.com
-                  </Typography>
-                  <Typography variant="caption" sx={{ display: 'block' }}>
-                    Password: demo123
-                  </Typography>
-                </Box>
-              )}
+                </Divider>
+                <Button
+                  fullWidth
+                  variant="outlined"
+                  startIcon={<PlayArrow />}
+                  onClick={() => {
+                    formik.setValues({
+                      email: 'demo@swapam.com',
+                      password: 'demo123',
+                      rememberMe: false,
+                    });
+                  }}
+                  sx={{
+                    py: 1.5,
+                    borderColor: 'primary.main',
+                    color: 'primary.main',
+                    '&:hover': {
+                      borderColor: 'primary.dark',
+                      bgcolor: 'primary.50',
+                    },
+                  }}
+                >
+                  Use Demo Account
+                </Button>
+                <Typography variant="caption" color="text.secondary" sx={{ display: 'block', textAlign: 'center', mt: 1 }}>
+                  Explore all features with sample data
+                </Typography>
+              </Box>
             </Card>
           </motion.div>
         </Container>

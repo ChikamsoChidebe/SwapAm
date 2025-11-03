@@ -1,13 +1,13 @@
 import React from 'react';
 import { Container, Grid, Card, CardContent, Typography, Box } from '@mui/material';
-import { TrendingUp, People, SwapHoriz, Eco } from '@mui/icons-material';
+import { TrendingUp, People, SwapHoriz, Nature } from '@mui/icons-material';
 
 const AdminAnalyticsPage: React.FC = () => {
   const stats = [
     { title: 'Total Revenue', value: '₦45,678', icon: <TrendingUp />, color: 'success.main' },
     { title: 'Active Users', value: '3,891', icon: <People />, color: 'primary.main' },
     { title: 'Total Swaps', value: '2,847', icon: <SwapHoriz />, color: 'info.main' },
-    { title: 'CO₂ Saved', value: '1.2T', icon: <Eco />, color: 'warning.main' },
+    { title: 'CO₂ Saved', value: '1.2T', icon: <Nature />, color: 'warning.main' },
   ];
 
   return (

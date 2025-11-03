@@ -565,7 +565,7 @@ export interface UseScreenShareResult {
   stream: MediaStream | null;
   error: string | null;
   supported: boolean;
-  start: (options?: DisplayMediaStreamConstraints) => Promise<void>;
+  start: (options?: MediaStreamConstraints) => Promise<void>;
   stop: () => void;
   isActive: boolean;
 }

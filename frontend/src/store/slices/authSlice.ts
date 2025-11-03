@@ -57,8 +57,9 @@ const authSlice = createSlice({
     clearError: (state) => {
       state.error = null;
     },
-    setUser: (state, action: PayloadAction<User>) => {
+    setUser: (state, action: PayloadAction<User | null>) => {
       state.user = action.payload;
+      state.isAuthenticated = !!action.payload;
     },
     updateUser: (state, action: PayloadAction<Partial<User>>) => {
       if (state.user) {

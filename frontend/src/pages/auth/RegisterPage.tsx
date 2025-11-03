@@ -448,10 +448,21 @@ const RegisterPage: React.FC = () => {
       <Box
         sx={{
           minHeight: '100vh',
-          background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+          background: 'linear-gradient(135deg, #00C853 0%, #4CAF50 50%, #2E7D32 100%)',
           display: 'flex',
           alignItems: 'center',
           py: 4,
+          position: 'relative',
+          '&::before': {
+            content: '""',
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            backdropFilter: 'blur(5px)',
+            backgroundImage: 'radial-gradient(circle at 25% 25%, rgba(255,255,255,0.1) 0%, transparent 50%), radial-gradient(circle at 75% 75%, rgba(255,255,255,0.05) 0%, transparent 50%)',
+          },
         }}
       >
         <Container maxWidth="md">
@@ -463,10 +474,11 @@ const RegisterPage: React.FC = () => {
             <Card
               sx={{
                 p: 4,
-                borderRadius: 3,
-                boxShadow: '0 20px 40px rgba(0, 0, 0, 0.1)',
-                backdropFilter: 'blur(10px)',
-                background: 'rgba(255, 255, 255, 0.95)',
+                borderRadius: 4,
+                boxShadow: '0 25px 50px rgba(0, 0, 0, 0.25)',
+                backdropFilter: 'blur(20px)',
+                background: 'rgba(255, 255, 255, 0.1)',
+                border: '1px solid rgba(255, 255, 255, 0.2)',
               }}
             >
               {/* Header */}
@@ -590,6 +602,35 @@ const RegisterPage: React.FC = () => {
                     </Button>
                   )}
                 </Box>
+              </Box>
+
+              {/* Demo Login Link */}
+              <Box sx={{ mt: 3 }}>
+                <Divider sx={{ mb: 2 }}>
+                  <Typography variant="body2" color="text.secondary">
+                    Try Demo
+                  </Typography>
+                </Divider>
+                <Button
+                  fullWidth
+                  variant="outlined"
+                  startIcon={<CheckCircle />}
+                  onClick={() => navigate('/login')}
+                  sx={{
+                    py: 1.5,
+                    borderColor: 'primary.main',
+                    color: 'primary.main',
+                    '&:hover': {
+                      borderColor: 'primary.dark',
+                      bgcolor: 'primary.50',
+                    },
+                  }}
+                >
+                  Try Demo Account Instead
+                </Button>
+                <Typography variant="caption" color="text.secondary" sx={{ display: 'block', textAlign: 'center', mt: 1 }}>
+                  Explore all features without signing up
+                </Typography>
               </Box>
 
               <Box sx={{ textAlign: 'center', mt: 3 }}>
