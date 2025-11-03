@@ -97,9 +97,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
             dispatch(setUser(response.data));
           }
         } catch (error) {
+          console.error('Auth initialization error:', error);
           localStorage.removeItem('token');
           localStorage.removeItem('refreshToken');
           localStorage.removeItem('isDemo');
+          dispatch(setUser(null));
         }
       }
       setInitialLoading(false);
@@ -120,10 +122,19 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   const logout = async () => {
-    localStorage.removeItem('token');
-    localStorage.removeItem('refreshToken');
-    localStorage.removeItem('isDemo');
-    dispatch(setUser(null));
+    try {
+      const isDemo = localStorage.getItem('isDemo');
+      if (isDemo !== 'true') {
+        await authAPI.logout();
+      }
+    } catch (error) {
+      console.error('Logout error:', error);
+    } finally {
+      localStorage.removeItem('token');
+      localStorage.removeItem('refreshToken');
+      localStorage.removeItem('isDemo');
+      dispatch(setUser(null));
+    }
   };
 
   const updateProfile = async (data: Partial<User>) => {

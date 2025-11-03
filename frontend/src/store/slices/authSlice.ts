@@ -15,7 +15,7 @@ const initialState: AuthState = {
   user: null,
   token: localStorage.getItem('token'),
   refreshToken: localStorage.getItem('refreshToken'),
-  isAuthenticated: false,
+  isAuthenticated: !!localStorage.getItem('token'),
   loading: false,
   error: null,
 };
@@ -60,6 +60,8 @@ const authSlice = createSlice({
     setUser: (state, action: PayloadAction<User | null>) => {
       state.user = action.payload;
       state.isAuthenticated = !!action.payload;
+      state.loading = false;
+      state.error = null;
     },
     updateUser: (state, action: PayloadAction<Partial<User>>) => {
       if (state.user) {

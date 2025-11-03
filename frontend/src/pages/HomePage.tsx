@@ -43,7 +43,7 @@ const HomePage: React.FC = () => {
       title: 'AI-Powered Valuation',
       description: 'Get instant, accurate valuations for your items using our advanced AI technology.',
       icon: <TrendingUp />,
-      color: '#2196F3',
+      color: '#4CAF50',
     },
     {
       title: 'Campus Agents',
@@ -55,7 +55,7 @@ const HomePage: React.FC = () => {
       title: 'Points System',
       description: 'Earn points for every item you list and use them to get items you need.',
       icon: <Star />,
-      color: '#9C27B0',
+      color: '#F57F17',
     },
     {
       title: 'Sustainability Impact',

@@ -31,6 +31,8 @@ import { motion } from 'framer-motion';
 import { useAuth } from '../../contexts/AuthContext';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
+import { useAppDispatch } from '../../store';
+import { setUser } from '../../store/slices/authSlice';
 
 const validationSchema = yup.object({
   email: yup.string().email('Invalid email').required('Email is required'),
@@ -39,6 +41,7 @@ const validationSchema = yup.object({
 
 const LoginPage: React.FC = () => {
   const { login } = useAuth();
+  const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const location = useLocation();
   const [showPassword, setShowPassword] = useState(false);
@@ -64,8 +67,68 @@ const LoginPage: React.FC = () => {
           localStorage.setItem('refreshToken', 'demo-refresh-token-123');
           localStorage.setItem('isDemo', 'true');
           
-          // Navigate directly
-          navigate('/dashboard/profile', { replace: true });
+          // Create mock demo user
+          const mockUser = {
+            id: 'demo-user-1',
+            email: 'demo@swapam.com',
+            firstName: 'Demo',
+            lastName: 'User',
+            username: 'demouser',
+            avatar: null,
+            campus: 'University of Lagos',
+            department: 'Computer Science',
+            year: 3,
+            points: 1250,
+            rating: 4.8,
+            totalSwaps: 15,
+            joinedAt: new Date('2024-01-15'),
+            isVerified: true,
+            preferences: {
+              notifications: {
+                email: true,
+                push: true,
+                sms: false,
+                swapUpdates: true,
+                newMatches: true,
+                promotions: false,
+                sustainability: true,
+              },
+              privacy: {
+                showProfile: true,
+                showLocation: true,
+                showRating: true,
+                allowMessages: true,
+              },
+              categories: ['Electronics', 'Books', 'Clothing'],
+              maxDistance: 10,
+              language: 'en',
+              theme: 'light' as const,
+            },
+            location: {
+              name: 'Akoka, Lagos',
+              address: 'University of Lagos, Akoka',
+              city: 'Lagos',
+              state: 'Lagos',
+              country: 'Nigeria',
+              zipCode: '101017',
+              coordinates: {
+                latitude: 6.5158,
+                longitude: 3.3894,
+              },
+              campus: 'University of Lagos',
+            },
+            badges: [],
+            sustainabilityScore: 85,
+            role: 'student' as const,
+          };
+          
+          // Set user in Redux state
+          dispatch(setUser(mockUser));
+          
+          // Small delay to ensure state is updated
+          setTimeout(() => {
+            navigate('/dashboard/profile', { replace: true });
+          }, 100);
           return;
         }
         
@@ -91,7 +154,7 @@ const LoginPage: React.FC = () => {
       <Box
         sx={{
           minHeight: '100vh',
-          background: 'linear-gradient(135deg, #00C853 0%, #4CAF50 50%, #2E7D32 100%)',
+          background: 'linear-gradient(135deg, #2E7D32 0%, #388E3C 50%, #F57F17 100%)',
           display: 'flex',
           alignItems: 'center',
           py: 4,
@@ -128,7 +191,7 @@ const LoginPage: React.FC = () => {
                   variant="h3"
                   sx={{
                     fontWeight: 800,
-                    background: 'linear-gradient(135deg, #00C853 0%, #4CAF50 100%)',
+                    background: 'linear-gradient(135deg, #2E7D32 0%, #F57F17 100%)',
                     WebkitBackgroundClip: 'text',
                     WebkitTextFillColor: 'transparent',
                     backgroundClip: 'text',
