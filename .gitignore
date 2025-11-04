@@ -28,4 +28,7 @@ yarn-error.log*
 
 # OS
 .DS_Store
-Thumbs.db
+Thumbs.dbnode_modules/
+.cache/
+build/
+dist/
