@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Box,
   Container,
@@ -7,641 +7,729 @@ import {
   Grid,
   Card,
   CardContent,
-  CardMedia,
-  Chip,
   Avatar,
+  Chip,
+  IconButton,
   useTheme,
   useMediaQuery,
+  Fade,
+  Slide,
 } from '@mui/material';
 import {
+  PlayArrow,
+  Recycling,
   TrendingUp,
-  Nature,
-  SwapHoriz,
   People,
+  School,
   Star,
   ArrowForward,
-  PlayArrow,
+  SwapHoriz,
+  Nature,
+  MonetizationOn,
 } from '@mui/icons-material';
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 
-const HomePage: React.FC = () => {
+// Hero Section Component
+const HeroSection: React.FC = () => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
   const navigate = useNavigate();
+  const [typedText, setTypedText] = useState('');
+  const fullText = 'Turn campus waste into student wealth';
 
-  const stats = [
-    { icon: <SwapHoriz />, value: '10K+', label: 'Items Swapped' },
-    { icon: <People />, value: '5K+', label: 'Active Users' },
-    { icon: <Nature />, value: '50T', label: 'CO₂ Saved' },
-    { icon: <TrendingUp />, value: '₦2M+', label: 'Value Created' },
-  ];
-
-  const features = [
-    {
-      title: 'AI-Powered Valuation',
-      description: 'Get instant, accurate valuations for your items using our advanced AI technology.',
-      icon: <TrendingUp />,
-      color: '#4CAF50',
-    },
-    {
-      title: 'Campus Agents',
-      description: 'Trusted local agents handle pickup, verification, and delivery for seamless swaps.',
-      icon: <People />,
-      color: '#FF9800',
-    },
-    {
-      title: 'Points System',
-      description: 'Earn points for every item you list and use them to get items you need.',
-      icon: <Star />,
-      color: '#F57F17',
-    },
-    {
-      title: 'Sustainability Impact',
-      description: 'Track your environmental impact and contribute to a circular economy.',
-      icon: <Nature />,
-      color: '#4CAF50',
-    },
-  ];
-
-  const testimonials = [
-    {
-      name: 'Sarah Johnson',
-      role: 'Computer Science Student',
-      university: 'University of Lagos',
-      avatar: '/avatars/sarah.jpg',
-      rating: 5,
-      comment: 'Swapam helped me get all my textbooks for free by swapping items I no longer needed. Amazing platform!',
-    },
-    {
-      name: 'Michael Chen',
-      role: 'Engineering Student',
-      university: 'Covenant University',
-      avatar: '/avatars/michael.jpg',
-      rating: 5,
-      comment: 'The AI valuation is spot-on and the campus agents are super reliable. Love the sustainability aspect!',
-    },
-    {
-      name: 'Amara Okafor',
-      role: 'Business Student',
-      university: 'Babcock University',
-      avatar: '/avatars/amara.jpg',
-      rating: 5,
-      comment: 'Made ₦50,000 worth of swaps in my first month. This platform is a game-changer for students!',
-    },
-  ];
+  useEffect(() => {
+    let index = 0;
+    const timer = setInterval(() => {
+      if (index < fullText.length) {
+        setTypedText(fullText.slice(0, index + 1));
+        index++;
+      } else {
+        clearInterval(timer);
+      }
+    }, 100);
+    return () => clearInterval(timer);
+  }, []);
 
   return (
-    <>
-      <Helmet>
-        <title>Swapam - Campus Circular Economy Platform</title>
-        <meta name="description" content="Turn student waste into wealth. Swap, sell, or donate used items on campus. Join the circular economy revolution." />
-      </Helmet>
+    <Box
+      sx={{
+        background: 'linear-gradient(135deg, #CAAC2A 0%, #FDD835 100%)',
+        minHeight: '100vh',
+        display: 'flex',
+        alignItems: 'center',
+        position: 'relative',
+        overflow: 'hidden',
+      }}
+    >
+      {/* Floating particles */}
+      <Box
+        sx={{
+          position: 'absolute',
+          width: '100%',
+          height: '100%',
+          '&::before': {
+            content: '""',
+            position: 'absolute',
+            width: '200px',
+            height: '200px',
+            background: 'rgba(255,255,255,0.1)',
+            borderRadius: '50%',
+            top: '10%',
+            left: '10%',
+            animation: 'float 6s ease-in-out infinite',
+          },
+          '&::after': {
+            content: '""',
+            position: 'absolute',
+            width: '150px',
+            height: '150px',
+            background: 'rgba(255,255,255,0.1)',
+            borderRadius: '50%',
+            bottom: '20%',
+            right: '15%',
+            animation: 'float 8s ease-in-out infinite reverse',
+          },
+        }}
+      />
 
-      <Box sx={{ minHeight: '100vh' }}>
-        {/* Hero Section */}
-        <Box
-          sx={{
-            background: 'linear-gradient(135deg, #00C853 0%, #4CAF50 100%)',
-            color: 'white',
-            py: { xs: 8, md: 12 },
-            position: 'relative',
-            overflow: 'hidden',
-          }}
-        >
-          <Container maxWidth="lg">
-            <Grid container spacing={4} alignItems="center">
-              <Grid item xs={12} md={6}>
-                <motion.div
-                  initial={{ opacity: 0, y: 50 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.8 }}
-                >
-                  <Typography
-                    variant="h1"
-                    sx={{
-                      fontSize: { xs: '2.5rem', md: '3.5rem' },
-                      fontWeight: 800,
-                      mb: 2,
-                      lineHeight: 1.2,
-                    }}
-                  >
-                    Turn Student Waste Into{' '}
-                    <Box
-                      component="span"
-                      sx={{
-                        background: 'linear-gradient(45deg, #FFD700 30%, #FFA000 90%)',
-                        WebkitBackgroundClip: 'text',
-                        WebkitTextFillColor: 'transparent',
-                        backgroundClip: 'text',
-                      }}
-                    >
-                      Wealth
-                    </Box>
-                  </Typography>
-
-                  <Typography
-                    variant="h5"
-                    sx={{
-                      mb: 4,
-                      opacity: 0.9,
-                      fontWeight: 400,
-                      lineHeight: 1.4,
-                    }}
-                  >
-                    Join the campus circular economy. Swap, sell, or donate used items.
-                    Make sustainability profitable.
-                  </Typography>
-
-                  <Box sx={{ display: 'flex', gap: 2, flexWrap: 'wrap', mb: 3 }}>
-                    <Button
-                      variant="contained"
-                      size="large"
-                      onClick={() => navigate('/register')}
-                      sx={{
-                        bgcolor: 'white',
-                        color: 'white',
-                        px: 4,
-                        py: 1.5,
-                        fontSize: '1.1rem',
-                        fontWeight: 700,
-                        boxShadow: '0 8px 32px rgba(0, 0, 0, 0.3)',
-                        border: '2px solid white',
-                        '&:hover': {
-                          bgcolor: '#f5f5f5',
-                          transform: 'translateY(-2px)',
-                          boxShadow: '0 12px 40px rgba(0, 0, 0, 0.4)',
-                        },
-                        transition: 'all 0.3s ease',
-                      }}
-                    >
-                      Get Started Free
-                    </Button>
-
-                    <Button
-                      variant="outlined"
-                      size="large"
-                      startIcon={<PlayArrow />}
-                      onClick={() => navigate('/login')}
-                      sx={{
-                        borderColor: 'white',
-                        borderWidth: 2,
-                        color: 'white',
-                        px: 4,
-                        py: 1.5,
-                        fontSize: '1.1rem',
-                        fontWeight: 700,
-                        boxShadow: '0 4px 20px rgba(0, 0, 0, 0.2)',
-                        backdropFilter: 'blur(10px)',
-                        bgcolor: 'rgba(255, 255, 255, 0.1)',
-                        '&:hover': {
-                          borderColor: 'white',
-                          bgcolor: 'rgba(255, 255, 255, 0.2)',
-                          transform: 'translateY(-2px)',
-                          boxShadow: '0 8px 30px rgba(0, 0, 0, 0.3)',
-                        },
-                        transition: 'all 0.3s ease',
-                      }}
-                    >
-                      Try Demo
-                    </Button>
-                  </Box>
-
-                  {/* Demo Info */}
-                  <Box
-                    sx={{
-                      display: 'inline-flex',
-                      alignItems: 'center',
-                      gap: 1,
-                      bgcolor: 'rgba(255, 255, 255, 0.15)',
-                      backdropFilter: 'blur(10px)',
-                      border: '1px solid rgba(255, 255, 255, 0.2)',
-                      borderRadius: 3,
-                      px: 3,
-                      py: 1.5,
-                    }}
-                  >
-                    <Star sx={{ color: '#FFD700', fontSize: '1.2rem' }} />
-                    <Typography variant="body2" sx={{ color: 'white', fontWeight: 500 }}>
-                      Try our demo account - no signup required!
-                    </Typography>
-                  </Box>
-                </motion.div>
-              </Grid>
-
-              <Grid item xs={12} md={6}>
-                <motion.div
-                  initial={{ opacity: 0, scale: 0.8 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  transition={{ duration: 0.8, delay: 0.2 }}
-                >
-                  <Box
-                    sx={{
-                      position: 'relative',
-                      textAlign: 'center',
-                    }}
-                  >
-                    <Box
-                      sx={{
-                        position: 'relative',
-                        width: '100%',
-                        maxWidth: 500,
-                        height: 400,
-                        borderRadius: 4,
-                        overflow: 'hidden',
-                        boxShadow: '0 20px 40px rgba(0, 0, 0, 0.2)',
-                      }}
-                    >
-                      <img
-                        src="/hero-mockup.svg"
-                        alt="Swapam App Interface"
-                        style={{
-                          width: '100%',
-                          height: '100%',
-                          objectFit: 'cover',
-                        }}
-                        onError={(e) => {
-                          // Fallback to glass morphism design if image fails to load
-                          const target = e.target as HTMLImageElement;
-                          target.style.display = 'none';
-                          const parent = target.parentElement;
-                          if (parent) {
-                            parent.innerHTML = `
-                              <div style="
-                                width: 100%;
-                                height: 100%;
-                                background: linear-gradient(135deg, rgba(255,255,255,0.2) 0%, rgba(255,255,255,0.1) 100%);
-                                backdrop-filter: blur(10px);
-                                border: 1px solid rgba(255,255,255,0.3);
-                                display: flex;
-                                align-items: center;
-                                justify-content: center;
-                                flex-direction: column;
-                                gap: 24px;
-                                border-radius: 16px;
-                              ">
-                                <div style="display: flex; gap: 16px; align-items: center;">
-                                  <div style="font-size: 4rem; color: white;">⇄</div>
-                                  <div style="font-size: 3rem; color: #FFD700;">🌱</div>
-                                  <div style="font-size: 3rem; color: white;">👥</div>
-                                </div>
-                                <h3 style="color: white; text-align: center; font-weight: 600; margin: 0;">Campus Circular Economy</h3>
-                                <p style="color: rgba(255,255,255,0.8); text-align: center; margin: 0;">Swap • Share • Sustain</p>
-                              </div>
-                            `;
-                          }
-                        }}
-                      />
-                    </Box>
-                  </Box>
-                </motion.div>
-              </Grid>
-            </Grid>
-          </Container>
-
-          {/* Floating Elements */}
-          <Box
-            sx={{
-              position: 'absolute',
-              top: '20%',
-              right: '10%',
-              opacity: 0.1,
-              fontSize: '8rem',
-              color: 'white',
-            }}
-          >
-            <Nature sx={{ fontSize: 'inherit' }} />
-          </Box>
-          <Box
-            sx={{
-              position: 'absolute',
-              bottom: '20%',
-              left: '5%',
-              opacity: 0.1,
-              fontSize: '6rem',
-              color: 'white',
-            }}
-          >
-            <SwapHoriz sx={{ fontSize: 'inherit' }} />
-          </Box>
-        </Box>
-
-        {/* Stats Section */}
-        <Box sx={{ py: 6, bgcolor: 'background.paper' }}>
-          <Container maxWidth="lg">
-            <Grid container spacing={4}>
-              {stats.map((stat, index) => (
-                <Grid item xs={6} md={3} key={index}>
-                  <motion.div
-                    initial={{ opacity: 0, y: 30 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.6, delay: index * 0.1 }}
-                    viewport={{ once: true }}
-                  >
-                    <Box sx={{ textAlign: 'center' }}>
-                      <Box
-                        sx={{
-                          display: 'inline-flex',
-                          alignItems: 'center',
-                          justifyContent: 'center',
-                          width: 60,
-                          height: 60,
-                          borderRadius: '50%',
-                          bgcolor: 'primary.main',
-                          color: 'white',
-                          mb: 2,
-                        }}
-                      >
-                        {stat.icon}
-                      </Box>
-                      <Typography variant="h4" sx={{ fontWeight: 700, mb: 1 }}>
-                        {stat.value}
-                      </Typography>
-                      <Typography variant="body2" color="text.secondary">
-                        {stat.label}
-                      </Typography>
-                    </Box>
-                  </motion.div>
-                </Grid>
-              ))}
-            </Grid>
-          </Container>
-        </Box>
-
-        {/* Features Section */}
-        <Box sx={{ py: 8, bgcolor: 'grey.50' }}>
-          <Container maxWidth="lg">
+      <Container maxWidth="lg">
+        <Grid container spacing={4} alignItems="center">
+          <Grid item xs={12} md={6}>
             <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
+              initial={{ opacity: 0, x: -50 }}
+              animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.8 }}
-              viewport={{ once: true }}
             >
               <Typography
-                variant="h2"
+                variant="h1"
                 sx={{
-                  textAlign: 'center',
-                  mb: 2,
+                  fontSize: { xs: '2.5rem', md: '4rem' },
                   fontWeight: 700,
+                  color: '#1a1a1a',
+                  mb: 3,
+                  lineHeight: 1.2,
                 }}
               >
-                How Swapam Works
+                {typedText}
+                <Box
+                  component="span"
+                  sx={{
+                    display: 'inline-block',
+                    width: '3px',
+                    height: '1em',
+                    backgroundColor: '#137C5C',
+                    ml: 1,
+                    animation: 'blink 1s infinite',
+                  }}
+                />
               </Typography>
+
               <Typography
                 variant="h6"
                 sx={{
-                  textAlign: 'center',
-                  mb: 6,
-                  color: 'text.secondary',
-                  maxWidth: 600,
-                  mx: 'auto',
-                }}
-              >
-                Our platform makes it easy to turn your unused items into valuable resources
-              </Typography>
-            </motion.div>
-
-            <Grid container spacing={4}>
-              {features.map((feature, index) => (
-                <Grid item xs={12} md={6} key={index}>
-                  <motion.div
-                    initial={{ opacity: 0, y: 30 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.6, delay: index * 0.1 }}
-                    viewport={{ once: true }}
-                  >
-                    <Card
-                      sx={{
-                        height: '100%',
-                        p: 3,
-                        border: 'none',
-                        boxShadow: '0 4px 20px rgba(0, 0, 0, 0.08)',
-                        '&:hover': {
-                          transform: 'translateY(-4px)',
-                          boxShadow: '0 8px 30px rgba(0, 0, 0, 0.12)',
-                        },
-                        transition: 'all 0.3s ease',
-                      }}
-                    >
-                      <CardContent>
-                        <Box
-                          sx={{
-                            display: 'inline-flex',
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                            width: 80,
-                            height: 80,
-                            borderRadius: '50%',
-                            bgcolor: feature.color,
-                            color: 'white',
-                            mb: 3,
-                            fontSize: '2rem',
-                          }}
-                        >
-                          {feature.icon}
-                        </Box>
-                        <Typography variant="h5" sx={{ mb: 2, fontWeight: 600 }}>
-                          {feature.title}
-                        </Typography>
-                        <Typography variant="body1" color="text.secondary">
-                          {feature.description}
-                        </Typography>
-                      </CardContent>
-                    </Card>
-                  </motion.div>
-                </Grid>
-              ))}
-            </Grid>
-          </Container>
-        </Box>
-
-        {/* Testimonials Section */}
-        <Box sx={{ py: 8, bgcolor: 'background.paper' }}>
-          <Container maxWidth="lg">
-            <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8 }}
-              viewport={{ once: true }}
-            >
-              <Typography
-                variant="h2"
-                sx={{
-                  textAlign: 'center',
-                  mb: 2,
-                  fontWeight: 700,
-                }}
-              >
-                What Students Say
-              </Typography>
-              <Typography
-                variant="h6"
-                sx={{
-                  textAlign: 'center',
-                  mb: 6,
-                  color: 'text.secondary',
-                  maxWidth: 600,
-                  mx: 'auto',
-                }}
-              >
-                Join thousands of students who are already benefiting from Swapam
-              </Typography>
-            </motion.div>
-
-            <Grid container spacing={4}>
-              {testimonials.map((testimonial, index) => (
-                <Grid item xs={12} md={4} key={index}>
-                  <motion.div
-                    initial={{ opacity: 0, y: 30 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.6, delay: index * 0.1 }}
-                    viewport={{ once: true }}
-                  >
-                    <Card
-                      sx={{
-                        height: '100%',
-                        p: 3,
-                        textAlign: 'center',
-                        border: 'none',
-                        boxShadow: '0 4px 20px rgba(0, 0, 0, 0.08)',
-                      }}
-                    >
-                      <CardContent>
-                        <Avatar
-                          src={testimonial.avatar}
-                          sx={{
-                            width: 80,
-                            height: 80,
-                            mx: 'auto',
-                            mb: 2,
-                          }}
-                        >
-                          {testimonial.name[0]}
-                        </Avatar>
-
-                        <Box sx={{ display: 'flex', justifyContent: 'center', mb: 2 }}>
-                          {[...Array(testimonial.rating)].map((_, i) => (
-                            <Star key={i} sx={{ color: 'warning.main', fontSize: 20 }} />
-                          ))}
-                        </Box>
-
-                        <Typography variant="body1" sx={{ mb: 3, fontStyle: 'italic' }}>
-                          "{testimonial.comment}"
-                        </Typography>
-
-                        <Typography variant="h6" sx={{ fontWeight: 600, mb: 0.5 }}>
-                          {testimonial.name}
-                        </Typography>
-                        <Typography variant="body2" color="text.secondary" sx={{ mb: 0.5 }}>
-                          {testimonial.role}
-                        </Typography>
-                        <Typography variant="caption" color="text.secondary">
-                          {testimonial.university}
-                        </Typography>
-                      </CardContent>
-                    </Card>
-                  </motion.div>
-                </Grid>
-              ))}
-            </Grid>
-          </Container>
-        </Box>
-
-        {/* CTA Section */}
-        <Box
-          sx={{
-            py: 8,
-            background: 'linear-gradient(135deg, #00C853 0%, #4CAF50 100%)',
-            color: 'white',
-            textAlign: 'center',
-          }}
-        >
-          <Container maxWidth="md">
-            <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8 }}
-              viewport={{ once: true }}
-            >
-              <Typography
-                variant="h2"
-                sx={{
-                  mb: 2,
-                  fontWeight: 700,
-                }}
-              >
-                Ready to Start Swapping?
-              </Typography>
-              <Typography
-                variant="h6"
-                sx={{
+                  color: '#4a4a4a',
                   mb: 4,
-                  opacity: 0.9,
-                  maxWidth: 500,
-                  mx: 'auto',
+                  fontSize: { xs: '1.1rem', md: '1.3rem' },
+                  lineHeight: 1.6,
                 }}
               >
-                Join thousands of students who are already making money while saving the planet
+                Swap, sell, and donate items with ease. Build a sustainable campus community while saving money.
               </Typography>
 
-              <Box sx={{ display: 'flex', gap: 2, justifyContent: 'center', flexWrap: 'wrap' }}>
+              <Box sx={{ display: 'flex', gap: 2, flexWrap: 'wrap' }}>
                 <Button
                   variant="contained"
                   size="large"
                   onClick={() => navigate('/register')}
-                  endIcon={<ArrowForward />}
                   sx={{
-                    bgcolor: 'white',
+                    backgroundColor: '#137C5C',
                     color: 'white',
                     px: 4,
                     py: 1.5,
                     fontSize: '1.1rem',
-                    fontWeight: 700,
-                    boxShadow: '0 8px 32px rgba(0, 0, 0, 0.3)',
-                    border: '2px solid white',
+                    borderRadius: 2,
                     '&:hover': {
-                      bgcolor: '#f5f5f5',
+                      backgroundColor: '#0f5132',
                       transform: 'translateY(-2px)',
-                      boxShadow: '0 12px 40px rgba(0, 0, 0, 0.4)',
                     },
-                    transition: 'all 0.3s ease',
                   }}
                 >
-                  Sign Up Now
+                  Join Now
                 </Button>
-
                 <Button
                   variant="outlined"
                   size="large"
-                  onClick={() => navigate('/browse')}
+                  startIcon={<PlayArrow />}
                   sx={{
-                    borderColor: 'white',
-                    borderWidth: 2,
-                    color: 'white',
+                    borderColor: '#137C5C',
+                    color: '#137C5C',
                     px: 4,
                     py: 1.5,
                     fontSize: '1.1rem',
-                    fontWeight: 700,
-                    boxShadow: '0 4px 20px rgba(0, 0, 0, 0.2)',
-                    backdropFilter: 'blur(10px)',
-                    bgcolor: 'rgba(255, 255, 255, 0.1)',
+                    borderRadius: 2,
+                    backgroundColor: 'rgba(255,255,255,0.9)',
                     '&:hover': {
-                      borderColor: 'white',
-                      bgcolor: 'rgba(255, 255, 255, 0.2)',
+                      backgroundColor: '#f0fdfa',
                       transform: 'translateY(-2px)',
-                      boxShadow: '0 8px 30px rgba(0, 0, 0, 0.3)',
                     },
-                    transition: 'all 0.3s ease',
                   }}
                 >
-                  Browse Items
+                  Learn More
                 </Button>
               </Box>
             </motion.div>
-          </Container>
+          </Grid>
+
+          <Grid item xs={12} md={6}>
+            <motion.div
+              initial={{ opacity: 0, x: 50 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.8, delay: 0.2 }}
+            >
+              <Box
+                sx={{
+                  position: 'relative',
+                  height: { xs: 300, md: 500 },
+                  borderRadius: 4,
+                  overflow: 'hidden',
+                  boxShadow: '0 20px 40px rgba(0,0,0,0.1)',
+                }}
+              >
+                <img
+                  src="/hero-image.svg"
+                  alt="Students swapping items"
+                  style={{
+                    width: '100%',
+                    height: '100%',
+                    objectFit: 'cover',
+                  }}
+                />
+              </Box>
+            </motion.div>
+          </Grid>
+        </Grid>
+      </Container>
+    </Box>
+  );
+};
+
+// Stats Section Component
+const StatsSection: React.FC = () => {
+  const stats = [
+    { number: '25K+', label: 'Items Rescued', icon: <Recycling /> },
+    { number: '8.5K+', label: 'Active Students', icon: <People /> },
+    { number: '150+', label: 'Universities', icon: <School /> },
+    { number: '98%', label: 'Satisfaction', icon: <Star /> },
+  ];
+
+  return (
+    <Box sx={{ py: 8, backgroundColor: '#0b3d2e', color: 'white' }}>
+      <Container maxWidth="lg">
+        <Grid container spacing={4}>
+          {stats.map((stat, index) => (
+            <Grid item xs={6} md={3} key={index}>
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: index * 0.1 }}
+                viewport={{ once: true }}
+              >
+                <Box sx={{ textAlign: 'center' }}>
+                  <Box sx={{ mb: 2, color: '#4CAF50' }}>
+                    {React.cloneElement(stat.icon, { fontSize: 'large' })}
+                  </Box>
+                  <Typography variant="h3" sx={{ fontWeight: 700, mb: 1 }}>
+                    {stat.number}
+                  </Typography>
+                  <Typography variant="body1" sx={{ opacity: 0.9 }}>
+                    {stat.label}
+                  </Typography>
+                </Box>
+              </motion.div>
+            </Grid>
+          ))}
+        </Grid>
+      </Container>
+    </Box>
+  );
+};
+
+// How It Works Section
+const HowItWorksSection: React.FC = () => {
+  const steps = [
+    {
+      title: 'Sign Up',
+      description: 'Create your account with your university email',
+      icon: <People />,
+    },
+    {
+      title: 'List Items',
+      description: 'Upload photos and descriptions of items to swap or sell',
+      icon: <SwapHoriz />,
+    },
+    {
+      title: 'Connect',
+      description: 'Find and connect with other students on your campus',
+      icon: <Nature />,
+    },
+    {
+      title: 'Exchange',
+      description: 'Complete safe transactions and build your reputation',
+      icon: <MonetizationOn />,
+    },
+  ];
+
+  return (
+    <Box sx={{ py: 10, backgroundColor: '#f8fffe', position: 'relative', overflow: 'hidden' }}>
+      <Container maxWidth="lg">
+        <Box sx={{ textAlign: 'center', mb: 8 }}>
+          <Typography variant="h2" sx={{ fontWeight: 700, mb: 2, color: '#2c3e50' }}>
+            How SwapAm Works
+          </Typography>
+          <Typography variant="h6" sx={{ color: 'text.secondary', maxWidth: 600, mx: 'auto' }}>
+            Simple steps to transform your unused items into valuable resources
+          </Typography>
         </Box>
+
+        <Grid container spacing={4}>
+          {steps.map((step, index) => (
+            <Grid item xs={12} sm={6} md={3} key={index}>
+              <motion.div
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: index * 0.15 }}
+                viewport={{ once: true }}
+              >
+                <Card
+                  sx={{
+                    height: '100%',
+                    textAlign: 'center',
+                    p: 4,
+                    borderRadius: 4,
+                    background: 'linear-gradient(135deg, rgba(255,255,255,0.9) 0%, rgba(248,255,254,0.8) 100%)',
+                    backdropFilter: 'blur(10px)',
+                    boxShadow: '0 8px 32px rgba(0, 200, 83, 0.1)',
+                    border: '1px solid rgba(0, 200, 83, 0.1)',
+                    position: 'relative',
+                    '&:hover': {
+                      transform: 'translateY(-12px) rotateX(5deg)',
+                      boxShadow: '0 20px 40px rgba(0, 200, 83, 0.2)',
+                    },
+                    transition: 'all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275)',
+                    transformStyle: 'preserve-3d',
+                  }}
+                >
+                  {/* 3D White Square Step Number */}
+                  <Box
+                    sx={{
+                      position: 'absolute',
+                      top: -25,
+                      left: -25,
+                      width: 70,
+                      height: 70,
+                      background: 'linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%)',
+                      borderRadius: 3,
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      boxShadow: '0 12px 24px rgba(0, 0, 0, 0.15), inset 0 2px 0 rgba(255, 255, 255, 0.9)',
+                      border: '3px solid rgba(0, 200, 83, 0.2)',
+                      transform: 'rotateX(20deg) rotateY(-20deg)',
+                      transformStyle: 'preserve-3d',
+                      '&::before': {
+                        content: '""',
+                        position: 'absolute',
+                        top: 6,
+                        left: 6,
+                        right: -6,
+                        bottom: -6,
+                        background: 'linear-gradient(135deg, rgba(0, 200, 83, 0.1) 0%, rgba(76, 175, 80, 0.1) 100%)',
+                        borderRadius: 3,
+                        transform: 'translateZ(-15px)',
+                        zIndex: -1,
+                      },
+                      '&::after': {
+                        content: '""',
+                        position: 'absolute',
+                        top: 12,
+                        left: 12,
+                        right: -12,
+                        bottom: -12,
+                        background: 'linear-gradient(135deg, rgba(0, 200, 83, 0.05) 0%, rgba(76, 175, 80, 0.05) 100%)',
+                        borderRadius: 3,
+                        transform: 'translateZ(-25px)',
+                        zIndex: -2,
+                      },
+                    }}
+                  >
+                    <Typography
+                      variant="h3"
+                      sx={{
+                        fontWeight: 800,
+                        background: 'linear-gradient(135deg, #00C853 0%, #4CAF50 100%)',
+                        WebkitBackgroundClip: 'text',
+                        WebkitTextFillColor: 'transparent',
+                        backgroundClip: 'text',
+                        textShadow: '0 2px 4px rgba(0, 200, 83, 0.2)',
+                      }}
+                    >
+                      {index + 1}
+                    </Typography>
+                  </Box>
+
+                  {/* Feature Icon */}
+                  <Box
+                    sx={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      width: 90,
+                      height: 90,
+                      borderRadius: 3,
+                      background: 'linear-gradient(135deg, #00C853 0%, #4CAF50 100%)',
+                      color: 'white',
+                      mb: 3,
+                      mt: 3,
+                      mx: 'auto',
+                      fontSize: '2.2rem',
+                      boxShadow: '0 12px 28px rgba(0, 200, 83, 0.3)',
+                      transform: 'rotateX(15deg)',
+                      '&:hover': {
+                        transform: 'rotateX(0deg) scale(1.1)',
+                      },
+                      transition: 'all 0.3s ease',
+                    }}
+                  >
+                    {React.cloneElement(step.icon, { fontSize: 'inherit' })}
+                  </Box>
+
+                  <Typography variant="h5" sx={{ fontWeight: 700, mb: 2, color: '#2c3e50' }}>
+                    {step.title}
+                  </Typography>
+                  <Typography variant="body1" sx={{ color: 'text.secondary', lineHeight: 1.7 }}>
+                    {step.description}
+                  </Typography>
+                </Card>
+              </motion.div>
+            </Grid>
+          ))}
+        </Grid>
+
+        {/* Floating 3D Elements */}
+        <Box
+          sx={{
+            position: 'absolute',
+            top: '15%',
+            right: '8%',
+            width: 120,
+            height: 120,
+            background: 'linear-gradient(135deg, rgba(255,255,255,0.8) 0%, rgba(0, 200, 83, 0.1) 100%)',
+            borderRadius: 4,
+            transform: 'rotateX(30deg) rotateY(30deg)',
+            boxShadow: '0 25px 50px rgba(0, 200, 83, 0.1)',
+            animation: 'float3d 8s ease-in-out infinite',
+          }}
+        />
+        <Box
+          sx={{
+            position: 'absolute',
+            bottom: '20%',
+            left: '5%',
+            width: 80,
+            height: 80,
+            background: 'linear-gradient(135deg, rgba(255,255,255,0.9) 0%, rgba(255, 109, 0, 0.1) 100%)',
+            borderRadius: 3,
+            transform: 'rotateX(-20deg) rotateY(-30deg)',
+            boxShadow: '0 20px 40px rgba(255, 109, 0, 0.1)',
+            animation: 'float3d 10s ease-in-out infinite reverse',
+          }}
+        />
+      </Container>
+    </Box>
+  );
+};
+
+// Auto-Sliding Testimonials Section
+const TestimonialsSection: React.FC = () => {
+  const [currentSlide, setCurrentSlide] = useState(0);
+  
+  const testimonials = [
+    {
+      name: 'Sarah Ahmed',
+      role: 'Computer Science Student',
+      university: 'University of Lagos',
+      content: 'SwapAm helped me furnish my dorm room for almost nothing! I swapped my old textbooks for a mini-fridge and desk lamp.',
+      avatar: 'SA',
+      rating: 5,
+    },
+    {
+      name: 'Michael Okafor',
+      role: 'Environmental Science Student',
+      university: 'University of Ibadan',
+      content: 'The environmental impact tracker is incredible. I\'ve prevented 50kg of waste from going to landfills this semester.',
+      avatar: 'MO',
+      rating: 5,
+    },
+    {
+      name: 'Fatima Jibril',
+      role: 'Business Student',
+      university: 'Ahmadu Bello University',
+      content: 'I\'ve made over ₦50,000 selling items I no longer need. SwapAm turned my clutter into cash!',
+      avatar: 'FJ',
+      rating: 5,
+    },
+    {
+      name: 'David Okonkwo',
+      role: 'Engineering Student',
+      university: 'Covenant University',
+      content: 'The campus agent system is brilliant! Safe, secure transactions right on campus.',
+      avatar: 'DO',
+      rating: 5,
+    },
+    {
+      name: 'Aisha Bello',
+      role: 'Medical Student',
+      university: 'University of Abuja',
+      content: 'Saved over ₦80,000 on textbooks and lab equipment through SwapAm exchanges.',
+      avatar: 'AB',
+      rating: 5,
+    },
+  ];
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrentSlide((prev) => (prev + 1) % testimonials.length);
+    }, 4000);
+    return () => clearInterval(timer);
+  }, [testimonials.length]);
+
+  return (
+    <Box sx={{ py: 10, backgroundColor: 'white', position: 'relative', overflow: 'hidden' }}>
+      <Container maxWidth="lg">
+        <Box sx={{ textAlign: 'center', mb: 8 }}>
+          <Typography variant="h2" sx={{ fontWeight: 700, mb: 2, color: '#2c3e50' }}>
+            What Students Say
+          </Typography>
+          <Typography variant="h6" sx={{ color: 'text.secondary' }}>
+            Hear from real students making a difference with SwapAm
+          </Typography>
+        </Box>
+
+        {/* Auto-sliding testimonials */}
+        <Box sx={{ position: 'relative', height: 300, mb: 4 }}>
+          {testimonials.map((testimonial, index) => (
+            <Slide
+              key={index}
+              direction="left"
+              in={index === currentSlide}
+              timeout={600}
+            >
+              <Box
+                sx={{
+                  position: 'absolute',
+                  width: '100%',
+                  display: index === currentSlide ? 'block' : 'none',
+                }}
+              >
+                <Card
+                  sx={{
+                    maxWidth: 800,
+                    mx: 'auto',
+                    p: 4,
+                    borderRadius: 4,
+                    background: 'linear-gradient(135deg, rgba(255,255,255,0.95) 0%, rgba(248,255,254,0.9) 100%)',
+                    boxShadow: '0 12px 40px rgba(0, 200, 83, 0.15)',
+                    border: '1px solid rgba(0, 200, 83, 0.1)',
+                    textAlign: 'center',
+                  }}
+                >
+                  <CardContent>
+                    <Box sx={{ display: 'flex', justifyContent: 'center', mb: 3 }}>
+                      {[...Array(testimonial.rating)].map((_, i) => (
+                        <Star key={i} sx={{ color: '#FFD700', fontSize: '1.5rem' }} />
+                      ))}
+                    </Box>
+                    <Typography 
+                      variant="h6" 
+                      sx={{ 
+                        mb: 4, 
+                        fontStyle: 'italic', 
+                        color: '#2c3e50',
+                        lineHeight: 1.6,
+                        fontSize: '1.2rem'
+                      }}
+                    >
+                      "{testimonial.content}"
+                    </Typography>
+                    <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 3 }}>
+                      <Avatar 
+                        sx={{ 
+                          backgroundColor: '#00C853', 
+                          width: 60, 
+                          height: 60,
+                          fontSize: '1.5rem',
+                          fontWeight: 700
+                        }}
+                      >
+                        {testimonial.avatar}
+                      </Avatar>
+                      <Box sx={{ textAlign: 'left' }}>
+                        <Typography variant="h6" sx={{ fontWeight: 700, color: '#2c3e50' }}>
+                          {testimonial.name}
+                        </Typography>
+                        <Typography variant="body1" sx={{ color: 'text.secondary' }}>
+                          {testimonial.role}
+                        </Typography>
+                        <Typography variant="body2" sx={{ color: '#00C853', fontWeight: 600 }}>
+                          {testimonial.university}
+                        </Typography>
+                      </Box>
+                    </Box>
+                  </CardContent>
+                </Card>
+              </Box>
+            </Slide>
+          ))}
+        </Box>
+
+        {/* Slide indicators */}
+        <Box sx={{ display: 'flex', justifyContent: 'center', gap: 1 }}>
+          {testimonials.map((_, index) => (
+            <Box
+              key={index}
+              onClick={() => setCurrentSlide(index)}
+              sx={{
+                width: 12,
+                height: 12,
+                borderRadius: '50%',
+                backgroundColor: index === currentSlide ? '#00C853' : 'rgba(0, 200, 83, 0.3)',
+                cursor: 'pointer',
+                transition: 'all 0.3s ease',
+                '&:hover': {
+                  backgroundColor: '#00C853',
+                  transform: 'scale(1.2)',
+                },
+              }}
+            />
+          ))}
+        </Box>
+      </Container>
+    </Box>
+  );
+};
+
+// CTA Section
+const CTASection: React.FC = () => {
+  const navigate = useNavigate();
+
+  return (
+    <Box
+      sx={{
+        py: 10,
+        background: 'linear-gradient(135deg, #00C853 0%, #4CAF50 100%)',
+        color: 'white',
+        textAlign: 'center',
+      }}
+    >
+      <Container maxWidth="md">
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8 }}
+          viewport={{ once: true }}
+        >
+          <Typography variant="h2" sx={{ fontWeight: 600, mb: 3 }}>
+            Ready to Start Your Sustainable Journey?
+          </Typography>
+          <Typography variant="h6" sx={{ mb: 4, opacity: 0.9 }}>
+            Join thousands of students making a positive impact on their campuses and wallets
+          </Typography>
+          <Box sx={{ display: 'flex', gap: 2, justifyContent: 'center', flexWrap: 'wrap' }}>
+            <Button
+              variant="contained"
+              size="large"
+              onClick={() => navigate('/register')}
+              sx={{
+                backgroundColor: 'white',
+                color: 'primary.main',
+                px: 4,
+                py: 1.5,
+                fontSize: '1.1rem',
+                '&:hover': {
+                  backgroundColor: 'grey.100',
+                  transform: 'translateY(-2px)',
+                },
+              }}
+            >
+              Sign Up Free
+            </Button>
+            <Button
+              variant="outlined"
+              size="large"
+              sx={{
+                borderColor: 'white',
+                color: 'white',
+                px: 4,
+                py: 1.5,
+                fontSize: '1.1rem',
+                '&:hover': {
+                  backgroundColor: 'rgba(255,255,255,0.1)',
+                  transform: 'translateY(-2px)',
+                },
+              }}
+            >
+              Download App
+            </Button>
+          </Box>
+        </motion.div>
+      </Container>
+    </Box>
+  );
+};
+
+// Main HomePage Component
+const HomePage: React.FC = () => {
+  return (
+    <>
+      <Helmet>
+        <title>SwapAm - Turn Campus Waste Into Student Wealth</title>
+        <meta
+          name="description"
+          content="Join the circular economy revolution. Swap, sell, and donate items while earning rewards and making a positive environmental impact on your campus."
+        />
+        <meta name="keywords" content="campus, sustainability, swap, sell, donate, students, circular economy" />
+      </Helmet>
+
+      <Box sx={{ overflow: 'hidden' }}>
+        <HeroSection />
+        <StatsSection />
+        <HowItWorksSection />
+        <TestimonialsSection />
+        <CTASection />
       </Box>
+
+      <style>
+        {`
+          @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+          }
+          @keyframes float3d {
+            0%, 100% { 
+              transform: rotateX(25deg) rotateY(25deg) translateY(0px) translateZ(0px); 
+            }
+            50% { 
+              transform: rotateX(25deg) rotateY(25deg) translateY(-30px) translateZ(20px); 
+            }
+          }
+          @keyframes blink {
+            0%, 50% { opacity: 1; }
+            51%, 100% { opacity: 0; }
+          }
+        `}
+      </style>
     </>
   );
 };

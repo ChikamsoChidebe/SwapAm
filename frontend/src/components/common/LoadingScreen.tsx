@@ -1,15 +1,19 @@
 import React from 'react';
-import { Box, CircularProgress, Typography } from '@mui/material';
+import { Box, CircularProgress, Typography, LinearProgress } from '@mui/material';
 import { motion } from 'framer-motion';
 
 interface LoadingScreenProps {
   message?: string;
   fullScreen?: boolean;
+  progress?: number;
+  showProgress?: boolean;
 }
 
 const LoadingScreen: React.FC<LoadingScreenProps> = ({ 
   message = 'Loading...', 
-  fullScreen = true 
+  fullScreen = true,
+  progress,
+  showProgress = false
 }) => {
   return (
     <Box
@@ -66,19 +70,52 @@ const LoadingScreen: React.FC<LoadingScreenProps> = ({
         </Typography>
       </motion.div>
 
-      <motion.div
-        initial={{ scale: 0 }}
-        animate={{ scale: 1 }}
-        transition={{ delay: 0.6, duration: 0.5 }}
-      >
-        <CircularProgress
-          size={60}
-          thickness={4}
-          sx={{
-            color: 'rgba(255, 255, 255, 0.8)',
-          }}
-        />
-      </motion.div>
+      {showProgress && progress !== undefined ? (
+        <motion.div
+          initial={{ width: 0, opacity: 0 }}
+          animate={{ width: 200, opacity: 1 }}
+          transition={{ delay: 0.6, duration: 0.5 }}
+          style={{ width: 200, marginBottom: 20 }}
+        >
+          <LinearProgress
+            variant="determinate"
+            value={progress}
+            sx={{
+              height: 6,
+              borderRadius: 3,
+              backgroundColor: 'rgba(255, 255, 255, 0.3)',
+              '& .MuiLinearProgress-bar': {
+                backgroundColor: 'white',
+                borderRadius: 3,
+              },
+            }}
+          />
+          <Typography
+            variant="body2"
+            sx={{
+              mt: 1,
+              textAlign: 'center',
+              opacity: 0.8,
+            }}
+          >
+            {Math.round(progress)}%
+          </Typography>
+        </motion.div>
+      ) : (
+        <motion.div
+          initial={{ scale: 0 }}
+          animate={{ scale: 1 }}
+          transition={{ delay: 0.6, duration: 0.5 }}
+        >
+          <CircularProgress
+            size={60}
+            thickness={4}
+            sx={{
+              color: 'rgba(255, 255, 255, 0.8)',
+            }}
+          />
+        </motion.div>
+      )}
 
       <motion.div
         initial={{ opacity: 0 }}

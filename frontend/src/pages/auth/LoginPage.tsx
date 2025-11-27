@@ -2,17 +2,17 @@ import React, { useState } from 'react';
 import {
   Box,
   Container,
-  Card,
+  Paper,
   TextField,
   Button,
   Typography,
   Link,
-  Checkbox,
-  FormControlLabel,
   Divider,
   IconButton,
   InputAdornment,
   Alert,
+  Checkbox,
+  FormControlLabel,
   CircularProgress,
 } from '@mui/material';
 import {
@@ -20,34 +20,28 @@ import {
   VisibilityOff,
   Google,
   Facebook,
-  Apple,
-  Email,
-  Lock,
-  PlayArrow,
+  School,
 } from '@mui/icons-material';
-import { useFormik } from 'formik';
-import * as yup from 'yup';
 import { motion } from 'framer-motion';
-import { useAuth } from '../../contexts/AuthContext';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate, Link as RouterLink } from 'react-router-dom';
+import { useFormik } from 'formik';
+import * as Yup from 'yup';
 import { Helmet } from 'react-helmet-async';
-import { useAppDispatch } from '../../store';
-import { setUser } from '../../store/slices/authSlice';
 
-const validationSchema = yup.object({
-  email: yup.string().email('Invalid email').required('Email is required'),
-  password: yup.string().required('Password is required'),
+const validationSchema = Yup.object({
+  email: Yup.string()
+    .email('Enter a valid email')
+    .required('Email is required'),
+  password: Yup.string()
+    .min(6, 'Password must be at least 6 characters')
+    .required('Password is required'),
 });
 
 const LoginPage: React.FC = () => {
-  const { login } = useAuth();
-  const dispatch = useAppDispatch();
   const navigate = useNavigate();
-  const location = useLocation();
   const [showPassword, setShowPassword] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
-
-  const from = (location.state as any)?.from?.pathname || '/dashboard';
 
   const formik = useFormik({
     initialValues: {
@@ -57,150 +51,110 @@ const LoginPage: React.FC = () => {
     },
     validationSchema,
     onSubmit: async (values) => {
+      setIsLoading(true);
+      setError('');
+      
       try {
-        setError('');
+        // Simulate API call
+        await new Promise(resolve => setTimeout(resolve, 2000));
         
-        // Handle demo login
-        if (values.email === 'demo@swapam.com' && values.password === 'demo123') {
-          // Store demo flag and tokens
-          localStorage.setItem('token', 'demo-token-123');
-          localStorage.setItem('refreshToken', 'demo-refresh-token-123');
-          localStorage.setItem('isDemo', 'true');
-          
-          // Create mock demo user
-          const mockUser = {
-            id: 'demo-user-1',
-            email: 'demo@swapam.com',
-            firstName: 'Demo',
-            lastName: 'User',
-            username: 'demouser',
-            avatar: null,
-            campus: 'University of Lagos',
-            department: 'Computer Science',
-            year: 3,
-            points: 1250,
-            rating: 4.8,
-            totalSwaps: 15,
-            joinedAt: new Date('2024-01-15'),
-            isVerified: true,
-            preferences: {
-              notifications: {
-                email: true,
-                push: true,
-                sms: false,
-                swapUpdates: true,
-                newMatches: true,
-                promotions: false,
-                sustainability: true,
-              },
-              privacy: {
-                showProfile: true,
-                showLocation: true,
-                showRating: true,
-                allowMessages: true,
-              },
-              categories: ['Electronics', 'Books', 'Clothing'],
-              maxDistance: 10,
-              language: 'en',
-              theme: 'light' as const,
-            },
-            location: {
-              name: 'Akoka, Lagos',
-              address: 'University of Lagos, Akoka',
-              city: 'Lagos',
-              state: 'Lagos',
-              country: 'Nigeria',
-              zipCode: '101017',
-              coordinates: {
-                latitude: 6.5158,
-                longitude: 3.3894,
-              },
-              campus: 'University of Lagos',
-            },
-            badges: [],
-            sustainabilityScore: 85,
-            role: 'student' as const,
-          };
-          
-          // Set user in Redux state
-          dispatch(setUser(mockUser));
-          
-          // Small delay to ensure state is updated
-          setTimeout(() => {
-            navigate('/dashboard/profile', { replace: true });
-          }, 100);
-          return;
-        }
-        
-        await login(values.email, values.password, values.rememberMe);
-        navigate(from, { replace: true });
-      } catch (error: any) {
-        setError(error.response?.data?.message || 'Login failed. Please try again.');
+        // Mock successful login
+        localStorage.setItem('token', 'mock-jwt-token');
+        navigate('/dashboard');
+      } catch (err) {
+        setError('Invalid email or password. Please try again.');
+      } finally {
+        setIsLoading(false);
       }
     },
   });
 
-  const handleSocialLogin = (provider: string) => {
-    window.location.href = `${process.env.REACT_APP_API_URL}/auth/${provider}`;
+  const handleGoogleLogin = () => {
+    // Implement Google OAuth
+    console.log('Google login');
+  };
+
+  const handleFacebookLogin = () => {
+    // Implement Facebook OAuth
+    console.log('Facebook login');
+  };
+
+  const handleDemoLogin = () => {
+    formik.setValues({
+      email: 'demo@student.edu',
+      password: 'demo123',
+      rememberMe: false,
+    });
+    formik.handleSubmit();
   };
 
   return (
     <>
       <Helmet>
-        <title>Sign In - Swapam</title>
-        <meta name="description" content="Sign in to your Swapam account and start swapping items on campus." />
+        <title>Login - SwapAm</title>
+        <meta name="description" content="Login to your SwapAm account and start swapping items with fellow students." />
       </Helmet>
 
       <Box
         sx={{
           minHeight: '100vh',
-          background: 'linear-gradient(135deg, #2E7D32 0%, #388E3C 50%, #F57F17 100%)',
+          background: 'linear-gradient(135deg, #CAAC2A 0%, #FDD835 50%, #00C853 100%)',
           display: 'flex',
           alignItems: 'center',
           py: 4,
-          position: 'relative',
-          '&::before': {
-            content: '""',
-            position: 'absolute',
-            top: 0,
-            left: 0,
-            right: 0,
-            bottom: 0,
-            background: 'url("data:image/svg+xml,%3Csvg width="60" height="60" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg"%3E%3Cg fill="none" fill-rule="evenodd"%3E%3Cg fill="%23ffffff" fill-opacity="0.05"%3E%3Ccircle cx="30" cy="30" r="4"/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")',
-          },
         }}
       >
         <Container maxWidth="sm">
           <motion.div
-            initial={{ opacity: 0, y: 50 }}
+            initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
           >
-            <Card
+            <Paper
+              elevation={24}
               sx={{
                 p: 4,
                 borderRadius: 3,
-                boxShadow: '0 20px 40px rgba(0, 0, 0, 0.1)',
-                backdropFilter: 'blur(10px)',
                 background: 'rgba(255, 255, 255, 0.95)',
+                backdropFilter: 'blur(20px)',
+                border: '1px solid rgba(255, 255, 255, 0.2)',
               }}
             >
               {/* Header */}
               <Box sx={{ textAlign: 'center', mb: 4 }}>
+                <motion.div
+                  initial={{ scale: 0.8 }}
+                  animate={{ scale: 1 }}
+                  transition={{ duration: 0.5, delay: 0.2 }}
+                >
+                  <Box
+                    sx={{
+                      width: 80,
+                      height: 80,
+                      borderRadius: '50%',
+                      background: 'linear-gradient(135deg, #00C853 0%, #4CAF50 100%)',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      mx: 'auto',
+                      mb: 2,
+                      boxShadow: '0 8px 32px rgba(0, 200, 83, 0.3)',
+                    }}
+                  >
+                    <School sx={{ fontSize: 40, color: 'white' }} />
+                  </Box>
+                </motion.div>
+
                 <Typography
-                  variant="h3"
+                  variant="h4"
                   sx={{
-                    fontWeight: 800,
-                    background: 'linear-gradient(135deg, #2E7D32 0%, #F57F17 100%)',
+                    fontWeight: 700,
+                    mb: 1,
+                    background: 'linear-gradient(135deg, #00C853 0%, #4CAF50 100%)',
                     WebkitBackgroundClip: 'text',
                     WebkitTextFillColor: 'transparent',
-                    backgroundClip: 'text',
-                    mb: 1,
                   }}
                 >
-                  SWAPAM
-                </Typography>
-                <Typography variant="h4" sx={{ fontWeight: 600, mb: 1 }}>
                   Welcome Back
                 </Typography>
                 <Typography variant="body1" color="text.secondary">
@@ -210,74 +164,60 @@ const LoginPage: React.FC = () => {
 
               {/* Error Alert */}
               {error && (
-                <Alert severity="error" sx={{ mb: 3 }}>
-                  {error}
-                </Alert>
+                <motion.div
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                >
+                  <Alert severity="error" sx={{ mb: 3 }}>
+                    {error}
+                  </Alert>
+                </motion.div>
               )}
 
-              {/* Social Login */}
-              <Box sx={{ mb: 3 }}>
-                <Button
-                  fullWidth
-                  variant="outlined"
-                  startIcon={<Google />}
-                  onClick={() => handleSocialLogin('google')}
-                  sx={{ mb: 2, py: 1.5 }}
+              {/* Demo Banner */}
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 0.4 }}
+              >
+                <Alert
+                  severity="info"
+                  sx={{ mb: 3 }}
+                  action={
+                    <Button
+                      color="inherit"
+                      size="small"
+                      onClick={handleDemoLogin}
+                      disabled={isLoading}
+                    >
+                      Try Demo
+                    </Button>
+                  }
                 >
-                  Continue with Google
-                </Button>
-                <Box sx={{ display: 'flex', gap: 2 }}>
-                  <Button
-                    fullWidth
-                    variant="outlined"
-                    startIcon={<Facebook />}
-                    onClick={() => handleSocialLogin('facebook')}
-                    sx={{ py: 1.5 }}
-                  >
-                    Facebook
-                  </Button>
-                  <Button
-                    fullWidth
-                    variant="outlined"
-                    startIcon={<Apple />}
-                    onClick={() => handleSocialLogin('apple')}
-                    sx={{ py: 1.5 }}
-                  >
-                    Apple
-                  </Button>
-                </Box>
-              </Box>
-
-              <Divider sx={{ mb: 3 }}>
-                <Typography variant="body2" color="text.secondary">
-                  or continue with email
-                </Typography>
-              </Divider>
+                  Want to explore? Try our demo account!
+                </Alert>
+              </motion.div>
 
               {/* Login Form */}
-              <Box component="form" onSubmit={formik.handleSubmit}>
+              <form onSubmit={formik.handleSubmit}>
                 <TextField
                   fullWidth
+                  id="email"
                   name="email"
-                  label="Email Address"
+                  label="University Email"
                   type="email"
                   value={formik.values.email}
                   onChange={formik.handleChange}
                   onBlur={formik.handleBlur}
                   error={formik.touched.email && Boolean(formik.errors.email)}
                   helperText={formik.touched.email && formik.errors.email}
-                  InputProps={{
-                    startAdornment: (
-                      <InputAdornment position="start">
-                        <Email color="action" />
-                      </InputAdornment>
-                    ),
-                  }}
                   sx={{ mb: 3 }}
+                  placeholder="your.email@university.edu"
                 />
 
                 <TextField
                   fullWidth
+                  id="password"
                   name="password"
                   label="Password"
                   type={showPassword ? 'text' : 'password'}
@@ -286,12 +226,8 @@ const LoginPage: React.FC = () => {
                   onBlur={formik.handleBlur}
                   error={formik.touched.password && Boolean(formik.errors.password)}
                   helperText={formik.touched.password && formik.errors.password}
+                  sx={{ mb: 2 }}
                   InputProps={{
-                    startAdornment: (
-                      <InputAdornment position="start">
-                        <Lock color="action" />
-                      </InputAdornment>
-                    ),
                     endAdornment: (
                       <InputAdornment position="end">
                         <IconButton
@@ -303,7 +239,6 @@ const LoginPage: React.FC = () => {
                       </InputAdornment>
                     ),
                   }}
-                  sx={{ mb: 2 }}
                 />
 
                 <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
@@ -319,11 +254,9 @@ const LoginPage: React.FC = () => {
                     label="Remember me"
                   />
                   <Link
-                    component="button"
-                    type="button"
-                    variant="body2"
-                    onClick={() => navigate('/forgot-password')}
-                    sx={{ textDecoration: 'none' }}
+                    component={RouterLink}
+                    to="/forgot-password"
+                    sx={{ textDecoration: 'none', color: 'primary.main' }}
                   >
                     Forgot password?
                   </Link>
@@ -334,72 +267,92 @@ const LoginPage: React.FC = () => {
                   fullWidth
                   variant="contained"
                   size="large"
-                  disabled={formik.isSubmitting}
+                  disabled={isLoading}
                   sx={{
-                    py: 1.5,
-                    fontSize: '1.1rem',
-                    fontWeight: 600,
-                    background: 'linear-gradient(135deg, #00C853 0%, #4CAF50 100%)',
                     mb: 3,
+                    py: 1.5,
+                    background: 'linear-gradient(135deg, #00C853 0%, #4CAF50 100%)',
+                    '&:hover': {
+                      background: 'linear-gradient(135deg, #009624 0%, #388E3C 100%)',
+                    },
                   }}
                 >
-                  {formik.isSubmitting ? (
+                  {isLoading ? (
                     <CircularProgress size={24} color="inherit" />
                   ) : (
                     'Sign In'
                   )}
                 </Button>
+              </form>
 
-                <Box sx={{ textAlign: 'center' }}>
-                  <Typography variant="body2" color="text.secondary">
-                    Don't have an account?{' '}
-                    <Link
-                      component="button"
-                      type="button"
-                      onClick={() => navigate('/register')}
-                      sx={{ fontWeight: 600, textDecoration: 'none' }}
-                    >
-                      Sign up for free
-                    </Link>
-                  </Typography>
-                </Box>
-              </Box>
+              {/* Divider */}
+              <Divider sx={{ my: 3 }}>
+                <Typography variant="body2" color="text.secondary">
+                  Or continue with
+                </Typography>
+              </Divider>
 
-              {/* Demo Login */}
-              <Box sx={{ mt: 3 }}>
-                <Divider sx={{ mb: 2 }}>
-                  <Typography variant="body2" color="text.secondary">
-                    Try Demo
-                  </Typography>
-                </Divider>
+              {/* Social Login */}
+              <Box sx={{ display: 'flex', gap: 2, mb: 3 }}>
                 <Button
                   fullWidth
                   variant="outlined"
-                  startIcon={<PlayArrow />}
-                  onClick={() => {
-                    formik.setValues({
-                      email: 'demo@swapam.com',
-                      password: 'demo123',
-                      rememberMe: false,
-                    });
-                  }}
+                  startIcon={<Google />}
+                  onClick={handleGoogleLogin}
+                  disabled={isLoading}
                   sx={{
                     py: 1.5,
-                    borderColor: 'primary.main',
-                    color: 'primary.main',
+                    borderColor: '#DB4437',
+                    color: '#DB4437',
                     '&:hover': {
-                      borderColor: 'primary.dark',
-                      bgcolor: 'primary.50',
+                      borderColor: '#DB4437',
+                      backgroundColor: 'rgba(219, 68, 55, 0.04)',
                     },
                   }}
                 >
-                  Use Demo Account
+                  Google
                 </Button>
-                <Typography variant="caption" color="text.secondary" sx={{ display: 'block', textAlign: 'center', mt: 1 }}>
-                  Explore all features with sample data
+                <Button
+                  fullWidth
+                  variant="outlined"
+                  startIcon={<Facebook />}
+                  onClick={handleFacebookLogin}
+                  disabled={isLoading}
+                  sx={{
+                    py: 1.5,
+                    borderColor: '#4267B2',
+                    color: '#4267B2',
+                    '&:hover': {
+                      borderColor: '#4267B2',
+                      backgroundColor: 'rgba(66, 103, 178, 0.04)',
+                    },
+                  }}
+                >
+                  Facebook
+                </Button>
+              </Box>
+
+              {/* Sign Up Link */}
+              <Box sx={{ textAlign: 'center' }}>
+                <Typography variant="body2" color="text.secondary">
+                  Don't have an account?{' '}
+                  <Link
+                    component={RouterLink}
+                    to="/register"
+                    sx={{
+                      color: 'primary.main',
+                      textDecoration: 'none',
+                      fontWeight: 600,
+                      '&:hover': {
+                        textDecoration: 'underline',
+                      },
+                    }}
+                  >
+                    Sign up here
+                  </Link>
                 </Typography>
               </Box>
-            </Card>
+            </Paper>
           </motion.div>
         </Container>
       </Box>

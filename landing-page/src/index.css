@@ -1,0 +1,320 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.line-clamp-2 {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.5s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.transition-all {
+  transition: all 0.3s ease;
+}
+
+.hover-scale:hover {
+  transform: scale(1.02);
+}
+
+.gradient-bg {
+  background: linear-gradient(135deg, #137C5C 0%, #0f5132 100%);
+}
+
+.shadow-custom {
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+.border-custom {
+  border-color: #e5e7eb;
+}
+
+.text-primary {
+  color: #137C5C;
+}
+
+.bg-primary {
+  background-color: #137C5C;
+}
+
+.bg-secondary {
+  background-color: #fdd835;
+}
+
+.focus-ring {
+  @apply focus:ring-2 focus:ring-[#137C5C] focus:ring-opacity-50 focus:outline-none;
+}
+
+.btn-primary {
+  @apply bg-[#137C5C] text-white px-6 py-3 rounded-lg font-medium hover:bg-[#0f5132] transition-colors duration-200 focus-ring;
+}
+
+.btn-secondary {
+  @apply bg-[#fdd835] text-gray-900 px-6 py-3 rounded-lg font-medium hover:bg-[#f9c74f] transition-colors duration-200 focus-ring;
+}
+
+.card {
+  @apply bg-white rounded-xl shadow-sm border border-gray-200 p-6;
+}
+
+.input-field {
+  @apply w-full px-4 py-3 border border-gray-300 rounded-lg focus-ring;
+}
+
+.sidebar-item {
+  @apply w-full text-left flex items-center px-3 py-2 text-sm font-medium rounded-lg transition-colors duration-200;
+}
+
+.sidebar-item-active {
+  @apply bg-[#137C5C] text-white;
+}
+
+.sidebar-item-inactive {
+  @apply text-gray-600 hover:bg-gray-50 hover:text-gray-900;
+}
+
+.loading-spinner {
+  @apply animate-spin rounded-full border-b-2 border-[#137C5C];
+}
+
+.status-badge {
+  @apply px-2 py-1 text-xs font-medium rounded-full;
+}
+
+.status-available {
+  @apply bg-green-100 text-green-800;
+}
+
+.status-pending {
+  @apply bg-yellow-100 text-yellow-800;
+}
+
+.status-completed {
+  @apply bg-blue-100 text-blue-800;
+}
+
+.message-bubble-sent {
+  @apply bg-[#137C5C] text-white rounded-lg px-4 py-2 max-w-xs lg:max-w-md ml-auto;
+}
+
+.message-bubble-received {
+  @apply bg-gray-200 text-gray-900 rounded-lg px-4 py-2 max-w-xs lg:max-w-md;
+}
+
+.notification-success {
+  @apply bg-green-50 border border-green-200 text-green-800 px-4 py-3 rounded-lg;
+}
+
+.notification-error {
+  @apply bg-red-50 border border-red-200 text-red-800 px-4 py-3 rounded-lg;
+}
+
+.notification-warning {
+  @apply bg-yellow-50 border border-yellow-200 text-yellow-800 px-4 py-3 rounded-lg;
+}
+
+.notification-info {
+  @apply bg-blue-50 border border-blue-200 text-blue-800 px-4 py-3 rounded-lg;
+}
+
+@media (max-width: 768px) {
+  .mobile-padding {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+  
+  .mobile-text {
+    font-size: 0.875rem;
+  }
+}
+
+.hero-gradient {
+  background: linear-gradient(135deg, #137C5C 0%, #0f5132 50%, #fdd835 100%);
+}
+
+.testimonial-card {
+  @apply bg-white p-6 rounded-xl shadow-sm border border-gray-200 hover:shadow-md transition-shadow duration-300;
+}
+
+.feature-icon {
+  @apply w-12 h-12 bg-gradient-to-r from-[#137C5C] to-[#0f5132] rounded-lg flex items-center justify-center text-white;
+}
+
+.stats-card {
+  @apply bg-white rounded-xl p-6 shadow-sm border border-gray-200 hover:shadow-md transition-shadow duration-200;
+}
+
+.quick-action-btn {
+  @apply flex items-center justify-center p-4 text-white rounded-lg transition-colors duration-200 font-medium;
+}
+
+.item-card {
+  @apply bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden hover:shadow-md transition-shadow duration-200;
+}
+
+.avatar {
+  @apply rounded-full flex items-center justify-center text-white font-bold;
+}
+
+.avatar-sm {
+  @apply w-8 h-8 text-sm;
+}
+
+.avatar-md {
+  @apply w-10 h-10 text-base;
+}
+
+.avatar-lg {
+  @apply w-16 h-16 text-xl;
+}
+
+.conversation-item {
+  @apply p-4 border-b border-gray-100 cursor-pointer hover:bg-gray-50 transition-colors duration-200;
+}
+
+.conversation-active {
+  @apply bg-blue-50 border-blue-200;
+}
+
+.filter-container {
+  @apply bg-white rounded-lg p-4 shadow-sm border border-gray-200;
+}
+
+.grid-responsive {
+  @apply grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6;
+}
+
+.flex-between {
+  @apply flex items-center justify-between;
+}
+
+.flex-center {
+  @apply flex items-center justify-center;
+}
+
+.text-truncate {
+  @apply truncate;
+}
+
+.border-divider {
+  @apply border-t border-gray-200;
+}
+
+.bg-overlay {
+  @apply bg-black bg-opacity-50;
+}
+
+.backdrop-blur {
+  backdrop-filter: blur(4px);
+}
+
+.glass-effect {
+  @apply bg-white bg-opacity-20 backdrop-blur border border-white border-opacity-30;
+}
+
+.gradient-text {
+  background: linear-gradient(135deg, #137C5C 0%, #fdd835 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.hover-lift {
+  @apply hover:transform hover:-translate-y-1 transition-transform duration-200;
+}
+
+.focus-visible {
+  @apply focus:outline-none focus:ring-2 focus:ring-[#137C5C] focus:ring-opacity-50;
+}
+
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
+.smooth-scroll {
+  scroll-behavior: smooth;
+}
+
+.select-none {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+.pointer-events-none {
+  pointer-events: none;
+}
+
+.z-modal {
+  z-index: 1000;
+}
+
+.z-dropdown {
+  z-index: 100;
+}
+
+.z-sticky {
+  z-index: 50;
+}
+
+.min-h-screen-safe {
+  min-height: calc(100vh - env(safe-area-inset-top) - env(safe-area-inset-bottom));
+}
+
+@supports (padding: max(0px)) {
+  .safe-area-inset {
+    padding-left: max(1rem, env(safe-area-inset-left));
+    padding-right: max(1rem, env(safe-area-inset-right));
+  }
+}
+
+.dark-mode {
+  @apply bg-gray-900 text-white;
+}
+
+.dark-mode .card {
+  @apply bg-gray-800 border-gray-700;
+}
+
+.dark-mode .input-field {
+  @apply bg-gray-800 border-gray-600 text-white;
+}
+
+.dark-mode .sidebar-item-inactive {
+  @apply text-gray-300 hover:bg-gray-700 hover:text-white;
+}
