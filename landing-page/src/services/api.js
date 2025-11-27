@@ -5,9 +5,9 @@ const BACKENDS = {
   AI: 'http://13.218.91.146:8000'
 };
 
-// Temporarily use Node backend until CORS is fixed
-const API_BASE_URL = BACKENDS.NODE; // Primary backend
-const FALLBACK_URL = BACKENDS.JAVA; // Alternative backend
+// Use Java backend as primary
+const API_BASE_URL = BACKENDS.JAVA; // Primary backend
+const FALLBACK_URL = BACKENDS.NODE; // Alternative backend
 const AI_BASE_URL = BACKENDS.AI; // AI services backend
 
 class ApiService {
@@ -297,7 +297,7 @@ class ApiService {
   // Get current backend info
   getBackendInfo() {
     return {
-      current: this.currentBackend === API_BASE_URL ? 'Node' : 'Java',
+      current: this.currentBackend === API_BASE_URL ? 'Java' : 'Node',
       url: this.currentBackend,
       ai: AI_BASE_URL
     };

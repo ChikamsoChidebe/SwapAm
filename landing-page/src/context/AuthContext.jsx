@@ -54,10 +54,30 @@ export const AuthProvider = ({ children }) => {
   };
 
   const demoLogin = async () => {
-    const response = await apiService.demoLogin();
-    apiService.setToken(response.token);
-    setUser(response.user);
-    return response;
+    // Create demo user data
+    const demoUser = {
+      id: 'demo-user',
+      firstName: 'Demo',
+      lastName: 'User',
+      email: 'demo@university.edu',
+      university: 'Demo University',
+      avatar: '',
+      rating: 4.5,
+      totalSwaps: 15,
+      campusPoints: 250
+    };
+    
+    const demoToken = 'demo-token-123';
+    
+    // Store in localStorage
+    localStorage.setItem('token', demoToken);
+    localStorage.setItem('user', JSON.stringify(demoUser));
+    
+    // Set in API service
+    apiService.setToken(demoToken);
+    setUser(demoUser);
+    
+    return { token: demoToken, user: demoUser };
   };
 
   const register = async (userData) => {

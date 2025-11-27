@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import apiService from '../services/api';
 import AIItemUpload from './AIItemUpload';
 import AIIntegration from './AIIntegration';
+import AIEndpointTester from './AIEndpointTester';
 
 export default function AIDashboard() {
   const [activeTab, setActiveTab] = useState('analyze');
@@ -60,7 +61,8 @@ export default function AIDashboard() {
     { id: 'analyze', label: 'AI Analysis', icon: '🔍' },
     { id: 'impact', label: 'Impact Metrics', icon: '🌱' },
     { id: 'matching', label: 'Smart Matching', icon: '🎯' },
-    { id: 'trends', label: 'Market Trends', icon: '📈' }
+    { id: 'trends', label: 'Market Trends', icon: '📈' },
+    { id: 'testing', label: 'API Testing', icon: '🧪' }
   ];
 
   return (
@@ -205,6 +207,10 @@ export default function AIDashboard() {
               </div>
             )}
           </div>
+        )}
+
+        {activeTab === 'testing' && (
+          <AIEndpointTester />
         )}
       </div>
     </div>

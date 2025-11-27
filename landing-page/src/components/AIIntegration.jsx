@@ -83,10 +83,10 @@ export default function AIIntegration() {
           <div className="bg-green-50 p-4 rounded">
             <h4 className="font-medium text-green-800">Platform Impact</h4>
             <div className="grid grid-cols-2 gap-4 mt-2 text-sm">
-              <div>CO₂ Saved: {impactData.co2Saved || 0} kg</div>
-              <div>Waste Reduced: {impactData.wasteReduced || 0} kg</div>
-              <div>Money Saved: ${impactData.moneySaved || 0}</div>
-              <div>Transactions: {impactData.transactionCount || 0}</div>
+              <div>CO₂ Saved: {impactData.wasteReduced?.co2Saved || 0} kg</div>
+              <div>Waste Reduced: {impactData.wasteReduced?.weight || 0} kg</div>
+              <div>Money Saved: ${impactData.economicImpact?.moneySaved || 0}</div>
+              <div>Transactions: {impactData.economicImpact?.transactionCount || 0}</div>
             </div>
           </div>
         )}
