@@ -96,7 +96,7 @@ const ItemDetails = () => {
                 {item.price && (
                   <div className="flex justify-between">
                     <span className="text-gray-500">Price:</span>
-                    <span className="text-xl font-bold text-[#137C5C]">${item.price}</span>
+                    <span className="text-xl font-bold text-[#137C5C]">₦{item.price}</span>
                   </div>
                 )}
                 <div className="flex justify-between">

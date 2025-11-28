@@ -58,11 +58,11 @@ export default function AIDashboard() {
   };
 
   const tabs = [
-    { id: 'analyze', label: 'AI Analysis', icon: '🔍' },
-    { id: 'impact', label: 'Impact Metrics', icon: '🌱' },
-    { id: 'matching', label: 'Smart Matching', icon: '🎯' },
-    { id: 'trends', label: 'Market Trends', icon: '📈' },
-    { id: 'testing', label: 'API Testing', icon: '🧪' }
+    { id: 'analyze', label: 'AI Analysis', icon: <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clipRule="evenodd" /></svg> },
+    { id: 'impact', label: 'Impact Metrics', icon: <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z" /></svg> },
+    { id: 'matching', label: 'Smart Matching', icon: <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-8.293l-3-3a1 1 0 00-1.414 1.414L10.586 9.5H7a1 1 0 100 2h3.586l-1.293 1.293a1 1 0 101.414 1.414l3-3a1 1 0 000-1.414z" clipRule="evenodd" /></svg> },
+    { id: 'trends', label: 'Market Trends', icon: <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M3 3a1 1 0 000 2v8a2 2 0 002 2h2.586l-1.293 1.293a1 1 0 101.414 1.414L10 15.414l2.293 2.293a1 1 0 001.414-1.414L12.414 15H15a2 2 0 002-2V5a1 1 0 100-2H3zm11.707 4.707a1 1 0 00-1.414-1.414L10 9.586 8.707 8.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" /></svg> },
+    { id: 'testing', label: 'API Testing', icon: <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M2 5a2 2 0 012-2h8a2 2 0 012 2v10a2 2 0 002 2H4a2 2 0 01-2-2V5zm3 1h6v4H5V6zm6 6H5v2h6v-2z" clipRule="evenodd" /></svg> }
   ];
 
   return (
@@ -115,8 +115,8 @@ export default function AIDashboard() {
                   <div className="bg-blue-50 p-4 rounded">
                     <h4 className="font-medium text-blue-800">Economic Impact</h4>
                     <div className="grid grid-cols-2 gap-2 mt-2 text-sm">
-                      <div>Money Saved: ${userImpact.economicImpact.moneySaved}</div>
-                      <div>Value Created: ${userImpact.economicImpact.valueCreated}</div>
+                      <div>Money Saved: ₦{userImpact.economicImpact.moneySaved}</div>
+                      <div>Value Created: ₦{userImpact.economicImpact.valueCreated}</div>
                       <div>Transactions: {userImpact.economicImpact.transactionCount}</div>
                     </div>
                   </div>
@@ -128,7 +128,11 @@ export default function AIDashboard() {
               <h3 className="text-lg font-bold mb-4">Impact Visualization</h3>
               <div className="space-y-4">
                 <div className="text-center p-8 bg-gradient-to-br from-green-100 to-blue-100 rounded-lg">
-                  <div className="text-4xl mb-2">🌍</div>
+                  <div className="text-4xl mb-2">
+                    <svg className="w-16 h-16 mx-auto text-green-600" fill="currentColor" viewBox="0 0 20 20">
+                      <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM4.332 8.027a6.012 6.012 0 011.912-2.706C6.512 5.73 6.974 6 7.5 6A1.5 1.5 0 019 7.5V8a2 2 0 004 0 2 2 0 011.523-1.943A5.977 5.977 0 0116 10c0 .34-.028.675-.083 1H15a2 2 0 00-2 2v2.197A5.973 5.973 0 0110 16v-2a2 2 0 00-2-2 2 2 0 01-2-2 2 2 0 00-1.668-1.973z" clipRule="evenodd" />
+                    </svg>
+                  </div>
                   <div className="text-lg font-bold text-green-700">
                     Making a Difference
                   </div>

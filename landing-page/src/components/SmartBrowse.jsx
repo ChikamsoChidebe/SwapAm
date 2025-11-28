@@ -162,7 +162,7 @@ export default function SmartBrowse() {
 
               <div className="flex justify-between items-center">
                 <span className="font-bold text-lg">
-                  {item.exchangeType === 'sell' ? `$${item.price}` : item.exchangeType}
+                  {item.exchangeType === 'sell' ? `₦${item.price}` : item.exchangeType}
                 </span>
                 <button className="bg-yellow-500 text-white px-3 py-1 rounded text-sm hover:bg-yellow-600">
                   View Details

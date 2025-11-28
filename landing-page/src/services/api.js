@@ -1,7 +1,7 @@
 // Backend configuration
 const BACKENDS = {
-  JAVA: 'https://swapam-backend.onrender.com/api',
-  NODE: 'http://localhost:5000/api',
+  JAVA: 'https://swapam-backend.onrender.com',
+  NODE: 'http://localhost:5000',
   AI: 'http://13.218.91.146:8000'
 };
 
@@ -66,35 +66,60 @@ class ApiService {
 
   // Auth methods
   async register(userData) {
-    return this.request('/auth/register', {
+    const response = await this.request('/api/auth/register', {
       method: 'POST',
-      body: userData,
+      body: {
+        name: `${userData.firstName} ${userData.lastName}`,
+        email: userData.email,
+        password: userData.password,
+        role: 'STUDENT'
+      },
     });
+    
+    return {
+      token: response.token,
+      user: {
+        firstName: userData.firstName,
+        lastName: userData.lastName,
+        email: userData.email,
+        role: response.role
+      }
+    };
   }
 
   async login(email, password) {
-    return this.request('/auth/login', {
+    const response = await this.request('/api/auth/login', {
       method: 'POST',
       body: { email, password },
     });
+    
+    return {
+      token: response.token,
+      user: {
+        firstName: 'User',
+        lastName: '',
+        email: email,
+        role: response.role
+      }
+    };
   }
 
   async verifyEmail(email, code) {
-    return this.request('/auth/verify-email', {
+    return this.request('/api/auth/verify-email', {
       method: 'POST',
       body: { email, code },
     });
   }
 
   async forgotPassword(email) {
-    return this.request('/auth/forgot-password', {
+    return this.request('/api/auth/forgot-password', {
       method: 'POST',
       body: { email },
     });
   }
 
   async resetPassword(email, code, newPassword) {
-    return this.request('/auth/reset-password', {
+    return this.request('/api/auth/reset-password', {
       method: 'POST',
       body: { email, code, newPassword },
     });
@@ -102,11 +127,11 @@ class ApiService {
 
   // User methods
   async getProfile() {
-    return this.request('/users/profile');
+    return this.request('/api/users/profile');
   }
 
   async updateProfile(formData) {
-    return this.request('/users/profile', {
+    return this.request('/api/users/profile', {
       method: 'PUT',
       headers: {},
       body: formData,
@@ -114,11 +139,11 @@ class ApiService {
   }
 
   async getDashboardStats() {
-    return this.request('/users/dashboard-stats');
+    return this.request('/api/users/dashboard-stats');
   }
 
   async getMyItems(status = 'all') {
-    return this.request(`/users/my-items?status=${status}`);
+    return this.request(`/api/users/my-items?status=${status}`);
   }
 
   // Items methods
@@ -127,15 +152,15 @@ class ApiService {
     Object.entries(filters).forEach(([key, value]) => {
       if (value) params.append(key, value);
     });
-    return this.request(`/items?${params}`);
+    return this.request(`/api/items?${params}`);
   }
 
   async getItem(id) {
-    return this.request(`/items/${id}`);
+    return this.request(`/api/items/${id}`);
   }
 
   async createItem(formData) {
-    return this.request('/items', {
+    return this.request('/api/items', {
       method: 'POST',
       headers: {},
       body: formData,
@@ -143,7 +168,7 @@ class ApiService {
   }
 
   async updateItem(id, formData) {
-    return this.request(`/items/${id}`, {
+    return this.request(`/api/items/${id}`, {
       method: 'PUT',
       headers: {},
       body: formData,
@@ -151,42 +176,42 @@ class ApiService {
   }
 
   async deleteItem(id) {
-    return this.request(`/items/${id}`, {
+    return this.request(`/api/items/${id}`, {
       method: 'DELETE',
     });
   }
 
   async likeItem(id) {
-    return this.request(`/items/${id}/like`, {
+    return this.request(`/api/items/${id}/like`, {
       method: 'POST',
     });
   }
 
   async getCategories() {
-    return this.request('/categories');
+    return this.request('/api/categories');
   }
 
   // Swaps methods
   async createSwap(swapData) {
-    return this.request('/swaps', {
+    return this.request('/api/swaps', {
       method: 'POST',
       body: swapData,
     });
   }
 
   async getMySwaps(type = 'all') {
-    return this.request(`/swaps/my-swaps?type=${type}`);
+    return this.request(`/api/swaps/my-swaps?type=${type}`);
   }
 
   async updateSwapStatus(id, statusData) {
-    return this.request(`/swaps/${id}/status`, {
+    return this.request(`/api/swaps/${id}/status`, {
       method: 'PUT',
       body: statusData,
     });
   }
 
   async rateSwap(id, rating) {
-    return this.request(`/swaps/${id}/rate`, {
+    return this.request(`/api/swaps/${id}/rate`, {
       method: 'POST',
       body: { rating },
     });
@@ -195,7 +220,7 @@ class ApiService {
   // Health check
   async healthCheck() {
     try {
-      const response = await fetch(`${this.currentBackend}/health`);
+      const response = await fetch(`${this.currentBackend}/api/health`);
       return response.ok;
     } catch {
       return false;

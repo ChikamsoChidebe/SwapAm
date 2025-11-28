@@ -25,6 +25,7 @@ import Profile from "./dashboard/pages/Profile";
 import ItemDetails from "./dashboard/pages/ItemDetails";
 import ProtectedRoute from "./dashboard/components/ProtectedRoute";
 import AIDashboard from "./components/AIDashboard";
+import AIDashboardPage from "./dashboard/pages/AIDashboard";
 
 const LandingPage = () => (
   <div className="text-gray-800">
@@ -101,6 +102,11 @@ export default function App() {
               <ItemDetails />
             </ProtectedRoute>
           } />
+          <Route path="/dashboard/ai" element={
+            <ProtectedRoute>
+              <AIDashboardPage />
+            </ProtectedRoute>
+          } />
           <Route path="/ai-dashboard" element={<AIDashboard />} />
         </Routes>
         
@@ -116,8 +122,8 @@ export default function App() {
           ))}
         </div>
         
-        {/* Backend Status */}
-        <BackendStatus />
+        {/* Backend Status - Temporarily disabled */}
+        {/* <BackendStatus /> */}
         
         {/* Demo Login */}
         <DemoLogin />

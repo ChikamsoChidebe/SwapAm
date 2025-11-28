@@ -38,17 +38,24 @@ const SignUpPage = () => {
     
     setLoading(true);
     try {
+      console.log('Attempting registration with:', {
+        firstName: formData.firstName,
+        lastName: formData.lastName,
+        email: formData.email,
+        password: formData.password
+      });
+      
       const response = await register({
         firstName: formData.firstName,
         lastName: formData.lastName,
         email: formData.email,
-        university: formData.university,
-
         password: formData.password
       });
       
+      console.log('Registration successful:', response);
       navigate('/dashboard');
     } catch (error) {
+      console.error('Registration error:', error);
       setError(error.message || 'Registration failed');
     } finally {
       setLoading(false);

@@ -105,7 +105,7 @@ const AddItem = () => {
           <div className="grid grid-cols-2 gap-4">
             <input
               type="number"
-              placeholder="Price ($)"
+              placeholder="Price (₦)"
               value={formData.price}
               onChange={(e) => setFormData({...formData, price: e.target.value})}
               className="px-4 py-3 border rounded-lg focus:ring-2 focus:ring-[#137C5C]"

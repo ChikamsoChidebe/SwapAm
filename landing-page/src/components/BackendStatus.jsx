@@ -34,7 +34,7 @@ export default function BackendStatus() {
           }`}></div>
           <span>{backendInfo.current} Backend</span>
           <span className={isHealthy ? 'text-green-600' : 'text-red-600'}>
-            {isHealthy ? '●' : '●'}
+            {isHealthy ? 'Online' : 'Offline'}
           </span>
         </div>
       </div>

@@ -136,7 +136,7 @@ export default function AIItemUpload({ onItemAnalyzed }) {
           <div className="bg-green-50 p-4 rounded">
             <h4 className="font-medium text-green-800 mb-2">Valuation Results</h4>
             <div className="grid grid-cols-2 gap-2 text-sm">
-              <div>Estimated Value: <span className="font-bold">${valuation.estimatedValue}</span></div>
+              <div>Estimated Value: <span className="font-bold">₦{valuation.estimatedValue}</span></div>
               <div>Confidence: <span className="font-medium">{valuation.confidence}%</span></div>
             </div>
             

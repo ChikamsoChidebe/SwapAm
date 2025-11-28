@@ -176,7 +176,7 @@ const LoginPage = () => {
               disabled={loading}
               className="w-full bg-[#2E7D32] hover:bg-[#1B5E20] text-white font-semibold py-3 px-4 rounded-lg transition-all duration-300 transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed mb-3"
             >
-              {loading ? 'Logging in...' : '🚀 Try Demo Account'}
+              {loading ? 'Logging in...' : '⚡ Try Demo Account'}
             </button>
 
             <button 

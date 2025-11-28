@@ -16,7 +16,7 @@ export default function DemoLogin() {
   };
 
   return (
-    <div className="fixed bottom-4 left-4 z-50">
+    <div className="fixed bottom-4 right-4 z-50">
       <div className="bg-yellow-100 border border-yellow-300 rounded-lg p-3 shadow-lg">
         <div className="text-sm font-medium text-yellow-800 mb-2">
           Quick Demo Access

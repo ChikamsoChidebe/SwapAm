@@ -79,7 +79,7 @@ const MyItems = () => {
                 <h3 className="font-semibold text-gray-900 mb-2">{item.title || item.itemName}</h3>
                 <p className="text-sm text-gray-600 mb-2">{item.description}</p>
                 {(item.price || item.estimatedValue) && (
-                  <p className="text-lg font-bold text-[#137C5C] mb-2">${item.price || item.estimatedValue}</p>
+                  <p className="text-lg font-bold text-[#137C5C] mb-2">₦{item.price || item.estimatedValue}</p>
                 )}
                 <div className="flex justify-between items-center mb-3">
                   <span className={`px-2 py-1 text-xs rounded-full ${
