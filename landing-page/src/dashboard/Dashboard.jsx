@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import DashboardLayout from './DashboardLayout';
+import AgentMap from '../components/AgentMap';
 import apiService from '../services/api';
 
 const Dashboard = () => {
@@ -222,6 +223,9 @@ const Dashboard = () => {
           </div>
         )}
 
+        {/* Agent Map Section */}
+        <AgentMap />
+
         {/* Tips Section */}
         <div className="bg-gradient-to-r from-[#caac2a] to-[#fdd835] rounded-xl p-6 text-white">
           <div className="flex items-center gap-2 mb-2">
@@ -234,7 +238,7 @@ const Dashboard = () => {
             <li>• Add clear photos to get 3x more responses</li>
             <li>• Complete your profile to build trust</li>
             <li>• Respond quickly to increase your rating</li>
-            <li>• Use campus meeting points for safety</li>
+            <li>• Use campus agents for safe delivery</li>
           </ul>
         </div>
       </div>

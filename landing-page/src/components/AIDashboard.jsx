@@ -66,19 +66,24 @@ export default function AIDashboard() {
   ];
 
   return (
-    <div className="max-w-6xl mx-auto p-6">
-      <h1 className="text-3xl font-bold mb-6">AI-Powered SwapAm Dashboard</h1>
-      
-      {/* Tab Navigation */}
-      <div className="flex space-x-1 mb-6 bg-gray-100 p-1 rounded-lg">
+    <div className="min-h-screen bg-gradient-to-br from-[#137C5C] via-[#0f5132] to-[#0b3d2e] p-4 sm:p-6">
+      <div className="max-w-7xl mx-auto">
+        {/* Header Section */}
+        <div className="text-center mb-8">
+          <h1 className="text-4xl font-bold text-white mb-4">AI Dashboard</h1>
+          <p className="text-green-100 text-lg">Advanced AI features for smart campus trading</p>
+        </div>
+        
+        {/* Navigation Tabs */}
+        <div className="flex flex-wrap justify-center gap-2 mb-8 bg-white/10 backdrop-blur-sm p-3 rounded-2xl border border-white/20">
         {tabs.map(tab => (
           <button
             key={tab.id}
             onClick={() => setActiveTab(tab.id)}
-            className={`flex-1 py-2 px-4 rounded-md text-sm font-medium transition-colors ${
+            className={`flex-1 min-w-[80px] py-3 px-3 sm:px-4 rounded-lg text-xs sm:text-sm font-medium transition-all duration-300 ${
               activeTab === tab.id
-                ? 'bg-white text-blue-600 shadow-sm'
-                : 'text-gray-600 hover:text-gray-900'
+                ? 'bg-white text-[#137C5C] shadow-lg transform scale-105'
+                : 'text-white/80 hover:text-white hover:bg-white/10'
             }`}
           >
             <span className="mr-2">{tab.icon}</span>
@@ -86,18 +91,28 @@ export default function AIDashboard() {
           </button>
         ))}
       </div>
+      </div>
+      
 
-      {/* Tab Content */}
-      <div className="space-y-6">
-        {activeTab === 'analyze' && (
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            <AIItemUpload onItemAnalyzed={(data) => console.log('Item analyzed:', data)} />
-            <AIIntegration />
-          </div>
-        )}
 
-        {activeTab === 'impact' && (
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+        {/* Main Content Area */}
+        <div className="bg-white/95 backdrop-blur-sm rounded-3xl shadow-2xl p-8 border border-white/20">
+          <div className="space-y-8">
+            {activeTab === 'analyze' && (
+              <div className="space-y-6">
+                <h2 className="text-2xl font-bold text-gray-900 mb-6">AI Item Analysis</h2>
+                <div className="grid grid-cols-1 xl:grid-cols-2 gap-8">
+                  <AIItemUpload onItemAnalyzed={(data) => console.log('Item analyzed:', data)} />
+                  <AIIntegration />
+                </div>
+              </div>
+            )}
+
+            {activeTab === 'impact' && (
+              <div className="space-y-6">
+                <h2 className="text-2xl font-bold text-gray-900 mb-6">Environmental Impact</h2>
+                <div className="grid grid-cols-1 xl:grid-cols-2 gap-8">
             {userImpact && (
               <div className="bg-white p-6 rounded-lg shadow-lg">
                 <h3 className="text-lg font-bold mb-4">Your Environmental Impact</h3>
@@ -142,12 +157,14 @@ export default function AIDashboard() {
                 </div>
               </div>
             </div>
-          </div>
-        )}
+                </div>
+              </div>
+            )}
 
-        {activeTab === 'matching' && (
-          <div className="space-y-6">
-            <div className="bg-white p-6 rounded-lg shadow-lg">
+            {activeTab === 'matching' && (
+              <div className="space-y-6">
+                <h2 className="text-2xl font-bold text-gray-900 mb-6">Smart Matching</h2>
+                <div className="bg-white p-6 rounded-lg shadow-lg">
               <div className="flex justify-between items-center mb-4">
                 <h3 className="text-lg font-bold">AI-Powered Matching</h3>
                 <button
@@ -216,6 +233,7 @@ export default function AIDashboard() {
         {activeTab === 'testing' && (
           <AIEndpointTester />
         )}
+        </div>
       </div>
     </div>
   );

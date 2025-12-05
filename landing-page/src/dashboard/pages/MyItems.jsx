@@ -17,21 +17,30 @@ const MyItems = () => {
         const demoItems = [
           {
             id: 1,
-            itemName: 'My Calculus Book',
-            description: 'Used calculus textbook',
+            itemName: 'Calculus Textbook',
+            description: 'Engineering Mathematics textbook, excellent condition',
             status: 'AVAILABLE',
-            estimatedValue: 80,
+            estimatedValue: 8000,
             imageUrl: 'https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?w=400&h=300&fit=crop',
             createdAt: new Date().toISOString()
           },
           {
             id: 2,
             itemName: 'Gaming Headset',
-            description: 'Wireless gaming headset',
+            description: 'Wireless Bluetooth headset, barely used',
             status: 'AVAILABLE',
-            estimatedValue: 120,
+            estimatedValue: 12000,
             imageUrl: 'https://images.unsplash.com/photo-1599669454699-248893623440?w=400&h=300&fit=crop',
             createdAt: new Date().toISOString()
+          },
+          {
+            id: 3,
+            itemName: 'Study Lamp',
+            description: 'LED desk lamp with adjustable brightness',
+            status: 'SOLD',
+            estimatedValue: 3500,
+            imageUrl: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=300&fit=crop',
+            createdAt: new Date(Date.now() - 86400000).toISOString()
           }
         ];
         setItems(demoItems);

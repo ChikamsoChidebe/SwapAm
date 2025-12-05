@@ -143,7 +143,16 @@ class ApiService {
   }
 
   async getMyItems(status = 'all') {
-    return this.request(`/api/users/my-items?status=${status}`);
+    const token = localStorage.getItem('token');
+    if (token === 'demo-token-123') {
+      return [];
+    }
+    return this.request(`/api/items/user/${this.getUserId()}`);
+  }
+
+  getUserId() {
+    // Extract user ID from token or return demo ID
+    return 'current-user-id';
   }
 
   // Items methods

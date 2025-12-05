@@ -164,7 +164,9 @@ const Messages = () => {
         <div className="bg-white rounded-xl shadow-sm border border-gray-200 h-[calc(100vh-8rem)]">
           <div className="flex h-full">
             {/* Conversations List */}
-            <div className="w-1/3 border-r border-gray-200 flex flex-col">
+            <div className={`w-full lg:w-1/3 border-r border-gray-200 flex flex-col ${
+              selectedConversation ? 'hidden lg:flex' : 'flex'
+            }`}>
               <div className="p-4 border-b border-gray-200">
                 <h2 className="text-lg font-semibold text-gray-900">Messages</h2>
                 <p className="text-sm text-gray-500">{conversations.length} conversations</p>
@@ -208,13 +210,23 @@ const Messages = () => {
             </div>
 
             {/* Chat Area */}
-            <div className="flex-1 flex flex-col">
+            <div className={`flex-1 flex flex-col ${
+              selectedConversation ? 'flex' : 'hidden lg:flex'
+            }`}>
               {selectedConversation ? (
                 <>
                   {/* Chat Header */}
                   <div className="p-4 border-b border-gray-200 bg-gray-50">
                     <div className="flex items-center justify-between">
                       <div className="flex items-center space-x-3">
+                        <button
+                          onClick={() => setSelectedConversation(null)}
+                          className="lg:hidden p-2 hover:bg-gray-200 rounded-full"
+                        >
+                          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                          </svg>
+                        </button>
                         <div className="w-10 h-10 bg-gradient-to-r from-[#137C5C] to-[#0f5132] rounded-full flex items-center justify-center text-white font-bold">
                           {selectedConversation.participant.avatar}
                         </div>

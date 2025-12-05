@@ -16,8 +16,32 @@ const ItemDetails = () => {
 
   const loadItem = async () => {
     try {
-      const data = await apiService.getItem(id);
-      setItem(data);
+      const token = localStorage.getItem('token');
+      if (token === 'demo-token-123') {
+        // Demo item data
+        const demoItem = {
+          _id: id,
+          title: 'MacBook Pro 13" 2020',
+          description: 'Excellent condition MacBook Pro, perfect for students. Includes charger and original box.',
+          category: 'Electronics',
+          exchangeType: 'sell',
+          price: 85000,
+          condition: 'like-new',
+          location: 'University of Lagos, Akoka',
+          images: ['https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=600&h=400&fit=crop'],
+          owner: {
+            firstName: 'John',
+            lastName: 'Doe',
+            university: 'University of Lagos',
+            rating: 4.8
+          },
+          createdAt: new Date().toISOString()
+        };
+        setItem(demoItem);
+      } else {
+        const data = await apiService.getItem(id);
+        setItem(data);
+      }
     } catch (error) {
       console.error('Failed to load item:', error);
     } finally {
