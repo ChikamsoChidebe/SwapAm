@@ -69,20 +69,23 @@ class ApiService {
     const response = await this.request('/api/auth/register', {
       method: 'POST',
       body: {
-        name: `${userData.firstName} ${userData.lastName}`,
-        email: userData.email,
-        password: userData.password,
-        role: 'STUDENT'
-      },
-    });
-    
-    return {
-      token: response.token,
-      user: {
         firstName: userData.firstName,
         lastName: userData.lastName,
         email: userData.email,
-        role: response.role
+        password: userData.password
+      },
+    });
+    
+    if (response.token) {
+      this.setToken(response.token);
+    }
+    
+    return {
+      token: response.token,
+      user: response.user || {
+        firstName: userData.firstName,
+        lastName: userData.lastName,
+        email: userData.email
       }
     };
   }
@@ -93,13 +96,16 @@ class ApiService {
       body: { email, password },
     });
     
+    if (response.token) {
+      this.setToken(response.token);
+    }
+    
     return {
       token: response.token,
-      user: {
-        firstName: 'User',
-        lastName: '',
-        email: email,
-        role: response.role
+      user: response.user || {
+        firstName: response.firstName || 'User',
+        lastName: response.lastName || '',
+        email: email
       }
     };
   }
