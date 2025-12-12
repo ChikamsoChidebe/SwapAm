@@ -1,13 +1,13 @@
 // Backend configuration
 const BACKENDS = {
-  JAVA: 'https://swapam-backend.onrender.com',
-  NODE: 'http://localhost:5000',
+  NODE: 'https://swapam-backend-9zqk.onrender.com',
+  LOCAL: 'http://localhost:5000',
   AI: 'http://13.218.91.146:8000'
 };
 
-// Use Java backend as primary
-const API_BASE_URL = BACKENDS.JAVA; // Primary backend
-const FALLBACK_URL = BACKENDS.NODE; // Alternative backend
+// Use Node backend as primary
+const API_BASE_URL = BACKENDS.NODE; // Primary backend
+const FALLBACK_URL = BACKENDS.LOCAL; // Alternative backend
 const AI_BASE_URL = BACKENDS.AI; // AI services backend
 
 class ApiService {
