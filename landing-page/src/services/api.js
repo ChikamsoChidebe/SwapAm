@@ -54,9 +54,9 @@ class ApiService {
 
       return await response.json();
     } catch (error) {
-      // Fallback to Node backend if Java backend fails
+      // Fallback to local backend if primary backend fails
       if (this.currentBackend === API_BASE_URL) {
-        console.warn('Java backend failed, trying Node backend:', error.message);
+        console.warn('Primary backend failed, trying local backend:', error.message);
         this.currentBackend = FALLBACK_URL;
         return this.request(endpoint, options);
       }
