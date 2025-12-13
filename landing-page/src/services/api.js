@@ -1,13 +1,13 @@
 // Backend configuration
 const BACKENDS = {
+  JAVA: 'https://swapam-backend.onrender.com',
   NODE: 'https://swapam-backend-9zqk.onrender.com',
-  LOCAL: 'http://localhost:5000',
   AI: 'http://13.218.91.146:8000'
 };
 
-// Use Node backend as primary
-const API_BASE_URL = BACKENDS.NODE; // Primary backend
-const FALLBACK_URL = BACKENDS.LOCAL; // Alternative backend
+// Use Java backend as primary
+const API_BASE_URL = BACKENDS.JAVA; // Primary backend
+const FALLBACK_URL = BACKENDS.NODE; // Alternative backend
 const AI_BASE_URL = BACKENDS.AI; // AI services backend
 
 class ApiService {
@@ -54,9 +54,9 @@ class ApiService {
 
       return await response.json();
     } catch (error) {
-      // Fallback to local backend if primary backend fails
+      // Fallback to Node backend if Java backend fails
       if (this.currentBackend === API_BASE_URL) {
-        console.warn('Primary backend failed, trying local backend:', error.message);
+        console.warn('Java backend failed, trying Node backend:', error.message);
         this.currentBackend = FALLBACK_URL;
         return this.request(endpoint, options);
       }
@@ -69,10 +69,10 @@ class ApiService {
     const response = await this.request('/api/auth/register', {
       method: 'POST',
       body: {
-        firstName: userData.firstName,
-        lastName: userData.lastName,
+        name: `${userData.firstName} ${userData.lastName}`,
         email: userData.email,
-        password: userData.password
+        password: userData.password,
+        role: 'STUDENT'
       },
     });
     
@@ -82,10 +82,12 @@ class ApiService {
     
     return {
       token: response.token,
-      user: response.user || {
+      user: {
+        id: response.userId || response.id,
         firstName: userData.firstName,
         lastName: userData.lastName,
-        email: userData.email
+        email: userData.email,
+        role: response.role || 'STUDENT'
       }
     };
   }
@@ -102,10 +104,12 @@ class ApiService {
     
     return {
       token: response.token,
-      user: response.user || {
-        firstName: response.firstName || 'User',
-        lastName: response.lastName || '',
-        email: email
+      user: {
+        id: response.userId || response.id,
+        firstName: response.name || 'User',
+        lastName: '',
+        email: email,
+        role: response.role || 'USER'
       }
     };
   }
@@ -146,7 +150,7 @@ class ApiService {
 
   async getDashboardStats() {
     try {
-      return await this.request('/api/users/dashboard-stats');
+      return await this.request('/api/users/stats');
     } catch (error) {
       console.error('Failed to get dashboard stats:', error);
       // If endpoint doesn't exist, return default stats
@@ -166,7 +170,8 @@ class ApiService {
       return [];
     }
     try {
-      return await this.request('/api/users/my-items');
+      // Try Java backend endpoint first, fallback to Node endpoint
+      return await this.request('/api/items/user');
     } catch (error) {
       console.error('Failed to get my items:', error);
       return [];
@@ -216,16 +221,16 @@ class ApiService {
 
   async getCategories() {
     try {
-      return await this.request('/api/items/categories');
+      return await this.request('/api/categories');
     } catch (error) {
       console.error('Failed to get categories:', error);
       return [
-        { _id: '1', name: 'Books' },
-        { _id: '2', name: 'Electronics' },
-        { _id: '3', name: 'Clothing' },
-        { _id: '4', name: 'Furniture' },
-        { _id: '5', name: 'Sports' },
-        { _id: '6', name: 'Other' }
+        { id: 1, name: 'Books' },
+        { id: 2, name: 'Electronics' },
+        { id: 3, name: 'Clothing' },
+        { id: 4, name: 'Furniture' },
+        { id: 5, name: 'Sports' },
+        { id: 6, name: 'Other' }
       ];
     }
   }
@@ -390,7 +395,7 @@ class ApiService {
   // Get current backend info
   getBackendInfo() {
     return {
-      current: this.currentBackend === API_BASE_URL ? 'Node' : 'Local',
+      current: this.currentBackend === API_BASE_URL ? 'Java' : 'Node',
       url: this.currentBackend,
       ai: AI_BASE_URL
     };
