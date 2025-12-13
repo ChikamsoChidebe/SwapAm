@@ -32,7 +32,7 @@ export default function BackendStatus() {
           <div className={`w-2 h-2 rounded-full ${
             isHealthy ? 'bg-green-500' : 'bg-red-500'
           }`}></div>
-          <span>{backendInfo.current} Backend</span>
+          <span>SwapAm Backend</span>
           <span className={isHealthy ? 'text-green-600' : 'text-red-600'}>
             {isHealthy ? 'Online' : 'Offline'}
           </span>

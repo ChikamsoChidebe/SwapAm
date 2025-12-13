@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import DashboardLayout from '../DashboardLayout';
 import apiService from '../../services/api';
+import ItemCard from '../../components/ItemCard';
 
 const BrowseItems = () => {
   const navigate = useNavigate();
@@ -142,28 +143,11 @@ const BrowseItems = () => {
         {/* Items Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6">
           {items.map((item) => (
-            <div key={item._id} className="bg-white rounded-xl shadow-sm border hover:shadow-md transition-shadow">
-              <img
-                src={item.images?.[0] || 'https://images.unsplash.com/photo-1560472354-b33ff0c44a43?w=400&h=300&fit=crop'}
-                alt={item.title}
-                className="w-full h-48 object-cover rounded-t-xl"
-              />
-              <div className="p-4">
-                <h3 className="font-semibold text-gray-900 mb-2">{item.title}</h3>
-                <p className="text-sm text-gray-600 mb-3">{item.description}</p>
-                <div className="flex justify-between items-center">
-                  <span className="px-2 py-1 bg-[#137C5C] text-white text-xs rounded-full">
-                    {item.exchangeType}
-                  </span>
-                  <button 
-                    onClick={() => navigate(`/dashboard/item/${item._id}`)}
-                    className="px-4 py-2 bg-[#fdd835] text-black rounded-lg hover:bg-[#f9c74f] transition-colors"
-                  >
-                    View Details
-                  </button>
-                </div>
-              </div>
-            </div>
+            <ItemCard 
+              key={item._id} 
+              item={item} 
+              onViewDetails={() => navigate(`/dashboard/item/${item._id}`)}
+            />
           ))}
         </div>
       </div>

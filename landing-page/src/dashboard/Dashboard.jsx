@@ -46,11 +46,29 @@ const Dashboard = () => {
         };
         setStats(demoStats);
       } else {
-        const data = await apiService.getDashboardStats();
-        setStats(data);
+        try {
+          const data = await apiService.getDashboardStats();
+          setStats(data);
+        } catch (error) {
+          // If backend doesn't have dashboard stats endpoint, use default values
+          setStats({
+            totalItems: 0,
+            activeItems: 0,
+            completedSwaps: 0,
+            campusPoints: 0,
+            recentItems: []
+          });
+        }
       }
     } catch (error) {
       console.error('Failed to load dashboard stats:', error);
+      setStats({
+        totalItems: 0,
+        activeItems: 0,
+        completedSwaps: 0,
+        campusPoints: 0,
+        recentItems: []
+      });
     } finally {
       setLoading(false);
     }
@@ -76,7 +94,7 @@ const Dashboard = () => {
               <div>
                 <div className="flex items-center gap-3 mb-3">
                   <h1 className="text-3xl sm:text-4xl font-bold">
-                    Welcome back, {user?.firstName}!
+                    Welcome back, {user?.firstName || 'User'}!
                   </h1>
                   <svg className="w-8 h-8 text-green-200" fill="currentColor" viewBox="0 0 20 20">
                     <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />

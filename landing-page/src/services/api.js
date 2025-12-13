@@ -145,7 +145,19 @@ class ApiService {
   }
 
   async getDashboardStats() {
-    return this.request('/api/users/dashboard-stats');
+    try {
+      return await this.request('/api/users/dashboard-stats');
+    } catch (error) {
+      console.error('Failed to get dashboard stats:', error);
+      // If endpoint doesn't exist, return default stats
+      return {
+        totalItems: 0,
+        activeItems: 0,
+        completedSwaps: 0,
+        campusPoints: 0,
+        recentItems: []
+      };
+    }
   }
 
   async getMyItems(status = 'all') {
@@ -153,12 +165,12 @@ class ApiService {
     if (token === 'demo-token-123') {
       return [];
     }
-    return this.request(`/api/items/user/${this.getUserId()}`);
-  }
-
-  getUserId() {
-    // Extract user ID from token or return demo ID
-    return 'current-user-id';
+    try {
+      return await this.request('/api/users/my-items');
+    } catch (error) {
+      console.error('Failed to get my items:', error);
+      return [];
+    }
   }
 
   // Items methods
@@ -203,7 +215,19 @@ class ApiService {
   }
 
   async getCategories() {
-    return this.request('/api/categories');
+    try {
+      return await this.request('/api/items/categories');
+    } catch (error) {
+      console.error('Failed to get categories:', error);
+      return [
+        { _id: '1', name: 'Books' },
+        { _id: '2', name: 'Electronics' },
+        { _id: '3', name: 'Clothing' },
+        { _id: '4', name: 'Furniture' },
+        { _id: '5', name: 'Sports' },
+        { _id: '6', name: 'Other' }
+      ];
+    }
   }
 
   // Swaps methods
@@ -366,7 +390,7 @@ class ApiService {
   // Get current backend info
   getBackendInfo() {
     return {
-      current: this.currentBackend === API_BASE_URL ? 'Java' : 'Node',
+      current: this.currentBackend === API_BASE_URL ? 'Node' : 'Local',
       url: this.currentBackend,
       ai: AI_BASE_URL
     };

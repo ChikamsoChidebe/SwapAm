@@ -1,8 +1,11 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import DashboardLayout from '../DashboardLayout';
 import apiService from '../../services/api';
+import ItemCard from '../../components/ItemCard';
 
 const MyItems = () => {
+  const navigate = useNavigate();
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -71,48 +74,23 @@ const MyItems = () => {
       <div className="space-y-6">
         <div className="flex justify-between items-center">
           <h1 className="text-2xl font-bold text-gray-900">My Items</h1>
-          <button className="px-4 py-2 bg-[#137C5C] text-white rounded-lg hover:bg-[#0f5132]">
+          <button 
+            onClick={() => navigate('/dashboard/add-item')}
+            className="px-4 py-2 bg-[#137C5C] text-white rounded-lg hover:bg-[#0f5132]"
+          >
             + Add New Item
           </button>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {items.map((item) => (
-            <div key={item._id || item.id} className="bg-white rounded-xl shadow-sm border">
-              <img
-                src={item.images?.[0] || item.imageUrl || 'https://images.unsplash.com/photo-1560472354-b33ff0c44a43?w=400&h=300&fit=crop'}
-                alt={item.itemName}
-                className="w-full h-48 object-cover rounded-t-xl"
-              />
-              <div className="p-4">
-                <h3 className="font-semibold text-gray-900 mb-2">{item.title || item.itemName}</h3>
-                <p className="text-sm text-gray-600 mb-2">{item.description}</p>
-                {(item.price || item.estimatedValue) && (
-                  <p className="text-lg font-bold text-[#137C5C] mb-2">₦{item.price || item.estimatedValue}</p>
-                )}
-                <div className="flex justify-between items-center mb-3">
-                  <span className={`px-2 py-1 text-xs rounded-full ${
-                    item.status === 'AVAILABLE' ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'
-                  }`}>
-                    {item.status}
-                  </span>
-                  <span className="text-xs text-gray-500">
-                    {new Date(item.createdAt).toLocaleDateString()}
-                  </span>
-                </div>
-                <div className="flex gap-2">
-                  <button className="flex-1 px-3 py-2 bg-[#137C5C] text-white rounded-lg text-sm hover:bg-[#0f5132]">
-                    Edit
-                  </button>
-                  <button 
-                    onClick={() => handleDelete(item.id)}
-                    className="flex-1 px-3 py-2 border border-red-300 text-red-600 rounded-lg text-sm hover:bg-red-50"
-                  >
-                    Delete
-                  </button>
-                </div>
-              </div>
-            </div>
+            <ItemCard 
+              key={item._id || item.id} 
+              item={item} 
+              showActions={true}
+              onEdit={(item) => console.log('Edit item:', item)}
+              onDelete={handleDelete}
+            />
           ))}
         </div>
       </div>

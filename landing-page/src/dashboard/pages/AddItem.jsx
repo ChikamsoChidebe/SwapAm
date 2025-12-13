@@ -35,7 +35,9 @@ const AddItem = () => {
         submitData.append('images', file);
       });
       
-      await apiService.createItem(submitData);
+      const result = await apiService.createItem(submitData);
+      console.log('Item created successfully:', result);
+      alert('Item created successfully!');
       navigate('/dashboard/my-items');
     } catch (error) {
       console.error('Failed to create item:', error);
