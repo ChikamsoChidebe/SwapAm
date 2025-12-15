@@ -26,6 +26,7 @@ import ItemDetails from "./dashboard/pages/ItemDetails";
 import ProtectedRoute from "./dashboard/components/ProtectedRoute";
 import AIDashboard from "./components/AIDashboard";
 import AIDashboardPage from "./dashboard/pages/AIDashboard";
+import ErrorBoundary from "./components/ErrorBoundary";
 
 const LandingPage = () => (
   <div className="text-gray-800">
@@ -54,8 +55,9 @@ export default function App() {
   };
 
   return (
-    <AuthProvider>
-      <Router>
+    <ErrorBoundary>
+      <AuthProvider>
+        <Router>
         <Routes>
           <Route path="/" element={<LandingPage />} />
           <Route path="/signup" element={<SignUpPage />} />
@@ -122,12 +124,10 @@ export default function App() {
           ))}
         </div>
         
-        {/* Backend Status - Temporarily disabled */}
-        {/* <BackendStatus /> */}
-        
         {/* Demo Login */}
         <DemoLogin />
-      </Router>
-    </AuthProvider>
+        </Router>
+      </AuthProvider>
+    </ErrorBoundary>
   );
 }

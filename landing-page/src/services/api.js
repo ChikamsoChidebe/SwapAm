@@ -55,10 +55,17 @@ class ApiService {
       return await response.json();
     } catch (error) {
       // Fallback to Node backend if Java backend fails
-      if (this.currentBackend === API_BASE_URL) {
+      if (this.currentBackend === API_BASE_URL && !options.skipFallback) {
         console.warn('Java backend failed, trying Node backend:', error.message);
+        const originalBackend = this.currentBackend;
         this.currentBackend = FALLBACK_URL;
-        return this.request(endpoint, options);
+        try {
+          const result = await this.request(endpoint, { ...options, skipFallback: true });
+          return result;
+        } catch (fallbackError) {
+          this.currentBackend = originalBackend;
+          throw error;
+        }
       }
       throw error;
     }
@@ -150,10 +157,28 @@ class ApiService {
 
   async getDashboardStats() {
     try {
-      return await this.request('/api/users/stats');
+      // Try Java backend endpoint first
+      if (this.currentBackend === API_BASE_URL) {
+        try {
+          return await this.request('/api/users/stats', { skipFallback: true });
+        } catch (javaError) {
+          console.warn('Java backend stats endpoint failed, trying Node backend');
+          // Switch to Node backend and try its endpoint
+          const originalBackend = this.currentBackend;
+          this.currentBackend = FALLBACK_URL;
+          try {
+            return await this.request('/api/users/dashboard-stats', { skipFallback: true });
+          } catch (nodeError) {
+            this.currentBackend = originalBackend;
+            throw javaError;
+          }
+        }
+      } else {
+        return await this.request('/api/users/dashboard-stats');
+      }
     } catch (error) {
       console.error('Failed to get dashboard stats:', error);
-      // If endpoint doesn't exist, return default stats
+      // If both endpoints fail, return default stats
       return {
         totalItems: 0,
         activeItems: 0,
@@ -170,8 +195,25 @@ class ApiService {
       return [];
     }
     try {
-      // Try Java backend endpoint first, fallback to Node endpoint
-      return await this.request('/api/items/user');
+      // Try Java backend endpoint first
+      if (this.currentBackend === API_BASE_URL) {
+        try {
+          return await this.request('/api/items/user', { skipFallback: true });
+        } catch (javaError) {
+          console.warn('Java backend my-items endpoint failed, trying Node backend');
+          // Switch to Node backend and try its endpoint
+          const originalBackend = this.currentBackend;
+          this.currentBackend = FALLBACK_URL;
+          try {
+            return await this.request('/api/users/my-items', { skipFallback: true });
+          } catch (nodeError) {
+            this.currentBackend = originalBackend;
+            throw javaError;
+          }
+        }
+      } else {
+        return await this.request('/api/users/my-items');
+      }
     } catch (error) {
       console.error('Failed to get my items:', error);
       return [];
@@ -221,7 +263,25 @@ class ApiService {
 
   async getCategories() {
     try {
-      return await this.request('/api/categories');
+      // Try Java backend endpoint first
+      if (this.currentBackend === API_BASE_URL) {
+        try {
+          return await this.request('/api/categories', { skipFallback: true });
+        } catch (javaError) {
+          console.warn('Java backend categories endpoint failed, trying Node backend');
+          // Switch to Node backend and try its endpoint
+          const originalBackend = this.currentBackend;
+          this.currentBackend = FALLBACK_URL;
+          try {
+            return await this.request('/api/items/categories', { skipFallback: true });
+          } catch (nodeError) {
+            this.currentBackend = originalBackend;
+            throw javaError;
+          }
+        }
+      } else {
+        return await this.request('/api/items/categories');
+      }
     } catch (error) {
       console.error('Failed to get categories:', error);
       return [
