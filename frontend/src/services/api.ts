@@ -61,229 +61,100 @@ api.interceptors.response.use(
 
 // API service classes
 export class AuthAPI {
-  async login(data: { email: string; password: string; rememberMe?: boolean }) {
+  async login(data: { email: string; password: string }) {
     return api.post('/auth/login', data);
   }
 
-  async register(data: any) {
+  async register(data: { name: string; email: string; password: string; role?: string }) {
     return api.post('/auth/register', data);
   }
 
-  async logout() {
-    return api.post('/auth/logout');
-  }
-
-  async refreshToken(data: { refreshToken: string }) {
-    return api.post('/auth/refresh', data);
-  }
-
-  async forgotPassword(data: { email: string }) {
-    return api.post('/auth/forgot-password', data);
-  }
-
-  async resetPassword(data: { token: string; password: string }) {
-    return api.post('/auth/reset-password', data);
-  }
-
-  async verifyEmail(data: { token: string }) {
-    return api.post('/auth/verify-email', data);
-  }
-
-  async getProfile() {
-    return api.get('/users/profile');
-  }
-
-  async updateProfile(data: any) {
-    return api.put('/users/profile', data);
+  async whoami() {
+    return api.get('/swaps/whoami');
   }
 }
 
 export class ItemsAPI {
-  async getItems(params?: any) {
-    return api.get('/items', { params });
+  async getItems() {
+    return api.get('/items');
   }
 
   async getItemById(id: string) {
     return api.get(`/items/${id}`);
   }
 
-  async createItem(data: any) {
+  async createItem(data: { itemName: string; description: string; categoryId: number; imageUrl?: string; estimatedValue?: number }) {
     return api.post('/items', data);
-  }
-
-  async updateItem(id: string, data: any) {
-    return api.put(`/items/${id}`, data);
   }
 
   async deleteItem(id: string) {
     return api.delete(`/items/${id}`);
   }
 
-  async likeItem(id: string) {
-    return api.post(`/items/${id}/like`);
+  async getItemsByUserId(userId: string) {
+    return api.get(`/items/user/${userId}`);
+  }
+}
+
+export class CategoriesAPI {
+  async getCategories() {
+    return api.get('/categories');
   }
 
-  async unlikeItem(id: string) {
-    return api.delete(`/items/${id}/like`);
+  async getCategoryById(id: string) {
+    return api.get(`/categories/${id}`);
   }
 
-  async searchItems(filters: any) {
-    return api.post('/items/search', filters);
+  async createCategory(data: { name: string; description: string }) {
+    return api.post('/categories', data);
   }
 
-  async uploadImages(id: string, files: FormData) {
-    return api.post(`/items/${id}/images`, files, {
-      headers: {
-        'Content-Type': 'multipart/form-data',
-      },
-    });
+  async updateCategory(id: string, data: { name: string; description: string }) {
+    return api.put(`/categories/${id}`, data);
+  }
+
+  async deleteCategory(id: string) {
+    return api.delete(`/categories/${id}`);
   }
 }
 
 export class SwapsAPI {
-  async getSwaps(params?: any) {
-    return api.get('/swaps', { params });
-  }
-
-  async getSwapById(id: string) {
-    return api.get(`/swaps/${id}`);
-  }
-
-  async createSwap(data: any) {
-    return api.post('/swaps', data);
-  }
-
-  async updateSwap(id: string, data: any) {
-    return api.put(`/swaps/${id}`, data);
+  async requestSwap(data: { itemAId: number; itemBId: number }) {
+    return api.post('/swaps/request', data);
   }
 
   async acceptSwap(id: string) {
-    return api.post(`/swaps/${id}/accept`);
+    return api.put(`/swaps/${id}/accept`);
   }
 
   async rejectSwap(id: string) {
-    return api.post(`/swaps/${id}/reject`);
+    return api.put(`/swaps/${id}/reject`);
   }
 
   async cancelSwap(id: string) {
-    return api.post(`/swaps/${id}/cancel`);
+    return api.delete(`/swaps/${id}`);
   }
 
-  async completeSwap(id: string) {
-    return api.post(`/swaps/${id}/complete`);
+  async getOutgoingSwaps() {
+    return api.get('/swaps/outgoing');
   }
 
-  async rateSwap(id: string, data: any) {
-    return api.post(`/swaps/${id}/rate`, data);
-  }
-}
-
-export class ChatAPI {
-  async getChatRooms() {
-    return api.get('/chat/rooms');
+  async getIncomingSwaps() {
+    return api.get('/swaps/incoming');
   }
 
-  async getChatRoom(id: string) {
-    return api.get(`/chat/rooms/${id}`);
-  }
-
-  async sendMessage(roomId: string, data: any) {
-    return api.post(`/chat/rooms/${roomId}/messages`, data);
-  }
-
-  async getMessages(roomId: string, params?: any) {
-    return api.get(`/chat/rooms/${roomId}/messages`, { params });
-  }
-
-  async markAsRead(roomId: string) {
-    return api.post(`/chat/rooms/${roomId}/read`);
+  async getPendingIncomingSwaps() {
+    return api.get('/swaps/incoming/pending');
   }
 }
 
-export class NotificationsAPI {
-  async getNotifications() {
-    return api.get('/notifications');
-  }
-
-  async markNotificationRead(id: string) {
-    return api.put(`/notifications/${id}/read`);
-  }
-
-  async markAllNotificationsRead() {
-    return api.put('/notifications/read-all');
-  }
-
-  async updateNotificationSettings(data: any) {
-    return api.put('/notifications/settings', data);
-  }
-}
-
-export class UploadAPI {
-  async uploadImage(file: File, options?: any) {
-    const formData = new FormData();
-    formData.append('file', file);
-    if (options) {
-      formData.append('options', JSON.stringify(options));
-    }
-
-    return api.post('/upload/image', formData, {
-      headers: {
-        'Content-Type': 'multipart/form-data',
-      },
-    });
-  }
-
-  async uploadVideo(file: File, options?: any) {
-    const formData = new FormData();
-    formData.append('file', file);
-    if (options) {
-      formData.append('options', JSON.stringify(options));
-    }
-
-    return api.post('/upload/video', formData, {
-      headers: {
-        'Content-Type': 'multipart/form-data',
-      },
-    });
-  }
-
-  async uploadDocument(file: File) {
-    const formData = new FormData();
-    formData.append('file', file);
-
-    return api.post('/upload/document', formData, {
-      headers: {
-        'Content-Type': 'multipart/form-data',
-      },
-    });
-  }
-}
-
-export class AIAPI {
-  async valuateItem(data: any) {
-    return api.post('/ai/valuate', data);
-  }
-
-  async generateDescription(data: any) {
-    return api.post('/ai/description', data);
-  }
-
-  async categorizeItem(data: any) {
-    return api.post('/ai/categorize', data);
-  }
-
-  async detectDuplicates(data: any) {
-    return api.post('/ai/duplicates', data);
-  }
-}
+// Note: Chat, Notifications, Upload, and AI APIs are not implemented in the Java backend yet
+// These can be added when the corresponding backend endpoints are created
 
 // Export API instances
 export const authAPI = new AuthAPI();
 export const itemsAPI = new ItemsAPI();
+export const categoriesAPI = new CategoriesAPI();
 export const swapsAPI = new SwapsAPI();
-export const chatAPI = new ChatAPI();
-export const notificationsAPI = new NotificationsAPI();
-export const uploadAPI = new UploadAPI();
-export const aiAPI = new AIAPI();
 
 export default api;

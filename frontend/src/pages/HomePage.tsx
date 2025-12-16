@@ -30,6 +30,7 @@ import {
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
+import BackendTest from '../components/common/BackendTest';
 
 // Hero Section Component
 const HeroSection: React.FC = () => {
@@ -704,6 +705,14 @@ const HomePage: React.FC = () => {
 
       <Box sx={{ overflow: 'hidden' }}>
         <HeroSection />
+        
+        {/* Temporary Backend Test Component */}
+        <Box sx={{ py: 4, backgroundColor: '#f5f5f5' }}>
+          <Container maxWidth="md">
+            <BackendTest />
+          </Container>
+        </Box>
+        
         <StatsSection />
         <HowItWorksSection />
         <TestimonialsSection />

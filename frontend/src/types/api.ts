@@ -144,33 +144,33 @@ export interface ApiEndpoints {
 export interface LoginRequest {
   email: string;
   password: string;
-  rememberMe?: boolean;
 }
 
 export interface LoginResponse {
-  user: User;
-  accessToken: string;
-  refreshToken: string;
-  expiresIn: number;
+  token: string;
+  user: {
+    id: number;
+    name: string;
+    email: string;
+    role: string;
+  };
 }
 
 export interface RegisterRequest {
+  name: string;
   email: string;
   password: string;
-  firstName: string;
-  lastName: string;
-  username: string;
-  campus: string;
-  department?: string;
-  year?: number;
-  phone?: string;
+  role?: string;
 }
 
 export interface RegisterResponse {
-  user: User;
-  accessToken: string;
-  refreshToken: string;
-  verificationRequired: boolean;
+  token: string;
+  user: {
+    id: number;
+    name: string;
+    email: string;
+    role: string;
+  };
 }
 
 export interface RefreshTokenRequest {
@@ -194,16 +194,10 @@ export interface ResetPasswordRequest {
 }
 
 export interface CreateItemRequest {
-  title: string;
+  itemName: string;
   description: string;
-  category: ItemCategory;
-  subcategory: string;
-  condition: ItemCondition;
-  images: string[];
-  videos?: string[];
-  tags: string[];
-  specifications: Record<string, any>;
-  location: Location;
+  categoryId: number;
+  imageUrl?: string;
   estimatedValue?: number;
 }
 
@@ -232,11 +226,8 @@ export interface SearchItemsResponse {
 }
 
 export interface CreateSwapRequest {
-  recipientId: string;
-  initiatorItems: string[];
-  recipientItems: string[];
-  message?: string;
-  pointsDifference?: number;
+  itemAId: number;
+  itemBId: number;
 }
 
 export interface UpdateSwapRequest {
