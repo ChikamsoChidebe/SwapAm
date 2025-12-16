@@ -4,7 +4,17 @@ import { useAuth } from '../context/AuthContext';
 
 const LoginPage = () => {
   const navigate = useNavigate();
-  const { login, demoLogin } = useAuth();
+  
+  let login, demoLogin;
+  try {
+    const auth = useAuth();
+    login = auth?.login;
+    demoLogin = auth?.demoLogin;
+  } catch (error) {
+    // AuthProvider not available, use fallback
+    login = null;
+    demoLogin = null;
+  }
   const [formData, setFormData] = useState({
     email: '',
     password: '',
@@ -27,7 +37,12 @@ const LoginPage = () => {
     setLoading(true);
     
     try {
-      await login(formData.email, formData.password);
+      if (login) {
+        await login(formData.email, formData.password);
+      } else {
+        // Fallback when auth context not available
+        throw new Error('Authentication service not available');
+      }
       navigate('/dashboard');
     } catch (error) {
       setError(error.message || 'Login failed');

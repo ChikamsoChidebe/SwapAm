@@ -3,10 +3,19 @@ import { useAuth } from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
 
 export default function DemoLogin() {
-  const { demoLogin } = useAuth();
   const navigate = useNavigate();
+  
+  let demoLogin;
+  try {
+    const auth = useAuth();
+    demoLogin = auth?.demoLogin;
+  } catch (error) {
+    // AuthProvider not available, render nothing
+    return null;
+  }
 
   const handleDemoLogin = async () => {
+    if (!demoLogin) return;
     try {
       await demoLogin();
       navigate('/dashboard');
