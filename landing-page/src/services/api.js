@@ -12,18 +12,25 @@ const AI_BASE_URL = BACKENDS.AI; // AI services backend
 
 class ApiService {
   constructor() {
-    this.token = localStorage.getItem('token');
+    // Check for real JWT token first, fallback to old token key
+    this.token = localStorage.getItem('jwtToken') || localStorage.getItem('token');
     this.currentBackend = API_BASE_URL;
   }
 
   setToken(token) {
-    this.token = token;
-    localStorage.setItem('token', token);
+    // Only store real JWT tokens, not demo tokens
+    if (token && token !== 'demo-token-123') {
+      this.token = token;
+      localStorage.setItem('jwtToken', token);
+    } else {
+      this.token = token; // Keep demo token in memory only
+    }
   }
 
   removeToken() {
     this.token = null;
-    localStorage.removeItem('token');
+    localStorage.removeItem('jwtToken');
+    localStorage.removeItem('token'); // Clean up old token key too
   }
 
   async request(endpoint, options = {}) {
@@ -36,7 +43,8 @@ class ApiService {
       ...options,
     };
 
-    if (this.token) {
+    // Only add Authorization header if we have a real token (not demo)
+    if (this.token && this.token !== 'demo-token-123') {
       config.headers.Authorization = `Bearer ${this.token}`;
     }
 
