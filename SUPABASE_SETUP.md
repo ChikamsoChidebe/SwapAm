@@ -23,7 +23,7 @@ const supabaseAnonKey = 'YOUR_ANON_KEY'
 ```
 
 ## 4. Create Database Tables
-
+ 
 Go to SQL Editor in Supabase dashboard and run:
 
 ```sql

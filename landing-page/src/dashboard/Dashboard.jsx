@@ -17,39 +17,8 @@ const Dashboard = () => {
 
   const loadDashboardStats = async () => {
     try {
-      const token = localStorage.getItem('token');
-      if (token === 'demo-token-123') {
-        // Demo mode - use mock data
-        const demoStats = {
-          totalItems: 8,
-          activeItems: 5,
-          completedSwaps: 15,
-          campusPoints: 250,
-          recentItems: [
-            {
-              _id: '1',
-              title: 'Calculus Textbook',
-              createdAt: new Date().toISOString(),
-              views: 24,
-              likes: [1, 2, 3],
-              status: 'available'
-            },
-            {
-              _id: '2', 
-              title: 'iPhone Charger',
-              createdAt: new Date(Date.now() - 86400000).toISOString(),
-              views: 12,
-              likes: [1, 2],
-              status: 'pending'
-            }
-          ]
-        };
-        setStats(demoStats);
-      } else {
-        // Real mode - fetch from backend
-        const data = await apiService.getDashboardStats();
-        setStats(data);
-      }
+      const data = await apiService.getDashboardStats();
+      setStats(data);
     } catch (error) {
       console.error('Failed to load dashboard stats:', error);
       // Fallback to empty stats on error
