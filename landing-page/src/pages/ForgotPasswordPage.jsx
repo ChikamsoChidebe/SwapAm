@@ -12,6 +12,20 @@ const ForgotPasswordPage = () => {
 
   return (
     <div className="min-h-screen bg-gray-50 flex">
+      {/* Mobile Header */}
+      <div className="lg:hidden fixed top-0 left-0 right-0 bg-white shadow-sm z-10 p-4">
+        <div className="flex items-center justify-between">
+          <button onClick={() => navigate('/')} className="flex items-center gap-2">
+            <img src="/SWAPAM LOGO.jpg" alt="SwapAm" className="w-8 h-8 rounded-full" />
+            <span className="font-bold text-[#2E7D32]">SwapAm</span>
+          </button>
+          <button onClick={() => navigate('/')} className="text-gray-600 hover:text-gray-800">
+            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
+        </div>
+      </div>
       {/* Left Side - Green Section with Logo */}
       <div className="hidden lg:flex lg:w-1/2 bg-gradient-to-br from-[#2E7D32] to-[#1B5E20] relative overflow-hidden">
         <div className="absolute inset-0 opacity-10">
@@ -40,7 +54,7 @@ const ForgotPasswordPage = () => {
       </div>
 
       {/* Right Side - Forgot Password Form */}
-      <div className="w-full lg:w-1/2 flex items-center justify-center p-8">
+      <div className="w-full lg:w-1/2 flex items-center justify-center p-4 lg:p-8 pt-20 lg:pt-8">
         <div className="w-full max-w-md">
           <div className="text-center mb-8">
             <div className="mb-4">

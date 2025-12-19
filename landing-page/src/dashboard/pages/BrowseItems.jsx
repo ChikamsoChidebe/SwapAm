@@ -20,8 +20,27 @@ const BrowseItems = () => {
 
   const loadItems = async () => {
     try {
-      const data = await apiService.getItems(filters);
-      setItems(Array.isArray(data) ? data : []);
+      const token = localStorage.getItem('token');
+      if (token === 'demo-token-123') {
+        // Demo mode - show mock data
+        const mockItems = [
+          {
+            _id: '1',
+            title: 'MacBook Pro 13" 2020',
+            description: 'Excellent condition, barely used. Perfect for students.',
+            category: 'Electronics',
+            exchange_type: 'sell',
+            price: 85000,
+            condition: 'like-new',
+            images: ['https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=400&h=300&fit=crop'],
+            owner: { first_name: 'John', last_name: 'Doe' }
+          }
+        ];
+        setItems(mockItems);
+      } else {
+        const data = await apiService.getItems(filters);
+        setItems(Array.isArray(data) ? data : []);
+      }
     } catch (error) {
       console.error('Failed to load items:', error);
       setItems([]);

@@ -84,6 +84,13 @@ export const AuthProvider = ({ children }) => {
   };
 
   const demoLogin = async () => {
+    // Sign out from Supabase first
+    try {
+      await supabaseService.signOut();
+    } catch (error) {
+      console.log('No Supabase session to sign out');
+    }
+    
     // Create demo user data
     const demoUser = {
       id: 'demo-user',
@@ -132,6 +139,8 @@ export const AuthProvider = ({ children }) => {
       localStorage.removeItem('token');
       localStorage.removeItem('user');
     } else {
+      // Sign out from Supabase
+      supabaseService.signOut().catch(console.error);
       apiService.removeToken();
     }
     setUser(null);
