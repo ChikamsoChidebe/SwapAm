@@ -237,22 +237,6 @@ export default function ModernAIDashboard() {
             <span className="text-sm">Export Report</span>
           </button>
         </div>
-          
-          <button 
-            onClick={generatePredictions}
-            disabled={isLoading}
-            className="bg-gradient-to-r from-green-500 to-teal-600 rounded-2xl p-6 text-white font-semibold hover:shadow-2xl transform hover:scale-105 transition-all duration-300 disabled:opacity-50">
-            <svg className="w-8 h-8 mb-2 mx-auto" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-8.293l-3-3a1 1 0 00-1.414 1.414L10.586 9.5H7a1 1 0 100 2h3.586l-1.293 1.293a1 1 0 101.414 1.414l3-3a1 1 0 000-1.414z" clipRule="evenodd" /></svg>
-            Generate Predictions
-          </button>
-          
-          <button 
-            onClick={exportReport}
-            className="bg-gradient-to-r from-orange-500 to-red-600 rounded-2xl p-6 text-white font-semibold hover:shadow-2xl transform hover:scale-105 transition-all duration-300">
-            <svg className="w-8 h-8 mb-2 mx-auto" fill="currentColor" viewBox="0 0 20 20"><path d="M3 4a1 1 0 011-1h12a1 1 0 011 1v2a1 1 0 01-1 1H4a1 1 0 01-1-1V4zM3 10a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H4a1 1 0 01-1-1v-6zM14 9a1 1 0 00-1 1v6a1 1 0 001 1h2a1 1 0 001-1v-6a1 1 0 00-1-1h-2z" /></svg>
-            Export Report
-          </button>
-        </div>
       </div>
     </div>
   );
