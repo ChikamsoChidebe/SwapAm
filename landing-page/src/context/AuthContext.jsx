@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import apiService from '../services/api';
+import supabaseService from '../services/supabase';
 
 const AuthContext = createContext();
 
@@ -26,13 +27,42 @@ export const AuthProvider = ({ children }) => {
         }
         setLoading(false);
       } else {
+        // Check if using Supabase
+        checkSupabaseAuth();
+      }
+    } else {
+      // Check Supabase session on app start
+      checkSupabaseAuth();
+    }
+  }, []);
+
+  const checkSupabaseAuth = async () => {
+    try {
+      const currentUser = await supabaseService.getCurrentUser();
+      if (currentUser) {
+        const profile = await supabaseService.getProfile(currentUser.id);
+        setUser({
+          id: currentUser.id,
+          firstName: profile?.first_name || currentUser.user_metadata?.first_name || 'User',
+          lastName: profile?.last_name || currentUser.user_metadata?.last_name || '',
+          email: currentUser.email,
+          university: profile?.university,
+          campusPoints: profile?.campus_points || 0,
+          totalSwaps: profile?.total_swaps || 0
+        });
+      }
+    } catch (error) {
+      console.error('Supabase auth check failed:', error);
+      // Fallback to traditional token check
+      const token = localStorage.getItem('token');
+      if (token && token !== 'demo-token-123') {
         apiService.setToken(token);
         loadUser();
       }
-    } else {
+    } finally {
       setLoading(false);
     }
-  }, []);
+  };
 
   const loadUser = async () => {
     try {

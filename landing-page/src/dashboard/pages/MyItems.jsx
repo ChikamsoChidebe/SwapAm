@@ -48,11 +48,13 @@ const MyItems = () => {
         ];
         setItems(demoItems);
       } else {
+        // Real mode - fetch from backend
         const data = await apiService.getMyItems();
         setItems(Array.isArray(data) ? data : []);
       }
     } catch (error) {
       console.error('Failed to load items:', error);
+      setItems([]);
     } finally {
       setLoading(false);
     }

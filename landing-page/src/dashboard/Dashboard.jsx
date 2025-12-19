@@ -46,22 +46,13 @@ const Dashboard = () => {
         };
         setStats(demoStats);
       } else {
-        try {
-          const data = await apiService.getDashboardStats();
-          setStats(data);
-        } catch (error) {
-          // If backend doesn't have dashboard stats endpoint, use default values
-          setStats({
-            totalItems: 0,
-            activeItems: 0,
-            completedSwaps: 0,
-            campusPoints: 0,
-            recentItems: []
-          });
-        }
+        // Real mode - fetch from backend
+        const data = await apiService.getDashboardStats();
+        setStats(data);
       }
     } catch (error) {
       console.error('Failed to load dashboard stats:', error);
+      // Fallback to empty stats on error
       setStats({
         totalItems: 0,
         activeItems: 0,

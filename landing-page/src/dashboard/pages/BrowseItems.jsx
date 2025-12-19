@@ -91,6 +91,7 @@ const BrowseItems = () => {
         ];
         setItems(mockItems);
       } else {
+        // Real mode - fetch from backend
         const data = await apiService.getItems(filters);
         setItems(Array.isArray(data) ? data : []);
       }

@@ -1,13 +1,15 @@
+import supabaseService from './supabase.js';
+
 // Backend configuration
 const BACKENDS = {
+  NODE: 'http://localhost:5000', // Local Node.js backend
   JAVA: 'https://swapam-backend.onrender.com',
-  NODE: 'https://swapam-backend-9zqk.onrender.com',
   AI: 'http://13.218.91.146:8000'
 };
 
-// Use Java backend as primary
-const API_BASE_URL = BACKENDS.JAVA; // Primary backend
-const FALLBACK_URL = BACKENDS.NODE; // Alternative backend
+// Use Supabase as primary, Node backend as fallback
+const USE_SUPABASE = true;
+const API_BASE_URL = BACKENDS.NODE; // Fallback backend
 const AI_BASE_URL = BACKENDS.AI; // AI services backend
 
 class ApiService {
@@ -81,13 +83,46 @@ class ApiService {
 
   // Auth methods
   async register(userData) {
+    if (USE_SUPABASE) {
+      try {
+        const { user, session } = await supabaseService.signUp(
+          userData.email,
+          userData.password,
+          {
+            firstName: userData.firstName,
+            lastName: userData.lastName,
+            university: userData.university || 'Default University'
+          }
+        );
+        
+        if (session?.access_token) {
+          this.setToken(session.access_token);
+        }
+        
+        return {
+          token: session?.access_token,
+          user: {
+            id: user?.id,
+            firstName: userData.firstName,
+            lastName: userData.lastName,
+            email: userData.email
+          }
+        };
+      } catch (error) {
+        console.error('Supabase registration failed:', error);
+        throw error;
+      }
+    }
+    
+    // Fallback to Node.js backend
     const response = await this.request('/api/auth/register', {
       method: 'POST',
       body: {
-        name: `${userData.firstName} ${userData.lastName}`,
+        firstName: userData.firstName,
+        lastName: userData.lastName,
         email: userData.email,
         password: userData.password,
-        role: 'STUDENT'
+        university: userData.university || 'Default University'
       },
     });
     
@@ -97,17 +132,40 @@ class ApiService {
     
     return {
       token: response.token,
-      user: {
+      user: response.user || {
         id: response.userId || response.id,
         firstName: userData.firstName,
         lastName: userData.lastName,
-        email: userData.email,
-        role: response.role || 'STUDENT'
+        email: userData.email
       }
     };
   }
 
   async login(email, password) {
+    if (USE_SUPABASE) {
+      try {
+        const { user, session } = await supabaseService.signIn(email, password);
+        
+        if (session?.access_token) {
+          this.setToken(session.access_token);
+        }
+        
+        return {
+          token: session?.access_token,
+          user: {
+            id: user?.id,
+            firstName: user?.user_metadata?.first_name || 'User',
+            lastName: user?.user_metadata?.last_name || '',
+            email: user?.email
+          }
+        };
+      } catch (error) {
+        console.error('Supabase login failed:', error);
+        throw error;
+      }
+    }
+    
+    // Fallback to Node.js backend
     const response = await this.request('/api/auth/login', {
       method: 'POST',
       body: { email, password },
@@ -119,12 +177,11 @@ class ApiService {
     
     return {
       token: response.token,
-      user: {
+      user: response.user || {
         id: response.userId || response.id,
-        firstName: response.name || 'User',
-        lastName: '',
-        email: email,
-        role: response.role || 'USER'
+        firstName: response.firstName || response.name || 'User',
+        lastName: response.lastName || '',
+        email: email
       }
     };
   }
@@ -152,6 +209,19 @@ class ApiService {
 
   // User methods
   async getProfile() {
+    if (USE_SUPABASE) {
+      try {
+        const user = await supabaseService.getCurrentUser();
+        if (user) {
+          return await supabaseService.getProfile(user.id);
+        }
+        throw new Error('No authenticated user');
+      } catch (error) {
+        console.error('Supabase getProfile failed:', error);
+        throw error;
+      }
+    }
+    
     return this.request('/api/users/profile');
   }
 
@@ -164,29 +234,29 @@ class ApiService {
   }
 
   async getDashboardStats() {
-    try {
-      // Try Java backend endpoint first
-      if (this.currentBackend === API_BASE_URL) {
-        try {
-          return await this.request('/api/users/stats', { skipFallback: true });
-        } catch (javaError) {
-          console.warn('Java backend stats endpoint failed, trying Node backend');
-          // Switch to Node backend and try its endpoint
-          const originalBackend = this.currentBackend;
-          this.currentBackend = FALLBACK_URL;
-          try {
-            return await this.request('/api/users/dashboard-stats', { skipFallback: true });
-          } catch (nodeError) {
-            this.currentBackend = originalBackend;
-            throw javaError;
-          }
+    if (USE_SUPABASE) {
+      try {
+        const user = await supabaseService.getCurrentUser();
+        if (user) {
+          return await supabaseService.getDashboardStats(user.id);
         }
-      } else {
-        return await this.request('/api/users/dashboard-stats');
+        throw new Error('No authenticated user');
+      } catch (error) {
+        console.error('Supabase getDashboardStats failed:', error);
+        return {
+          totalItems: 0,
+          activeItems: 0,
+          completedSwaps: 0,
+          campusPoints: 0,
+          recentItems: []
+        };
       }
+    }
+    
+    try {
+      return await this.request('/api/users/dashboard-stats');
     } catch (error) {
       console.error('Failed to get dashboard stats:', error);
-      // If both endpoints fail, return default stats
       return {
         totalItems: 0,
         activeItems: 0,
@@ -202,26 +272,22 @@ class ApiService {
     if (token === 'demo-token-123') {
       return [];
     }
-    try {
-      // Try Java backend endpoint first
-      if (this.currentBackend === API_BASE_URL) {
-        try {
-          return await this.request('/api/items/user', { skipFallback: true });
-        } catch (javaError) {
-          console.warn('Java backend my-items endpoint failed, trying Node backend');
-          // Switch to Node backend and try its endpoint
-          const originalBackend = this.currentBackend;
-          this.currentBackend = FALLBACK_URL;
-          try {
-            return await this.request('/api/users/my-items', { skipFallback: true });
-          } catch (nodeError) {
-            this.currentBackend = originalBackend;
-            throw javaError;
-          }
+    
+    if (USE_SUPABASE) {
+      try {
+        const user = await supabaseService.getCurrentUser();
+        if (user) {
+          return await supabaseService.getMyItems(user.id);
         }
-      } else {
-        return await this.request('/api/users/my-items');
+        return [];
+      } catch (error) {
+        console.error('Supabase getMyItems failed:', error);
+        return [];
       }
+    }
+    
+    try {
+      return await this.request('/api/users/my-items');
     } catch (error) {
       console.error('Failed to get my items:', error);
       return [];
@@ -230,6 +296,15 @@ class ApiService {
 
   // Items methods
   async getItems(filters = {}) {
+    if (USE_SUPABASE) {
+      try {
+        return await supabaseService.getItems(filters);
+      } catch (error) {
+        console.error('Supabase getItems failed:', error);
+        return [];
+      }
+    }
+    
     const params = new URLSearchParams();
     Object.entries(filters).forEach(([key, value]) => {
       if (value) params.append(key, value);
@@ -242,6 +317,42 @@ class ApiService {
   }
 
   async createItem(formData) {
+    if (USE_SUPABASE) {
+      try {
+        const user = await supabaseService.getCurrentUser();
+        if (!user) throw new Error('No authenticated user');
+        
+        // Extract form data
+        const itemData = {
+          title: formData.get('title'),
+          description: formData.get('description'),
+          category: formData.get('category'),
+          condition: formData.get('condition'),
+          exchange_type: formData.get('exchangeType'),
+          price: formData.get('price') ? parseFloat(formData.get('price')) : null,
+          owner_id: user.id
+        };
+        
+        // Handle image uploads
+        const imageFiles = formData.getAll('images');
+        if (imageFiles.length > 0) {
+          const imageUrls = [];
+          for (const file of imageFiles) {
+            if (file.size > 0) {
+              const url = await supabaseService.uploadImage(file);
+              imageUrls.push(url);
+            }
+          }
+          itemData.images = imageUrls;
+        }
+        
+        return await supabaseService.createItem(itemData);
+      } catch (error) {
+        console.error('Supabase createItem failed:', error);
+        throw error;
+      }
+    }
+    
     return this.request('/api/items', {
       method: 'POST',
       headers: {},
@@ -271,25 +382,7 @@ class ApiService {
 
   async getCategories() {
     try {
-      // Try Java backend endpoint first
-      if (this.currentBackend === API_BASE_URL) {
-        try {
-          return await this.request('/api/categories', { skipFallback: true });
-        } catch (javaError) {
-          console.warn('Java backend categories endpoint failed, trying Node backend');
-          // Switch to Node backend and try its endpoint
-          const originalBackend = this.currentBackend;
-          this.currentBackend = FALLBACK_URL;
-          try {
-            return await this.request('/api/items/categories', { skipFallback: true });
-          } catch (nodeError) {
-            this.currentBackend = originalBackend;
-            throw javaError;
-          }
-        }
-      } else {
-        return await this.request('/api/items/categories');
-      }
+      return await this.request('/api/items/categories');
     } catch (error) {
       console.error('Failed to get categories:', error);
       return [
