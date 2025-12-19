@@ -1,18 +1,64 @@
-import React from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
 
 export default function DemoLogin() {
   const navigate = useNavigate();
+  const [position, setPosition] = useState({ x: window.innerWidth - 120, y: window.innerHeight - 120 });
+  const [isDragging, setIsDragging] = useState(false);
+  const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 });
+  const bannerRef = useRef(null);
   
   let demoLogin;
   try {
     const auth = useAuth();
     demoLogin = auth?.demoLogin;
   } catch (error) {
-    // AuthProvider not available, render nothing
     return null;
   }
+
+  useEffect(() => {
+    const handleResize = () => {
+      setPosition(prev => ({
+        x: Math.min(prev.x, window.innerWidth - 120),
+        y: Math.min(prev.y, window.innerHeight - 120)
+      }));
+    };
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  const handleMouseDown = (e) => {
+    setIsDragging(true);
+    const rect = bannerRef.current.getBoundingClientRect();
+    setDragOffset({
+      x: e.clientX - rect.left,
+      y: e.clientY - rect.top
+    });
+  };
+
+  const handleMouseMove = (e) => {
+    if (!isDragging) return;
+    setPosition({
+      x: Math.max(0, Math.min(e.clientX - dragOffset.x, window.innerWidth - 120)),
+      y: Math.max(0, Math.min(e.clientY - dragOffset.y, window.innerHeight - 120))
+    });
+  };
+
+  const handleMouseUp = () => {
+    setIsDragging(false);
+  };
+
+  useEffect(() => {
+    if (isDragging) {
+      document.addEventListener('mousemove', handleMouseMove);
+      document.addEventListener('mouseup', handleMouseUp);
+      return () => {
+        document.removeEventListener('mousemove', handleMouseMove);
+        document.removeEventListener('mouseup', handleMouseUp);
+      };
+    }
+  }, [isDragging, dragOffset]);
 
   const handleDemoLogin = async () => {
     if (!demoLogin) return;
@@ -25,7 +71,12 @@ export default function DemoLogin() {
   };
 
   return (
-    <div className="fixed bottom-6 right-6 z-40">
+    <div 
+      ref={bannerRef}
+      className="fixed z-40 cursor-move select-none"
+      style={{ left: position.x, top: position.y }}
+      onMouseDown={handleMouseDown}
+    >
       <div className="bg-gradient-to-br from-[#137C5C] to-[#0f5132] rounded-xl p-3 shadow-xl border border-white/20">
         <div className="flex flex-col gap-2">
           <button

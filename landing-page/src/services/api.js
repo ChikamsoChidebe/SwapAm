@@ -10,6 +10,7 @@ const BACKENDS = {
 // Use Supabase as primary, Node backend as fallback
 const USE_SUPABASE = true;
 const API_BASE_URL = BACKENDS.NODE; // Fallback backend
+const FALLBACK_URL = BACKENDS.JAVA; // Second fallback
 const AI_BASE_URL = BACKENDS.AI; // AI services backend
 
 class ApiService {
