@@ -1,4 +1,4 @@
-import supabaseService from './supabase.js';
+import supabaseService, { supabase } from './supabase.js';
 
 // Backend configuration
 const BACKENDS = {
@@ -316,7 +316,7 @@ class ApiService {
   async getItem(id) {
     if (USE_SUPABASE) {
       try {
-        const { data, error } = await supabaseService.supabase
+        const { data, error } = await supabase
           .from('items')
           .select(`
             *,
@@ -566,7 +566,31 @@ class ApiService {
         ]
       };
     }
-    return this.request('/matching/recommendations');
+    
+    if (USE_SUPABASE) {
+      try {
+        // Get recent items from Supabase as recommendations
+        const { data, error } = await supabase
+          .from('items')
+          .select('title, category')
+          .eq('status', 'available')
+          .order('created_at', { ascending: false })
+          .limit(3);
+        
+        if (error) throw error;
+        
+        return {
+          recommendations: data || []
+        };
+      } catch (error) {
+        console.error('Failed to load recommendations from Supabase:', error);
+        // Return empty recommendations on error
+        return { recommendations: [] };
+      }
+    }
+    
+    // Fallback - don't call the Java backend endpoint that doesn't exist
+    return { recommendations: [] };
   }
 
   async getSimilarItems(itemId) {

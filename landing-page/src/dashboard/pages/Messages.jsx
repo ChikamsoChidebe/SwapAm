@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import DashboardLayout from '../DashboardLayout';
 import { useAuth } from '../../context/AuthContext';
+import supabaseService from '../../services/supabase';
 
 const Messages = () => {
   const { user } = useAuth();
@@ -14,9 +15,27 @@ const Messages = () => {
     loadConversations();
   }, []);
 
+  useEffect(() => {
+    if (selectedConversation) {
+      // Subscribe to new messages for the selected conversation
+      const subscription = supabaseService.subscribeToMessages(
+        selectedConversation.id,
+        (payload) => {
+          if (payload.eventType === 'INSERT') {
+            setMessages(prev => [...prev, payload.new]);
+          }
+        }
+      );
+
+      return () => {
+        subscription.unsubscribe();
+      };
+    }
+  }, [selectedConversation]);
+
   const loadConversations = async () => {
     try {
-      const token = localStorage.getItem('token');
+      const token = localStorage.getItem('jwtToken') || localStorage.getItem('token');
       if (token === 'demo-token-123') {
         // Demo data
         const demoConversations = [
@@ -36,11 +55,29 @@ const Messages = () => {
         setConversations(demoConversations);
         setSelectedConversation(demoConversations[0]);
         loadMessages(demoConversations[0].id);
-      } else {
-        setConversations([]);
+      } else if (user?.id) {
+        // Load real conversations from Supabase
+        const realConversations = await supabaseService.getConversations(user.id);
+        const formattedConversations = realConversations.map(conv => {
+          const otherUser = conv.user1_id === user.id ? conv.user2 : conv.user1;
+          return {
+            id: conv.id,
+            participant: {
+              name: `${otherUser.first_name} ${otherUser.last_name}`,
+              avatar: `${otherUser.first_name[0]}${otherUser.last_name[0]}`,
+              lastSeen: 'Online'
+            },
+            lastMessage: 'Start a conversation',
+            timestamp: new Date(conv.last_message_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+            unread: 0,
+            item: 'General'
+          };
+        });
+        setConversations(formattedConversations);
       }
     } catch (error) {
       console.error('Failed to load conversations:', error);
+      setConversations([]);
     } finally {
       setLoading(false);
     }
@@ -48,78 +85,92 @@ const Messages = () => {
 
   const loadMessages = async (conversationId) => {
     try {
-      // Demo messages
-      const demoMessages = [
-        {
-          id: 1,
-          senderId: 'other',
-          senderName: 'Sarah Johnson',
-          content: 'Hi! I saw your listing for the Calculus textbook. Is it still available?',
-          timestamp: '2:25 PM',
-          type: 'text'
-        },
-        {
-          id: 2,
-          senderId: user?.id,
-          senderName: user?.firstName + ' ' + user?.lastName,
-          content: 'Yes, it\'s still available! It\'s in great condition.',
-          timestamp: '2:27 PM',
-          type: 'text'
-        },
-        {
-          id: 3,
-          senderId: 'other',
-          senderName: 'Sarah Johnson',
-          content: 'Perfect! What\'s your asking price?',
-          timestamp: '2:28 PM',
-          type: 'text'
-        },
-        {
-          id: 4,
-          senderId: user?.id,
-          senderName: user?.firstName + ' ' + user?.lastName,
-          content: 'I\'m asking $80, but I\'m open to negotiation.',
-          timestamp: '2:29 PM',
-          type: 'text'
-        },
-        {
-          id: 5,
-          senderId: 'other',
-          senderName: 'Sarah Johnson',
-          content: 'Is the textbook still available?',
-          timestamp: '2:30 PM',
-          type: 'text'
-        }
-      ];
-      setMessages(demoMessages);
+      const token = localStorage.getItem('jwtToken') || localStorage.getItem('token');
+      if (token === 'demo-token-123') {
+        // Demo messages
+        const demoMessages = [
+          {
+            id: 1,
+            sender_id: 'other',
+            sender: { first_name: 'Sarah', last_name: 'Johnson' },
+            content: 'Hi! I saw your listing for the Calculus textbook. Is it still available?',
+            created_at: new Date(Date.now() - 300000).toISOString(),
+          },
+          {
+            id: 2,
+            sender_id: user?.id,
+            sender: { first_name: user?.firstName, last_name: user?.lastName },
+            content: 'Yes, it\'s still available! It\'s in great condition.',
+            created_at: new Date(Date.now() - 180000).toISOString(),
+          },
+          {
+            id: 3,
+            sender_id: 'other',
+            sender: { first_name: 'Sarah', last_name: 'Johnson' },
+            content: 'Perfect! What\'s your asking price?',
+            created_at: new Date(Date.now() - 120000).toISOString(),
+          },
+          {
+            id: 4,
+            sender_id: user?.id,
+            sender: { first_name: user?.firstName, last_name: user?.lastName },
+            content: 'I\'m asking ₦80, but I\'m open to negotiation.',
+            created_at: new Date(Date.now() - 60000).toISOString(),
+          },
+          {
+            id: 5,
+            sender_id: 'other',
+            sender: { first_name: 'Sarah', last_name: 'Johnson' },
+            content: 'Is the textbook still available?',
+            created_at: new Date().toISOString(),
+          }
+        ];
+        setMessages(demoMessages);
+      } else {
+        // Load real messages from Supabase
+        const realMessages = await supabaseService.getMessages(conversationId);
+        setMessages(realMessages);
+      }
     } catch (error) {
       console.error('Failed to load messages:', error);
+      setMessages([]);
     }
   };
 
   const sendMessage = async () => {
-    if (!newMessage.trim()) return;
+    if (!newMessage.trim() || !selectedConversation) return;
 
-    const message = {
-      id: Date.now(),
-      senderId: user?.id,
-      senderName: user?.firstName + ' ' + user?.lastName,
-      content: newMessage,
-      timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-      type: 'text'
-    };
+    try {
+      const token = localStorage.getItem('jwtToken') || localStorage.getItem('token');
+      if (token === 'demo-token-123') {
+        // Demo mode - add message locally
+        const message = {
+          id: Date.now(),
+          sender_id: user?.id,
+          sender: { first_name: user?.firstName, last_name: user?.lastName },
+          content: newMessage,
+          created_at: new Date().toISOString(),
+        };
+        setMessages(prev => [...prev, message]);
+      } else {
+        // Real mode - send via Supabase
+        const otherUserId = selectedConversation.participant.id || 'demo-user';
+        await supabaseService.sendMessage(user.id, otherUserId, newMessage);
+      }
 
-    setMessages(prev => [...prev, message]);
-    setNewMessage('');
+      setNewMessage('');
 
-    // Update conversation last message
-    setConversations(prev => 
-      prev.map(conv => 
-        conv.id === selectedConversation?.id 
-          ? { ...conv, lastMessage: newMessage, timestamp: 'now' }
-          : conv
-      )
-    );
+      // Update conversation last message
+      setConversations(prev => 
+        prev.map(conv => 
+          conv.id === selectedConversation?.id 
+            ? { ...conv, lastMessage: newMessage, timestamp: 'now' }
+            : conv
+        )
+      );
+    } catch (error) {
+      console.error('Failed to send message:', error);
+    }
   };
 
   const handleKeyPress = (e) => {
@@ -228,22 +279,22 @@ const Messages = () => {
                     {messages.map((message) => (
                       <div
                         key={message.id}
-                        className={`flex ${message.senderId === user?.id ? 'justify-end' : 'justify-start'}`}
+                        className={`flex ${message.sender_id === user?.id ? 'justify-end' : 'justify-start'}`}
                       >
                         <div className={`max-w-xs lg:max-w-md px-4 py-2 rounded-lg ${
-                          message.senderId === user?.id
+                          message.sender_id === user?.id
                             ? 'bg-[#137C5C] text-white'
                             : 'bg-gray-200 text-gray-900'
                         }`}>
                           <p className="text-sm">{message.content}</p>
                           <p className={`text-xs mt-1 ${
-                            message.senderId === user?.id ? 'text-green-100' : 'text-gray-500'
+                            message.sender_id === user?.id ? 'text-green-100' : 'text-gray-500'
                           }`}>
-                            {message.timestamp}
+                            {new Date(message.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                           </p>
                         </div>
                       </div>
-                    ))}
+                    ))}}
                   </div>
 
                   {/* Message Input */}

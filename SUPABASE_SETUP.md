@@ -70,10 +70,33 @@ CREATE TABLE public.swaps (
   created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
 
+-- Messages table for real-time chat
+CREATE TABLE public.messages (
+  id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
+  conversation_id UUID REFERENCES public.conversations(id) NOT NULL,
+  sender_id UUID REFERENCES public.users(id) NOT NULL,
+  receiver_id UUID REFERENCES public.users(id) NOT NULL,
+  content TEXT NOT NULL,
+  read BOOLEAN DEFAULT FALSE,
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+-- Conversations table
+CREATE TABLE public.conversations (
+  id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
+  user1_id UUID REFERENCES public.users(id) NOT NULL,
+  user2_id UUID REFERENCES public.users(id) NOT NULL,
+  last_message_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+  UNIQUE(user1_id, user2_id)
+);
+
 -- Row Level Security (RLS)
 ALTER TABLE public.users ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.items ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.swaps ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.messages ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.conversations ENABLE ROW LEVEL SECURITY;
 
 -- Users policies
 CREATE POLICY "Users can view all profiles" ON public.users FOR SELECT USING (true);
@@ -91,6 +114,16 @@ CREATE POLICY "Users can delete own items" ON public.items FOR DELETE USING (aut
 CREATE POLICY "Users can view own swaps" ON public.swaps FOR SELECT USING (auth.uid() = requester_id OR auth.uid() = owner_id);
 CREATE POLICY "Users can create swaps" ON public.swaps FOR INSERT WITH CHECK (auth.uid() = requester_id);
 CREATE POLICY "Users can update swaps they're involved in" ON public.swaps FOR UPDATE USING (auth.uid() = requester_id OR auth.uid() = owner_id);
+
+-- Messages policies
+CREATE POLICY "Users can view their messages" ON public.messages FOR SELECT USING (auth.uid() = sender_id OR auth.uid() = receiver_id);
+CREATE POLICY "Users can send messages" ON public.messages FOR INSERT WITH CHECK (auth.uid() = sender_id);
+CREATE POLICY "Users can update their received messages" ON public.messages FOR UPDATE USING (auth.uid() = receiver_id);
+
+-- Conversations policies
+CREATE POLICY "Users can view their conversations" ON public.conversations FOR SELECT USING (auth.uid() = user1_id OR auth.uid() = user2_id);
+CREATE POLICY "Users can create conversations" ON public.conversations FOR INSERT WITH CHECK (auth.uid() = user1_id OR auth.uid() = user2_id);
+CREATE POLICY "Users can update their conversations" ON public.conversations FOR UPDATE USING (auth.uid() = user1_id OR auth.uid() = user2_id);
 ```
 
 ## 5. Set up Storage

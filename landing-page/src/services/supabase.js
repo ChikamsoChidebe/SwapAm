@@ -47,7 +47,8 @@ Swaps table:
 class SupabaseService {
   // Auth methods
   async signUp(email, password, userData) {
-    const { data, error } = await supabase.auth.signUp({
+    // First sign up the user
+    const { data: authData, error: authError } = await supabase.auth.signUp({
       email,
       password,
       options: {
@@ -59,8 +60,25 @@ class SupabaseService {
       }
     })
     
-    if (error) throw error
-    return data
+    if (authError) throw authError
+    
+    // Create user profile in public.users table
+    if (authData.user) {
+      const { error: profileError } = await supabase
+        .from('users')
+        .insert([{
+          id: authData.user.id,
+          first_name: userData.firstName,
+          last_name: userData.lastName,
+          university: userData.university,
+          campus_points: 0,
+          total_swaps: 0
+        }])
+      
+      if (profileError) console.error('Profile creation error:', profileError)
+    }
+    
+    return authData
   }
 
   async signIn(email, password) {
@@ -269,6 +287,105 @@ class SupabaseService {
           schema: 'public', 
           table: 'items',
           filter: `owner_id=eq.${userId}`
+        }, 
+        callback
+      )
+      .subscribe()
+  }
+
+  // Chat methods
+  async getConversations(userId) {
+    const { data, error } = await supabase
+      .from('conversations')
+      .select(`
+        *,
+        user1:users!conversations_user1_id_fkey(id, first_name, last_name),
+        user2:users!conversations_user2_id_fkey(id, first_name, last_name)
+      `)
+      .or(`user1_id.eq.${userId},user2_id.eq.${userId}`)
+      .order('last_message_at', { ascending: false })
+    
+    if (error) throw error
+    return data
+  }
+
+  async getMessages(conversationId) {
+    const { data, error } = await supabase
+      .from('messages')
+      .select(`
+        *,
+        sender:users!messages_sender_id_fkey(id, first_name, last_name)
+      `)
+      .eq('conversation_id', conversationId)
+      .order('created_at', { ascending: true })
+    
+    if (error) throw error
+    return data
+  }
+
+  async sendMessage(senderId, receiverId, content) {
+    // First, find or create conversation
+    let { data: conversation } = await supabase
+      .from('conversations')
+      .select('id')
+      .or(`and(user1_id.eq.${senderId},user2_id.eq.${receiverId}),and(user1_id.eq.${receiverId},user2_id.eq.${senderId})`)
+      .single()
+    
+    if (!conversation) {
+      const { data: newConv, error: convError } = await supabase
+        .from('conversations')
+        .insert([{
+          user1_id: senderId,
+          user2_id: receiverId
+        }])
+        .select()
+        .single()
+      
+      if (convError) throw convError
+      conversation = newConv
+    }
+    
+    // Send message
+    const { data, error } = await supabase
+      .from('messages')
+      .insert([{
+        sender_id: senderId,
+        receiver_id: receiverId,
+        content,
+        conversation_id: conversation.id
+      }])
+      .select()
+      .single()
+    
+    if (error) throw error
+    
+    // Update conversation last_message_at
+    await supabase
+      .from('conversations')
+      .update({ last_message_at: new Date().toISOString() })
+      .eq('id', conversation.id)
+    
+    return data
+  }
+
+  async markMessageAsRead(messageId) {
+    const { error } = await supabase
+      .from('messages')
+      .update({ read: true })
+      .eq('id', messageId)
+    
+    if (error) throw error
+  }
+
+  subscribeToMessages(conversationId, callback) {
+    return supabase
+      .channel(`messages-${conversationId}`)
+      .on('postgres_changes', 
+        { 
+          event: 'INSERT', 
+          schema: 'public', 
+          table: 'messages',
+          filter: `conversation_id=eq.${conversationId}`
         }, 
         callback
       )
