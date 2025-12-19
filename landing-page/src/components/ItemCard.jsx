@@ -14,7 +14,7 @@ const ItemCard = ({ item, onViewDetails, onEdit, onDelete, showActions = false }
         <h3 className="font-semibold text-gray-900 mb-2">{item.title || item.itemName}</h3>
         <p className="text-sm text-gray-600 mb-3 line-clamp-2">{item.description}</p>
         
-        {(item.price || item.estimatedValue) && (
+        {((item.exchange_type === 'sell' || item.exchangeType === 'sell') && (item.price || item.estimatedValue)) && (
           <p className="text-lg font-bold text-[#137C5C] mb-2">
             ₦{item.price || item.estimatedValue}
           </p>
@@ -22,13 +22,13 @@ const ItemCard = ({ item, onViewDetails, onEdit, onDelete, showActions = false }
         
         <div className="flex justify-between items-center mb-3">
           <span className={`px-2 py-1 text-xs rounded-full ${
-            item.exchangeType === 'sell' ? 'bg-green-100 text-green-800' :
-            item.exchangeType === 'swap' ? 'bg-blue-100 text-blue-800' :
-            item.exchangeType === 'donate' ? 'bg-purple-100 text-purple-800' :
+            item.exchange_type === 'sell' || item.exchangeType === 'sell' ? 'bg-green-100 text-green-800' :
+            item.exchange_type === 'swap' || item.exchangeType === 'swap' ? 'bg-blue-100 text-blue-800' :
+            item.exchange_type === 'donate' || item.exchangeType === 'donate' ? 'bg-purple-100 text-purple-800' :
             item.status === 'AVAILABLE' ? 'bg-green-100 text-green-800' : 
             'bg-gray-100 text-gray-800'
           }`}>
-            {item.exchangeType || item.status}
+            {item.exchange_type || item.exchangeType || item.status}
           </span>
           
           {item.createdAt && (
@@ -55,7 +55,7 @@ const ItemCard = ({ item, onViewDetails, onEdit, onDelete, showActions = false }
           </div>
         ) : (
           <button 
-            onClick={() => onViewDetails && onViewDetails(item)}
+            onClick={() => onViewDetails && onViewDetails(item._id || item.id)}
             className="w-full px-4 py-2 bg-[#fdd835] text-black rounded-lg hover:bg-[#f9c74f] transition-colors"
           >
             View Details

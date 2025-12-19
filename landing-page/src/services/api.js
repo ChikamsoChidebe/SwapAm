@@ -314,6 +314,25 @@ class ApiService {
   }
 
   async getItem(id) {
+    if (USE_SUPABASE) {
+      try {
+        const { data, error } = await supabaseService.supabase
+          .from('items')
+          .select(`
+            *,
+            owner:users(id, first_name, last_name)
+          `)
+          .eq('id', id)
+          .single();
+        
+        if (error) throw error;
+        return data;
+      } catch (error) {
+        console.error('Supabase getItem failed:', error);
+        throw error;
+      }
+    }
+    
     return this.request(`/api/items/${id}`);
   }
 
