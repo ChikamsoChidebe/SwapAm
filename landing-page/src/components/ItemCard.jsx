@@ -20,6 +20,18 @@ const ItemCard = ({ item, onViewDetails, onEdit, onDelete, showActions = false }
           </p>
         )}
         
+        {(item.exchange_type === 'swap' || item.exchangeType === 'swap') && (
+          <p className="text-lg font-bold text-blue-600 mb-2">
+            For Swap
+          </p>
+        )}
+        
+        {(item.exchange_type === 'donate' || item.exchangeType === 'donate') && (
+          <p className="text-lg font-bold text-purple-600 mb-2">
+            Free
+          </p>
+        )}
+        
         <div className="flex justify-between items-center mb-3">
           <span className={`px-2 py-1 text-xs rounded-full ${
             item.exchange_type === 'sell' || item.exchangeType === 'sell' ? 'bg-green-100 text-green-800' :

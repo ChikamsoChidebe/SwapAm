@@ -16,48 +16,29 @@ const Messages = () => {
 
   const loadConversations = async () => {
     try {
-      // Demo data for now
-      const demoConversations = [
-        {
-          id: 1,
-          participant: {
-            name: 'Sarah Johnson',
-            avatar: 'SJ',
-            lastSeen: '2 min ago'
-          },
-          lastMessage: 'Is the textbook still available?',
-          timestamp: '2:30 PM',
-          unread: 2,
-          item: 'Calculus Textbook'
-        },
-        {
-          id: 2,
-          participant: {
-            name: 'Mike Chen',
-            avatar: 'MC',
-            lastSeen: '1 hour ago'
-          },
-          lastMessage: 'Great! When can we meet?',
-          timestamp: '1:15 PM',
-          unread: 0,
-          item: 'iPhone Charger'
-        },
-        {
-          id: 3,
-          participant: {
-            name: 'Emma Davis',
-            avatar: 'ED',
-            lastSeen: 'Yesterday'
-          },
-          lastMessage: 'Thanks for the quick response!',
-          timestamp: 'Yesterday',
-          unread: 0,
-          item: 'Study Lamp'
-        }
-      ];
-      setConversations(demoConversations);
-      setSelectedConversation(demoConversations[0]);
-      loadMessages(demoConversations[0].id);
+      const token = localStorage.getItem('token');
+      if (token === 'demo-token-123') {
+        // Demo data
+        const demoConversations = [
+          {
+            id: 1,
+            participant: {
+              name: 'Sarah Johnson',
+              avatar: 'SJ',
+              lastSeen: '2 min ago'
+            },
+            lastMessage: 'Is the textbook still available?',
+            timestamp: '2:30 PM',
+            unread: 2,
+            item: 'Calculus Textbook'
+          }
+        ];
+        setConversations(demoConversations);
+        setSelectedConversation(demoConversations[0]);
+        loadMessages(demoConversations[0].id);
+      } else {
+        setConversations([]);
+      }
     } catch (error) {
       console.error('Failed to load conversations:', error);
     } finally {
@@ -295,7 +276,7 @@ const Messages = () => {
                       <path d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z" />
                       <path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z" />
                     </svg>
-                    <p className="text-gray-500">Select a conversation to start messaging</p>
+                    <p className="text-gray-500">No messages yet. Start swapping to connect with other students!</p>
                   </div>
                 </div>
               )}

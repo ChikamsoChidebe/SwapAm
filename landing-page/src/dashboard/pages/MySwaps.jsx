@@ -6,26 +6,31 @@ const MySwaps = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Demo data
-    const demoSwaps = [
-      {
-        id: 1,
-        item: 'Calculus Textbook',
-        partner: 'John Doe',
-        status: 'pending',
-        date: '2024-01-15',
-        type: 'swap'
-      },
-      {
-        id: 2,
-        item: 'iPhone Charger',
-        partner: 'Jane Smith',
-        status: 'completed',
-        date: '2024-01-10',
-        type: 'sell'
-      }
-    ];
-    setSwaps(demoSwaps);
+    const token = localStorage.getItem('token');
+    if (token === 'demo-token-123') {
+      // Demo data
+      const demoSwaps = [
+        {
+          id: 1,
+          item: 'Calculus Textbook',
+          partner: 'John Doe',
+          status: 'pending',
+          date: '2024-01-15',
+          type: 'swap'
+        },
+        {
+          id: 2,
+          item: 'iPhone Charger',
+          partner: 'Jane Smith',
+          status: 'completed',
+          date: '2024-01-10',
+          type: 'sell'
+        }
+      ];
+      setSwaps(demoSwaps);
+    } else {
+      setSwaps([]);
+    }
     setLoading(false);
   }, []);
 
@@ -48,7 +53,7 @@ const MySwaps = () => {
           <div className="px-4 py-5 sm:p-6">
             {swaps.length === 0 ? (
               <div className="text-center py-12">
-                <p className="text-gray-500">No swaps yet</p>
+                <p className="text-gray-500">No swaps yet. Start swapping items to see your activity here!</p>
               </div>
             ) : (
               <div className="space-y-4">
