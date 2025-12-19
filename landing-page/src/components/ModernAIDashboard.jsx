@@ -79,19 +79,19 @@ export default function ModernAIDashboard() {
         </div>
 
         {/* Navigation */}
-        <div className="flex space-x-2 mb-8 bg-white/10 backdrop-blur-lg rounded-2xl p-2">
+        <div className="flex flex-wrap gap-2 mb-8 bg-white/10 backdrop-blur-lg rounded-2xl p-2">
           {tabs.map(tab => (
             <button
               key={tab.id}
               onClick={() => setActiveTab(tab.id)}
-              className={`flex-1 py-3 px-6 rounded-xl font-medium transition-all duration-300 ${
+              className={`flex-1 min-w-0 py-2 px-3 sm:py-3 sm:px-6 rounded-xl font-medium transition-all duration-300 text-sm sm:text-base ${
                 activeTab === tab.id
                   ? 'bg-white text-purple-900 shadow-lg transform scale-105'
                   : 'text-white hover:bg-white/20'
               }`}
             >
-              <span className="mr-2">{tab.icon}</span>
-              {tab.label}
+              <span className="mr-1 sm:mr-2">{tab.icon}</span>
+              <span className="hidden sm:inline">{tab.label}</span>
             </button>
           ))}
         </div>
@@ -208,17 +208,17 @@ export default function ModernAIDashboard() {
         </div>
 
         {/* Interactive Controls */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
           <button 
             onClick={runAnalysis}
             disabled={isLoading}
-            className="bg-gradient-to-r from-blue-500 to-purple-600 rounded-2xl p-6 text-white font-semibold hover:shadow-2xl transform hover:scale-105 transition-all duration-300 disabled:opacity-50">
+            className="bg-gradient-to-r from-blue-500 to-purple-600 rounded-2xl p-4 sm:p-6 text-white font-semibold hover:shadow-2xl transform hover:scale-105 transition-all duration-300 disabled:opacity-50">
             {isLoading ? (
-              <div className="w-8 h-8 mb-2 mx-auto border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+              <div className="w-6 h-6 sm:w-8 sm:h-8 mb-2 mx-auto border-2 border-white border-t-transparent rounded-full animate-spin"></div>
             ) : (
-              <svg className="w-8 h-8 mb-2 mx-auto" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M12.395 2.553a1 1 0 00-1.45-.385c-.345.23-.614.558-.822.88-.214.33-.403.713-.57 1.116-.334.804-.614 1.768-.84 2.734a31.365 31.365 0 00-.613 3.58 2.64 2.64 0 01-.945-1.067c-.328-.68-.398-1.534-.398-2.654A1 1 0 005.05 6.05 6.981 6.981 0 003 11a7 7 0 1011.95-4.95c-.592-.591-.98-.985-1.348-1.467-.363-.476-.724-1.063-1.207-2.03zM12.12 15.12A3 3 0 017 13s.879.5 2.5.5c0-1 .5-4 1.25-4.5.5 1 .786 1.293 1.371 1.879A2.99 2.99 0 0113 13a2.99 2.99 0 01-.879 2.121z" clipRule="evenodd" /></svg>
+              <svg className="w-6 h-6 sm:w-8 sm:h-8 mb-2 mx-auto" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M12.395 2.553a1 1 0 00-1.45-.385c-.345.23-.614.558-.822.88-.214.33-.403.713-.57 1.116-.334.804-.614 1.768-.84 2.734a31.365 31.365 0 00-.613 3.58 2.64 2.64 0 01-.945-1.067c-.328-.68-.398-1.534-.398-2.654A1 1 0 005.05 6.05 6.981 6.981 0 003 11a7 7 0 1011.95-4.95c-.592-.591-.98-.985-1.348-1.467-.363-.476-.724-1.063-1.207-2.03zM12.12 15.12A3 3 0 017 13s.879.5 2.5.5c0-1 .5-4 1.25-4.5.5 1 .786 1.293 1.371 1.879A2.99 2.99 0 0113 13a2.99 2.99 0 01-.879 2.121z" clipRule="evenodd" /></svg>
             )}
-            {isLoading ? 'Analyzing...' : 'Run Analysis'}
+            <span className="text-sm sm:text-base">{isLoading ? 'Analyzing...' : 'Run Analysis'}</span>
           </button>
           
           <button 
