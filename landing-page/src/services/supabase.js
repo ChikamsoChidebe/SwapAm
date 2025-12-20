@@ -62,20 +62,26 @@ class SupabaseService {
     
     if (authError) throw authError
     
-    // Create user profile in public.users table
+    // Create user profile in public.users table immediately
     if (authData.user) {
-      const { error: profileError } = await supabase
-        .from('users')
-        .insert([{
-          id: authData.user.id,
-          first_name: userData.firstName,
-          last_name: userData.lastName,
-          university: userData.university,
-          campus_points: 0,
-          total_swaps: 0
-        }])
-      
-      if (profileError) console.error('Profile creation error:', profileError)
+      try {
+        const { error: profileError } = await supabase
+          .from('users')
+          .upsert([{
+            id: authData.user.id,
+            first_name: userData.firstName,
+            last_name: userData.lastName,
+            university: userData.university,
+            campus_points: 0,
+            total_swaps: 0
+          }], { onConflict: 'id' })
+        
+        if (profileError) {
+          console.error('Profile creation error:', profileError)
+        }
+      } catch (error) {
+        console.error('Failed to create profile:', error)
+      }
     }
     
     return authData
@@ -88,6 +94,34 @@ class SupabaseService {
     })
     
     if (error) throw error
+    
+    // Ensure user profile exists
+    if (data.user) {
+      try {
+        const { data: existingProfile } = await supabase
+          .from('users')
+          .select('*')
+          .eq('id', data.user.id)
+          .single()
+        
+        if (!existingProfile) {
+          // Create profile if it doesn't exist
+          await supabase
+            .from('users')
+            .insert([{
+              id: data.user.id,
+              first_name: data.user.user_metadata?.first_name || 'User',
+              last_name: data.user.user_metadata?.last_name || '',
+              university: data.user.user_metadata?.university || 'University',
+              campus_points: 0,
+              total_swaps: 0
+            }])
+        }
+      } catch (error) {
+        console.error('Profile check/creation error:', error)
+      }
+    }
+    
     return data
   }
 
