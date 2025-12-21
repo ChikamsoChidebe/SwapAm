@@ -4,7 +4,7 @@ import supabaseService, { supabase } from './supabase.js';
 const BACKENDS = {
   NODE: 'http://localhost:5000', // Local Node.js backend
   JAVA: 'https://swapam-backend.onrender.com',
-  AI: 'http://13.218.91.146:8000'
+  AI: 'https://13.218.91.146:8000' // Changed to HTTPS
 };
 
 // Use Supabase as primary, Node backend as fallback
