@@ -172,7 +172,7 @@ const LoginPage = () => {
                 </button>
               </div>
               <div className="text-right mt-2">
-                <a href="/forgot-password" className="text-sm text-[#2E7D32] hover:underline">Show Password</a>
+                <a href="/forgot-password" className="text-sm text-[#2E7D32] hover:underline">Forgot Password</a>
               </div>
             </div>
 
