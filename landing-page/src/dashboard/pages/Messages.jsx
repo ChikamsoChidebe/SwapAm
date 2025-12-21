@@ -294,7 +294,7 @@ const Messages = () => {
                           </p>
                         </div>
                       </div>
-                    ))}}
+                    ))}
                   </div>
 
                   {/* Message Input */}
