@@ -20,11 +20,12 @@ const BrowseItems = () => {
 
   const loadItems = async () => {
     try {
-      const token = localStorage.getItem('token');
+      const token = localStorage.getItem('jwtToken') || localStorage.getItem('token');
       if (token === 'demo-token-123') {
-        // Demo mode - show mock data
+        // Demo mode - show mock data with proper IDs
         const mockItems = [
           {
+            id: '1',
             _id: '1',
             title: 'MacBook Pro 13" 2020',
             description: 'Excellent condition, barely used. Perfect for students.',
@@ -38,6 +39,7 @@ const BrowseItems = () => {
         ];
         setItems(mockItems);
       } else {
+        // Real mode - load from Supabase
         const data = await apiService.getItems(filters);
         setItems(Array.isArray(data) ? data : []);
       }
@@ -91,11 +93,11 @@ const BrowseItems = () => {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6">
           {items.map((item) => (
             <ItemCard 
-              key={item._id} 
+              key={item.id || item._id} 
               item={item} 
-              onViewDetails={() => navigate(`/dashboard/item/${item._id}`)}
+              onViewDetails={() => navigate(`/dashboard/item/${item.id || item._id}`)}
             />
-          ))}
+          ))}}
         </div>
       </div>
     </DashboardLayout>

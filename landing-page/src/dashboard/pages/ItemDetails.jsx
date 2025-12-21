@@ -16,29 +16,30 @@ const ItemDetails = () => {
 
   const loadItem = async () => {
     try {
-      const token = localStorage.getItem('token');
+      const token = localStorage.getItem('jwtToken') || localStorage.getItem('token');
       if (token === 'demo-token-123') {
         // Demo item data
         const demoItem = {
+          id: id,
           _id: id,
           title: 'MacBook Pro 13" 2020',
           description: 'Excellent condition MacBook Pro, perfect for students. Includes charger and original box.',
           category: 'Electronics',
-          exchangeType: 'sell',
+          exchange_type: 'sell',
           price: 85000,
           condition: 'like-new',
           location: 'University of Lagos, Akoka',
           images: ['https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=600&h=400&fit=crop'],
           owner: {
-            firstName: 'John',
-            lastName: 'Doe',
-            university: 'University of Lagos',
-            rating: 4.8
+            first_name: 'John',
+            last_name: 'Doe',
+            university: 'University of Lagos'
           },
-          createdAt: new Date().toISOString()
+          created_at: new Date().toISOString()
         };
         setItem(demoItem);
       } else {
+        // Real mode - load from Supabase
         const data = await apiService.getItem(id);
         setItem(data);
       }
@@ -110,11 +111,11 @@ const ItemDetails = () => {
                 <div className="flex justify-between">
                   <span className="text-gray-500">Type:</span>
                   <span className={`px-2 py-1 text-xs rounded-full ${
-                    item.exchangeType === 'sell' ? 'bg-green-100 text-green-800' :
-                    item.exchangeType === 'swap' ? 'bg-blue-100 text-blue-800' :
+                    (item.exchange_type || item.exchangeType) === 'sell' ? 'bg-green-100 text-green-800' :
+                    (item.exchange_type || item.exchangeType) === 'swap' ? 'bg-blue-100 text-blue-800' :
                     'bg-purple-100 text-purple-800'
                   }`}>
-                    {item.exchangeType}
+                    {item.exchange_type || item.exchangeType}
                   </span>
                 </div>
                 {item.price && (
@@ -133,10 +134,10 @@ const ItemDetails = () => {
                 <h3 className="font-semibold mb-2">Owner</h3>
                 <div className="flex items-center space-x-3">
                   <div className="w-10 h-10 bg-[#137C5C] rounded-full flex items-center justify-center text-white font-bold">
-                    {item.owner?.firstName?.[0]}{item.owner?.lastName?.[0]}
+                    {(item.owner?.first_name || item.owner?.firstName)?.[0]}{(item.owner?.last_name || item.owner?.lastName)?.[0]}
                   </div>
                   <div>
-                    <p className="font-medium">{item.owner?.firstName} {item.owner?.lastName}</p>
+                    <p className="font-medium">{item.owner?.first_name || item.owner?.firstName} {item.owner?.last_name || item.owner?.lastName}</p>
                     <p className="text-sm text-gray-500">{item.owner?.university}</p>
                   </div>
                 </div>
@@ -147,7 +148,7 @@ const ItemDetails = () => {
                   onClick={() => setShowSwapModal(true)}
                   className="w-full py-3 bg-[#137C5C] text-white rounded-lg hover:bg-[#0f5132]"
                 >
-                  {item.exchangeType === 'swap' ? 'Request Swap' : 'Contact Owner'}
+                  {(item.exchange_type || item.exchangeType) === 'swap' ? 'Request Swap' : 'Contact Owner'}
                 </button>
                 <button
                   onClick={() => navigate('/dashboard/browse')}
