@@ -411,19 +411,38 @@ class SupabaseService {
     if (error) throw error
   }
 
-  subscribeToMessages(conversationId, callback) {
-    return supabase
-      .channel(`messages-${conversationId}`)
-      .on('postgres_changes', 
-        { 
-          event: 'INSERT', 
-          schema: 'public', 
-          table: 'messages',
-          filter: `conversation_id=eq.${conversationId}`
-        }, 
-        callback
-      )
-      .subscribe()
+  // Swaps methods
+  async createSwap(swapData) {
+    const { data, error } = await supabase
+      .from('swaps')
+      .insert([{
+        requester_id: swapData.requesterId,
+        owner_id: swapData.ownerId,
+        item_id: swapData.itemId,
+        message: swapData.message,
+        status: 'pending'
+      }])
+      .select()
+      .single()
+    
+    if (error) throw error
+    return data
+  }
+
+  async getMySwaps(userId) {
+    const { data, error } = await supabase
+      .from('swaps')
+      .select(`
+        *,
+        item:items(*),
+        requester:users!swaps_requester_id_fkey(*),
+        owner:users!swaps_owner_id_fkey(*)
+      `)
+      .or(`requester_id.eq.${userId},owner_id.eq.${userId}`)
+      .order('created_at', { ascending: false })
+    
+    if (error) throw error
+    return data
   }
 }
 

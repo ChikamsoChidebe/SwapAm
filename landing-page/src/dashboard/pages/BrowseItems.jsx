@@ -106,7 +106,7 @@ const BrowseItems = () => {
                 }}
               />
             );
-          })}}}
+          })}
         </div>
       </div>
     </DashboardLayout>
