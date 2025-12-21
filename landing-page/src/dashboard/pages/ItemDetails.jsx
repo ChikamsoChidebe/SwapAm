@@ -60,13 +60,15 @@ const ItemDetails = () => {
   const handleSwapRequest = async () => {
     try {
       await apiService.createSwap({
-        itemId: item._id,
+        itemId: item.id || item._id,
+        ownerId: item.owner_id || item.owner?.id,
         message: 'Interested in swapping!'
       });
       alert('Swap request sent!');
       setShowSwapModal(false);
     } catch (error) {
       console.error('Failed to send swap request:', error);
+      alert('Failed to send swap request. Please try again.');
     }
   };
 

@@ -418,6 +418,23 @@ class ApiService {
 
   // Swaps methods
   async createSwap(swapData) {
+    if (USE_SUPABASE) {
+      try {
+        const user = await supabaseService.getCurrentUser();
+        if (!user) throw new Error('No authenticated user');
+        
+        return await supabaseService.createSwap({
+          requesterId: user.id,
+          ownerId: swapData.ownerId,
+          itemId: swapData.itemId,
+          message: swapData.message
+        });
+      } catch (error) {
+        console.error('Supabase createSwap failed:', error);
+        throw error;
+      }
+    }
+    
     return this.request('/api/swaps', {
       method: 'POST',
       body: swapData,

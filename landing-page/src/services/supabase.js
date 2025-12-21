@@ -444,6 +444,20 @@ class SupabaseService {
     if (error) throw error
     return data
   }
+  subscribeToMessages(conversationId, callback) {
+    return supabase
+      .channel(`messages-${conversationId}`)
+      .on('postgres_changes', 
+        { 
+          event: 'INSERT', 
+          schema: 'public', 
+          table: 'messages',
+          filter: `conversation_id=eq.${conversationId}`
+        }, 
+        callback
+      )
+      .subscribe()
+  }
 }
 
 export default new SupabaseService()
