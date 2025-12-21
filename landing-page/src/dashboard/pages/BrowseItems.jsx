@@ -91,13 +91,22 @@ const BrowseItems = () => {
 
         {/* Items Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6">
-          {items.map((item) => (
-            <ItemCard 
-              key={item.id || item._id} 
-              item={item} 
-              onViewDetails={() => navigate(`/dashboard/item/${item.id || item._id}`)}
-            />
-          ))}}
+          {items.map((item) => {
+            const itemId = item.id || item._id;
+            return (
+              <ItemCard 
+                key={itemId} 
+                item={item} 
+                onViewDetails={() => {
+                  if (itemId) {
+                    navigate(`/dashboard/item/${itemId}`);
+                  } else {
+                    console.error('Item has no valid ID:', item);
+                  }
+                }}
+              />
+            );
+          })}}}
         </div>
       </div>
     </DashboardLayout>

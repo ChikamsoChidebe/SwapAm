@@ -15,6 +15,13 @@ const ItemDetails = () => {
   }, [id]);
 
   const loadItem = async () => {
+    // Guard against undefined ID
+    if (!id || id === 'undefined') {
+      console.error('Invalid item ID:', id);
+      setLoading(false);
+      return;
+    }
+
     try {
       const token = localStorage.getItem('jwtToken') || localStorage.getItem('token');
       if (token === 'demo-token-123') {
