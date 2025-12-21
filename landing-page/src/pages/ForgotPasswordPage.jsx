@@ -1,13 +1,28 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import supabaseService from '../services/supabase';
 
 const ForgotPasswordPage = () => {
   const navigate = useNavigate();
   const [email, setEmail] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [message, setMessage] = useState('');
+  const [error, setError] = useState('');
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log('Reset password for:', email);
+    setLoading(true);
+    setError('');
+    setMessage('');
+    
+    try {
+      await supabaseService.resetPassword(email);
+      setMessage('Password reset email sent! Check your inbox.');
+    } catch (error) {
+      setError(error.message || 'Failed to send reset email');
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -79,11 +94,24 @@ const ForgotPasswordPage = () => {
               />
             </div>
 
+            {error && (
+              <div className="mb-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded-lg text-sm">
+                {error}
+              </div>
+            )}
+            
+            {message && (
+              <div className="mb-4 p-3 bg-green-100 border border-green-400 text-green-700 rounded-lg text-sm">
+                {message}
+              </div>
+            )}
+
             <button 
               type="submit" 
-              className="w-full bg-[#fdd835] hover:bg-[#f9c74f] text-black font-semibold py-3 px-4 rounded-lg transition-all duration-300 transform hover:scale-105"
+              disabled={loading}
+              className="w-full bg-[#fdd835] hover:bg-[#f9c74f] text-black font-semibold py-3 px-4 rounded-lg transition-all duration-300 transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              Reset Password
+              {loading ? 'Sending...' : 'Reset Password'}
             </button>
 
             <div className="text-center">

@@ -444,19 +444,13 @@ class SupabaseService {
     if (error) throw error
     return data
   }
-  subscribeToMessages(conversationId, callback) {
-    return supabase
-      .channel(`messages-${conversationId}`)
-      .on('postgres_changes', 
-        { 
-          event: 'INSERT', 
-          schema: 'public', 
-          table: 'messages',
-          filter: `conversation_id=eq.${conversationId}`
-        }, 
-        callback
-      )
-      .subscribe()
+  async resetPassword(email) {
+    const { error } = await supabase.auth.resetPasswordForEmail(email, {
+      redirectTo: `${window.location.origin}/reset-password`
+    })
+    
+    if (error) throw error
+    return { message: 'Password reset email sent' }
   }
 }
 
