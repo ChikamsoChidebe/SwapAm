@@ -227,6 +227,26 @@ class ApiService {
   }
 
   async updateProfile(formData) {
+    if (USE_SUPABASE) {
+      try {
+        const user = await supabaseService.getCurrentUser();
+        if (!user) throw new Error('No authenticated user');
+        
+        const updates = {
+          first_name: formData.firstName,
+          last_name: formData.lastName,
+          university: formData.university,
+          phone: formData.phone,
+          bio: formData.bio
+        };
+        
+        return await supabaseService.updateProfile(user.id, updates);
+      } catch (error) {
+        console.error('Supabase updateProfile failed:', error);
+        throw error;
+      }
+    }
+    
     return this.request('/api/users/profile', {
       method: 'PUT',
       headers: {},
