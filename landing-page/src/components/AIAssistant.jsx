@@ -61,8 +61,13 @@ export default function AIAssistant() {
     try {
       const GROQ_API_KEY = process.env.REACT_APP_GROQ_API_KEY;
       if (!GROQ_API_KEY) {
-        throw new Error('API key not configured');
+        // Fallback to predefined responses if no API key
+        if (lowerMessage.includes('help') || lowerMessage.includes('how')) {
+          return 'I\'m here to assist you with SwapAm! I can help with item valuations, explain market trends, provide trading guidance, and share safety tips.';
+        }
+        return 'I\'m your SwapAm AI assistant! Add your API key to .env file for full AI responses. For now, I can help with basic questions about valuations, trends, and trading.';
       }
+      
       const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
         method: 'POST',
         headers: {
@@ -85,6 +90,22 @@ export default function AIAssistant() {
       }
     } catch (error) {
       console.error('AI response error:', error);
+      // Add more predefined responses as fallback
+      if (lowerMessage.includes('help') || lowerMessage.includes('how')) {
+        return 'I\'m here to assist you with SwapAm! I can help with item valuations, explain market trends, provide trading guidance, and share safety tips.';
+      }
+
+      if (lowerMessage.includes('start') || lowerMessage.includes('begin')) {
+        return 'Getting started on SwapAm is easy! First, sign up with your university email for verification. Then browse items or create listings.';
+      }
+
+      if (lowerMessage.includes('book') || lowerMessage.includes('textbook')) {
+        return 'Books are popular on SwapAm! Textbooks typically range from ₦2,000-₦8,000 depending on subject and condition.';
+      }
+
+      if (lowerMessage.includes('electronic') || lowerMessage.includes('laptop') || lowerMessage.includes('phone')) {
+        return 'Electronics are in high demand! Laptops range ₦15,000-₦80,000, phones ₦8,000-₦50,000 depending on brand and condition.';
+      }
     }
     
     return 'I\'m your SwapAm AI assistant, here to help you navigate our campus marketplace! I can assist with accurate item valuations using current market data, provide insights on trending categories and pricing, offer safety tips for secure trading, and guide you through the listing and exchange process. What specific aspect of campus trading would you like to explore?';
