@@ -43,19 +43,19 @@ export default function AIAssistant() {
     const lowerMessage = message.toLowerCase();
     
     if (lowerMessage.includes('value') || lowerMessage.includes('price')) {
-      return 'I can value your items! Use the AI Dashboard valuation tool or tell me: category, condition, brand.';
+      return 'I can help you value your items accurately! Use our AI Dashboard valuation tool for detailed analysis, or tell me about your item including category, condition, brand, and age. I\'ll provide a market-based estimate in Nigerian Naira considering current student demand and local pricing trends.';
     }
     
     if (lowerMessage.includes('trend') || lowerMessage.includes('market')) {
-      return 'Electronics and Books are trending high. Check AI Dashboard for detailed market analysis.';
+      return 'Current market trends show Electronics and Books are in high demand among Nigerian students. Electronics average ₦25,000, Books around ₦3,000. Check our AI Dashboard for comprehensive market analysis, demand patterns, and pricing insights across all categories.';
     }
     
     if (lowerMessage.includes('sell') || lowerMessage.includes('swap')) {
-      return '1) Create listing with photos 2) Set exchange type 3) Connect with students 4) Meet on campus safely.';
+      return 'Here\'s how to successfully trade on SwapAm: 1) Create detailed listings with clear photos and descriptions 2) Choose your exchange type (swap, sell, or donate) 3) Connect with verified students through secure messaging 4) Arrange safe campus meetups in designated areas during daylight hours.';
     }
     
     if (lowerMessage.includes('safe')) {
-      return 'SwapAm verifies all users. Always meet in public campus areas during daylight hours.';
+      return 'SwapAm prioritizes your safety with multiple security measures: university email verification for all users, secure in-app messaging system, designated safe meeting points on campus, user rating system, and transaction history tracking. Always meet in public campus areas during daylight hours.';
     }
 
     try {
@@ -73,9 +73,9 @@ export default function AIAssistant() {
           model: 'llama-3.1-8b-instant',
           messages: [{ 
             role: 'user', 
-            content: `SwapAm is a campus marketplace for university students to swap/sell physical items like books, electronics, clothing. Not blockchain/crypto. Answer in English, max 25 words: "${message}"` 
+            content: `SwapAm is a campus marketplace for university students to swap/sell physical items like books, electronics, clothing. Not blockchain/crypto. Provide helpful detailed response in English, 50-80 words: "${message}"` 
           }],
-          max_tokens: 40
+          max_tokens: 120
         })
       });
       
@@ -87,7 +87,7 @@ export default function AIAssistant() {
       console.error('AI response error:', error);
     }
     
-    return 'I help with item valuations, market trends, and trading tips. What do you need?';
+    return 'I\'m your SwapAm AI assistant, here to help you navigate our campus marketplace! I can assist with accurate item valuations using current market data, provide insights on trending categories and pricing, offer safety tips for secure trading, and guide you through the listing and exchange process. What specific aspect of campus trading would you like to explore?';
   };
 
   const quickActions = [
