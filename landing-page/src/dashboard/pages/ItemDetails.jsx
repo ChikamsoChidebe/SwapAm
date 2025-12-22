@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import DashboardLayout from '../DashboardLayout';
 import apiService from '../../services/api';
+import supabaseService from '../../services/supabase';
 
 const ItemDetails = () => {
   const { id } = useParams();
@@ -58,6 +59,12 @@ const ItemDetails = () => {
         setItem(data);
         setViews(data.views || 0);
         setLikesCount(data.likes?.length || 0);
+        
+        // Check if current user has liked this item
+        const user = await supabaseService.getCurrentUser();
+        if (user && data.likes?.includes(user.id)) {
+          setLiked(true);
+        }
       }
     } catch (error) {
       console.error('Failed to load item:', error);
@@ -68,15 +75,20 @@ const ItemDetails = () => {
 
   const handleLike = async () => {
     try {
-      setLiked(!liked);
-      setLikesCount(prev => liked ? prev - 1 : prev + 1);
-      // In real app, call API to like/unlike item
-      // await apiService.likeItem(item.id);
+      const token = localStorage.getItem('jwtToken') || localStorage.getItem('token');
+      if (token === 'demo-token-123') {
+        // Demo mode - just toggle locally
+        setLiked(!liked);
+        setLikesCount(prev => liked ? prev - 1 : prev + 1);
+        return;
+      }
+      
+      // Real mode - call Supabase API
+      const result = await apiService.likeItem(item.id);
+      setLiked(result.liked);
+      setLikesCount(result.likes);
     } catch (error) {
       console.error('Failed to like item:', error);
-      // Revert on error
-      setLiked(liked);
-      setLikesCount(prev => liked ? prev + 1 : prev - 1);
     }
   };
 

@@ -415,6 +415,18 @@ class ApiService {
   }
 
   async likeItem(id) {
+    if (USE_SUPABASE) {
+      try {
+        const user = await supabaseService.getCurrentUser();
+        if (!user) throw new Error('No authenticated user');
+        
+        return await supabaseService.likeItem(id, user.id);
+      } catch (error) {
+        console.error('Supabase likeItem failed:', error);
+        throw error;
+      }
+    }
+    
     return this.request(`/api/items/${id}/like`, {
       method: 'POST',
     });
