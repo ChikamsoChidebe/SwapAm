@@ -9,6 +9,9 @@ const ItemDetails = () => {
   const [item, setItem] = useState(null);
   const [loading, setLoading] = useState(true);
   const [showSwapModal, setShowSwapModal] = useState(false);
+  const [liked, setLiked] = useState(false);
+  const [likesCount, setLikesCount] = useState(0);
+  const [views, setViews] = useState(0);
 
   useEffect(() => {
     loadItem();
@@ -42,18 +45,38 @@ const ItemDetails = () => {
             last_name: 'Doe',
             university: 'University of Lagos'
           },
-          created_at: new Date().toISOString()
+          created_at: new Date().toISOString(),
+          views: 42,
+          likes: ['user1', 'user2', 'user3']
         };
         setItem(demoItem);
+        setViews(42);
+        setLikesCount(3);
       } else {
         // Real mode - load from Supabase
         const data = await apiService.getItem(id);
         setItem(data);
+        setViews(data.views || 0);
+        setLikesCount(data.likes?.length || 0);
       }
     } catch (error) {
       console.error('Failed to load item:', error);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleLike = async () => {
+    try {
+      setLiked(!liked);
+      setLikesCount(prev => liked ? prev - 1 : prev + 1);
+      // In real app, call API to like/unlike item
+      // await apiService.likeItem(item.id);
+    } catch (error) {
+      console.error('Failed to like item:', error);
+      // Revert on error
+      setLiked(liked);
+      setLikesCount(prev => liked ? prev + 1 : prev - 1);
     }
   };
 
@@ -109,7 +132,17 @@ const ItemDetails = () => {
             </div>
             
             <div>
-              <h1 className="text-2xl font-bold text-gray-900 mb-4">{item.title}</h1>
+              <h1 className="text-2xl font-bold text-gray-900 mb-2">{item.title}</h1>
+              
+              {/* Item Stats */}
+              <div className="flex items-center gap-4 mb-4 text-sm text-gray-500">
+                <span>{new Date(item.created_at).toLocaleDateString()}</span>
+                <span>•</span>
+                <span>{views} views</span>
+                <span>•</span>
+                <span>{likesCount} likes</span>
+              </div>
+              
               <p className="text-gray-600 mb-4">{item.description}</p>
               
               <div className="space-y-3 mb-6">
@@ -153,6 +186,29 @@ const ItemDetails = () => {
               </div>
               
               <div className="space-y-3">
+                <div className="flex gap-3">
+                  <button
+                    onClick={handleLike}
+                    className={`flex items-center gap-2 px-4 py-2 rounded-lg border transition-colors ${
+                      liked 
+                        ? 'bg-red-50 border-red-200 text-red-600' 
+                        : 'bg-gray-50 border-gray-200 text-gray-600 hover:bg-gray-100'
+                    }`}
+                  >
+                    <svg className={`w-5 h-5 ${liked ? 'fill-current' : 'stroke-current fill-none'}`} viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                    </svg>
+                    {liked ? 'Liked' : 'Like'}
+                  </button>
+                  
+                  <button className="flex items-center gap-2 px-4 py-2 rounded-lg border border-gray-200 text-gray-600 hover:bg-gray-100">
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.367 2.684 3 3 0 00-5.367-2.684z" />
+                    </svg>
+                    Share
+                  </button>
+                </div>
+                
                 <button
                   onClick={() => setShowSwapModal(true)}
                   className="w-full py-3 bg-[#137C5C] text-white rounded-lg hover:bg-[#0f5132]"
