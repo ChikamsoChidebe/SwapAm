@@ -388,7 +388,10 @@ class SupabaseService {
         content,
         conversation_id: conversation.id
       }])
-      .select()
+      .select(`
+        *,
+        sender:users!messages_sender_id_fkey(id, first_name, last_name)
+      `)
       .single()
     
     if (error) throw error

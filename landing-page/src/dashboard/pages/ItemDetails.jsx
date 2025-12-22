@@ -10,6 +10,7 @@ const ItemDetails = () => {
   const [item, setItem] = useState(null);
   const [loading, setLoading] = useState(true);
   const [showSwapModal, setShowSwapModal] = useState(false);
+  const [swapMessage, setSwapMessage] = useState('');
   const [liked, setLiked] = useState(false);
   const [likesCount, setLikesCount] = useState(0);
   const [views, setViews] = useState(0);
@@ -94,16 +95,35 @@ const ItemDetails = () => {
 
   const handleSwapRequest = async () => {
     try {
-      await apiService.createSwap({
-        itemId: item.id || item._id,
-        ownerId: item.owner_id || item.owner?.id,
-        message: 'Interested in swapping!'
-      });
-      alert('Swap request sent!');
-      setShowSwapModal(false);
+      const token = localStorage.getItem('jwtToken') || localStorage.getItem('token');
+      if (token === 'demo-token-123') {
+        // Demo mode - just show success and navigate
+        alert('Message sent! (Demo mode)');
+        setShowSwapModal(false);
+        navigate('/dashboard/messages');
+        return;
+      }
+      
+      // Real mode - send message via Supabase
+      const currentUser = await supabaseService.getCurrentUser();
+      const ownerId = item.owner_id || item.owner?.id;
+      
+      if (currentUser && ownerId && currentUser.id !== ownerId) {
+        await supabaseService.sendMessage(
+          currentUser.id, 
+          ownerId, 
+          swapMessage || 'Interested in this item!'
+        );
+        alert('Message sent successfully!');
+        setShowSwapModal(false);
+        setSwapMessage('');
+        navigate('/dashboard/messages');
+      } else {
+        alert('Unable to send message. Please try again.');
+      }
     } catch (error) {
-      console.error('Failed to send swap request:', error);
-      alert('Failed to send swap request. Please try again.');
+      console.error('Failed to send message:', error);
+      alert('Failed to send message. Please try again.');
     }
   };
 
@@ -244,6 +264,8 @@ const ItemDetails = () => {
           <div className="bg-white rounded-lg p-6 max-w-md w-full mx-4">
             <h3 className="text-lg font-semibold mb-4">Send Swap Request</h3>
             <textarea
+              value={swapMessage}
+              onChange={(e) => setSwapMessage(e.target.value)}
               placeholder="Write a message to the owner..."
               className="w-full px-3 py-2 border rounded-lg h-24 mb-4"
             />
