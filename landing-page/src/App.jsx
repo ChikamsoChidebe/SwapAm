@@ -3,7 +3,6 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { AuthProvider } from "./context/AuthContext";
 import Notification from "./components/Notification";
 import BackendStatus from "./components/BackendStatus";
-import DemoLogin from "./components/DemoLogin";
 import Navbar from "./components/Navbar";
 import Hero from "./components/Hero";
 import About from "./components/About";
@@ -27,6 +26,7 @@ import ProtectedRoute from "./dashboard/components/ProtectedRoute";
 import AIDashboard from "./components/AIDashboard";
 import AIDashboardPage from "./dashboard/pages/AIDashboard";
 import ErrorBoundary from "./components/ErrorBoundary";
+import AIAssistant from "./components/AIAssistant";
 
 const LandingPage = () => (
   <div className="text-gray-800">
@@ -124,8 +124,8 @@ export default function App() {
           ))}
         </div>
         
-        {/* Demo Login */}
-        <DemoLogin />
+        {/* AI Assistant - Available on all pages */}
+        <AIAssistant />
         </Router>
       </AuthProvider>
     </ErrorBoundary>
