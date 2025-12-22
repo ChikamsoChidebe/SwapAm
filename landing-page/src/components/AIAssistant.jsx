@@ -59,7 +59,10 @@ export default function AIAssistant() {
     }
 
     try {
-      const GROQ_API_KEY = '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';
+      const GROQ_API_KEY = process.env.REACT_APP_GROQ_API_KEY;
+      if (!GROQ_API_KEY) {
+        throw new Error('API key not configured');
+      }
       const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
         method: 'POST',
         headers: {

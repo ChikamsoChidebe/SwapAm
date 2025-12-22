@@ -534,7 +534,12 @@ class ApiService {
 
   // AI Services with Groq API - real integration
   async aiRequest(endpoint, options = {}) {
-    const GROQ_API_KEY = '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';
+    const GROQ_API_KEY = process.env.REACT_APP_GROQ_API_KEY;
+    
+    if (!GROQ_API_KEY) {
+      console.warn('Groq API key not configured');
+      return this.getFallbackResponse(endpoint, options);
+    }
     
     try {
       const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
@@ -782,7 +787,10 @@ Consider Nigerian market prices, university student budgets, and current demand.
   // AI Recommendations with real Groq API
   async getAIRecommendations(userId) {
     try {
-      const GROQ_API_KEY = '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';
+      const GROQ_API_KEY = process.env.REACT_APP_GROQ_API_KEY;
+      if (!GROQ_API_KEY) {
+        return this.getFallbackRecommendations();
+      }
       const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
         method: 'POST',
         headers: {
