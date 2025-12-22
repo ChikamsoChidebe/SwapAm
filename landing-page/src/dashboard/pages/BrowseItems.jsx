@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import DashboardLayout from '../DashboardLayout';
+import LoadingScreen from '../../components/LoadingScreen';
 import apiService from '../../services/api';
 import ItemCard from '../../components/ItemCard';
 
@@ -51,6 +52,10 @@ const BrowseItems = () => {
     }
   };
 
+  if (loading) {
+    return <LoadingScreen />;
+  }
+
   return (
     <DashboardLayout>
       <div className="space-y-6">
@@ -90,24 +95,40 @@ const BrowseItems = () => {
         </div>
 
         {/* Items Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6">
-          {items.map((item) => {
-            const itemId = item.id || item._id;
-            return (
-              <ItemCard 
-                key={itemId} 
-                item={item} 
-                onViewDetails={() => {
-                  if (itemId) {
-                    navigate(`/dashboard/item/${itemId}`);
-                  } else {
-                    console.error('Item has no valid ID:', item);
-                  }
-                }}
-              />
-            );
-          })}
-        </div>
+        {items.length === 0 ? (
+          <div className="text-center py-12">
+            <svg className="w-16 h-16 text-gray-400 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M9 5l7 7-7 7" />
+            </svg>
+            <h3 className="text-lg font-medium text-gray-900 mb-2">No items found</h3>
+            <p className="text-gray-500 mb-4">Try adjusting your search filters or browse different categories.</p>
+            <button 
+              onClick={() => setFilters({ category: '', exchangeType: '', search: '' })}
+              className="px-4 py-2 bg-[#137C5C] text-white rounded-lg hover:bg-[#0f5132]"
+            >
+              Clear Filters
+            </button>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6">
+            {items.map((item) => {
+              const itemId = item.id || item._id;
+              return (
+                <ItemCard 
+                  key={itemId} 
+                  item={item} 
+                  onViewDetails={() => {
+                    if (itemId) {
+                      navigate(`/dashboard/item/${itemId}`);
+                    } else {
+                      console.error('Item has no valid ID:', item);
+                    }
+                  }}
+                />
+              );
+            })}
+          </div>
+        )}
       </div>
     </DashboardLayout>
   );

@@ -3,6 +3,7 @@ import { useAuth } from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import DashboardLayout from './DashboardLayout';
 import AgentMap from '../components/AgentMap';
+import LoadingScreen from '../components/LoadingScreen';
 import apiService from '../services/api';
 
 const Dashboard = () => {
@@ -35,13 +36,7 @@ const Dashboard = () => {
   };
 
   if (loading) {
-    return (
-      <DashboardLayout>
-        <div className="flex items-center justify-center h-64">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#137C5C]"></div>
-        </div>
-      </DashboardLayout>
-    );
+    return <LoadingScreen />;
   }
 
   return (

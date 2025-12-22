@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import DashboardLayout from '../DashboardLayout';
+import LoadingScreen from '../../components/LoadingScreen';
 import apiService from '../../services/api';
 import ItemCard from '../../components/ItemCard';
 
@@ -41,6 +42,10 @@ const MyItems = () => {
     }
   };
 
+  if (loading) {
+    return <LoadingScreen />;
+  }
+
   return (
     <DashboardLayout>
       <div className="space-y-6">
@@ -54,17 +59,33 @@ const MyItems = () => {
           </button>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {items.map((item) => (
-            <ItemCard 
-              key={item._id || item.id} 
-              item={item} 
-              showActions={true}
-              onEdit={handleEdit}
-              onDelete={handleDelete}
-            />
-          ))}
-        </div>
+        {items.length === 0 ? (
+          <div className="text-center py-12">
+            <svg className="w-16 h-16 text-gray-400 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4" />
+            </svg>
+            <h3 className="text-lg font-medium text-gray-900 mb-2">No items yet</h3>
+            <p className="text-gray-500 mb-4">Start your sustainable journey by listing your first item!</p>
+            <button 
+              onClick={() => navigate('/dashboard/add-item')}
+              className="px-6 py-3 bg-[#137C5C] text-white rounded-lg hover:bg-[#0f5132] font-medium"
+            >
+              + List Your First Item
+            </button>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {items.map((item) => (
+              <ItemCard 
+                key={item._id || item.id} 
+                item={item} 
+                showActions={true}
+                onEdit={handleEdit}
+                onDelete={handleDelete}
+              />
+            ))}
+          </div>
+        )}
       </div>
     </DashboardLayout>
   );
