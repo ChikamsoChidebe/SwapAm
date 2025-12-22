@@ -42,12 +42,15 @@ const ItemCard = ({ item, onViewDetails, onEdit, onDelete, showActions = false }
           }`}>
             {item.exchange_type || item.exchangeType || item.status}
           </span>
-          
-          {item.createdAt && (
-            <span className="text-xs text-gray-500">
-              {new Date(item.createdAt).toLocaleDateString()}
-            </span>
-          )}
+        </div>
+        
+        {/* Item Stats */}
+        <div className="flex items-center gap-2 text-xs text-gray-500 mb-3">
+          <span>{item.created_at ? new Date(item.created_at).toLocaleDateString() : 'No date'}</span>
+          <span>•</span>
+          <span>{item.views || 0} views</span>
+          <span>•</span>
+          <span>{item.likes?.length || 0} likes</span>
         </div>
         
         {showActions ? (

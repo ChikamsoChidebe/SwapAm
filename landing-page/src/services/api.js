@@ -401,6 +401,28 @@ class ApiService {
   }
 
   async updateItem(id, formData) {
+    if (USE_SUPABASE) {
+      try {
+        const user = await supabaseService.getCurrentUser();
+        if (!user) throw new Error('No authenticated user');
+        
+        // Extract form data
+        const itemData = {
+          title: formData.get('title'),
+          description: formData.get('description'),
+          category: formData.get('category'),
+          condition: formData.get('condition'),
+          exchange_type: formData.get('exchangeType'),
+          price: formData.get('price') ? parseFloat(formData.get('price')) : null
+        };
+        
+        return await supabaseService.updateItem(id, itemData);
+      } catch (error) {
+        console.error('Supabase updateItem failed:', error);
+        throw error;
+      }
+    }
+    
     return this.request(`/api/items/${id}`, {
       method: 'PUT',
       headers: {},
@@ -409,6 +431,15 @@ class ApiService {
   }
 
   async deleteItem(id) {
+    if (USE_SUPABASE) {
+      try {
+        return await supabaseService.deleteItem(id);
+      } catch (error) {
+        console.error('Supabase deleteItem failed:', error);
+        throw error;
+      }
+    }
+    
     return this.request(`/api/items/${id}`, {
       method: 'DELETE',
     });

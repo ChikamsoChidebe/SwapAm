@@ -1,19 +1,23 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 import DashboardLayout from '../DashboardLayout';
 import apiService from '../../services/api';
 
 const AddItem = () => {
   const navigate = useNavigate();
+  const location = useLocation();
+  const editItem = location.state?.editItem;
+  const isEditing = !!editItem;
+  
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
-    title: '',
-    description: '',
-    category: '',
-    exchangeType: '',
-    price: '',
-    condition: '',
-    location: '',
+    title: editItem?.title || '',
+    description: editItem?.description || '',
+    category: editItem?.category || '',
+    exchangeType: editItem?.exchange_type || editItem?.exchangeType || '',
+    price: editItem?.price || '',
+    condition: editItem?.condition || '',
+    location: editItem?.location || '',
     images: []
   });
   const [imageFiles, setImageFiles] = useState([]);
@@ -35,13 +39,20 @@ const AddItem = () => {
         submitData.append('images', file);
       });
       
-      const result = await apiService.createItem(submitData);
-      console.log('Item created successfully:', result);
-      alert('Item created successfully!');
+      if (isEditing) {
+        const result = await apiService.updateItem(editItem.id || editItem._id, submitData);
+        console.log('Item updated successfully:', result);
+        alert('Item updated successfully!');
+      } else {
+        const result = await apiService.createItem(submitData);
+        console.log('Item created successfully:', result);
+        alert('Item created successfully!');
+      }
+      
       navigate('/dashboard/my-items');
     } catch (error) {
-      console.error('Failed to create item:', error);
-      alert('Failed to create item. Please try again.');
+      console.error(`Failed to ${isEditing ? 'update' : 'create'} item:`, error);
+      alert(`Failed to ${isEditing ? 'update' : 'create'} item. Please try again.`);
     } finally {
       setLoading(false);
     }
@@ -55,7 +66,7 @@ const AddItem = () => {
   return (
     <DashboardLayout>
       <div className="max-w-2xl mx-auto">
-        <h1 className="text-2xl font-bold text-gray-900 mb-6">Add New Item</h1>
+        <h1 className="text-2xl font-bold text-gray-900 mb-6">{isEditing ? 'Edit Item' : 'Add New Item'}</h1>
         
         <form onSubmit={handleSubmit} className="bg-white rounded-xl p-6 shadow-sm border space-y-4">
           <input
@@ -154,7 +165,7 @@ const AddItem = () => {
             disabled={loading}
             className="w-full py-3 bg-[#137C5C] text-white font-semibold rounded-lg hover:bg-[#0f5132] disabled:opacity-50"
           >
-            {loading ? 'Adding Item...' : 'Add Item'}
+            {loading ? (isEditing ? 'Updating Item...' : 'Adding Item...') : (isEditing ? 'Update Item' : 'Add Item')}
           </button>
         </form>
       </div>

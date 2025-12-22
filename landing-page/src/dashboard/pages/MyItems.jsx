@@ -25,6 +25,10 @@ const MyItems = () => {
     }
   };
 
+  const handleEdit = (item) => {
+    navigate('/dashboard/add-item', { state: { editItem: item } });
+  };
+
   const handleDelete = async (itemId) => {
     if (window.confirm('Delete this item?')) {
       try {
@@ -32,6 +36,7 @@ const MyItems = () => {
         setItems(items.filter(item => (item._id || item.id) !== itemId));
       } catch (error) {
         console.error('Failed to delete item:', error);
+        alert('Failed to delete item. Please try again.');
       }
     }
   };
@@ -55,7 +60,7 @@ const MyItems = () => {
               key={item._id || item.id} 
               item={item} 
               showActions={true}
-              onEdit={(item) => console.log('Edit item:', item)}
+              onEdit={handleEdit}
               onDelete={handleDelete}
             />
           ))}
