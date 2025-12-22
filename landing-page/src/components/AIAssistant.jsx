@@ -60,12 +60,14 @@ export default function AIAssistant() {
 
     try {
       const GROQ_API_KEY = process.env.REACT_APP_GROQ_API_KEY;
+      console.log('API Key check:', GROQ_API_KEY ? 'Found' : 'Missing');
+      
       if (!GROQ_API_KEY) {
         // Fallback to predefined responses if no API key
         if (lowerMessage.includes('help') || lowerMessage.includes('how')) {
           return 'I\'m here to assist you with SwapAm! I can help with item valuations, explain market trends, provide trading guidance, and share safety tips.';
         }
-        return 'I\'m your SwapAm AI assistant! Add your API key to .env file for full AI responses. For now, I can help with basic questions about valuations, trends, and trading.';
+        return 'I\'m your SwapAm AI assistant! API key not found in environment. For now, I can help with basic questions about valuations, trends, and trading.';
       }
       
       const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
