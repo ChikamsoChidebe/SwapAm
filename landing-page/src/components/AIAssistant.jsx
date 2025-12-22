@@ -59,8 +59,7 @@ export default function AIAssistant() {
     }
 
     try {
-      const GROQ_API_KEY = process.env.REACT_APP_GROQ_API_KEY;
-      console.log('API Key check:', GROQ_API_KEY ? 'Found' : 'Missing');
+      const GROQ_API_KEY = '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';
       
       if (!GROQ_API_KEY) {
         // Fallback to predefined responses if no API key
