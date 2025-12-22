@@ -81,7 +81,7 @@ export default function AIAssistant() {
             role: 'user', 
             content: `SwapAm is a campus marketplace for university students to swap/sell physical items like books, electronics, clothing. Not blockchain/crypto. Provide helpful detailed response in English, 50-80 words: "${message}"` 
           }],
-          max_tokens: 120
+          max_tokens: 200
         })
       });
       
