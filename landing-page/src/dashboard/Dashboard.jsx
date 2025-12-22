@@ -185,7 +185,7 @@ const Dashboard = () => {
                   <div>
                     <h3 className="font-medium text-gray-900">{item.title}</h3>
                     <p className="text-sm text-gray-500">
-                      {new Date(item.createdAt).toLocaleDateString()} • {item.views} views • {item.likes?.length || 0} likes
+                      {item.created_at ? new Date(item.created_at).toLocaleDateString() : 'No date'} • {item.views || 0} views • {item.likes?.length || 0} likes
                     </p>
                   </div>
                   <span className={`px-2 py-1 text-xs font-medium rounded-full ${
