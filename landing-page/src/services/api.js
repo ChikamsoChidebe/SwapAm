@@ -255,82 +255,47 @@ class ApiService {
   }
 
   async getDashboardStats() {
-    if (USE_SUPABASE) {
-      try {
-        const user = await supabaseService.getCurrentUser();
-        if (user) {
-          return await supabaseService.getDashboardStats(user.id);
-        }
-        throw new Error('No authenticated user');
-      } catch (error) {
-        console.error('Supabase getDashboardStats failed:', error);
-        return {
-          totalItems: 0,
-          activeItems: 0,
-          completedSwaps: 0,
-          campusPoints: 0,
-          recentItems: []
-        };
-      }
-    }
-    
-    try {
-      return await this.request('/api/users/dashboard-stats');
-    } catch (error) {
-      console.error('Failed to get dashboard stats:', error);
-      return {
-        totalItems: 0,
-        activeItems: 0,
-        completedSwaps: 0,
-        campusPoints: 0,
-        recentItems: []
-      };
-    }
+    // Return mock dashboard stats
+    return {
+      totalItems: 6,
+      activeItems: 6,
+      completedSwaps: 12,
+      campusPoints: 150,
+      recentItems: [
+        { id: 1, title: "Vintage Denim Jacket", category: "Clothing" },
+        { id: 2, title: "Elegant Black Dress", category: "Clothing" },
+        { id: 3, title: "Nike Air Force 1 Sneakers", category: "Clothing" }
+      ]
+    };
   }
 
   async getMyItems(status = 'all') {
-    const token = localStorage.getItem('token');
-    if (token === 'demo-token-123') {
-      return [];
-    }
-    
-    if (USE_SUPABASE) {
-      try {
-        const user = await supabaseService.getCurrentUser();
-        if (user) {
-          return await supabaseService.getMyItems(user.id);
-        }
-        return [];
-      } catch (error) {
-        console.error('Supabase getMyItems failed:', error);
-        return [];
-      }
-    }
-    
-    try {
-      return await this.request('/api/users/my-items');
-    } catch (error) {
-      console.error('Failed to get my items:', error);
-      return [];
-    }
+    // Return mock user items
+    const { mockItems } = await import('../data/mockData.js');
+    return mockItems.slice(0, 3); // Return first 3 items as user's items
   }
 
   // Items methods
   async getItems(filters = {}) {
-    if (USE_SUPABASE) {
-      try {
-        return await supabaseService.getItems(filters);
-      } catch (error) {
-        console.error('Supabase getItems failed:', error);
-        return [];
-      }
+    // Return mock data instead of API call
+    const { mockItems } = await import('../data/mockData.js');
+    let items = [...mockItems];
+    
+    if (filters.category && filters.category !== 'All Categories') {
+      items = items.filter(item => item.category === filters.category);
+    }
+    if (filters.exchangeType) {
+      items = items.filter(item => item.exchange_type === filters.exchangeType);
+    }
+    if (filters.search) {
+      const searchLower = filters.search.toLowerCase();
+      items = items.filter(item => 
+        item.title.toLowerCase().includes(searchLower) ||
+        item.description.toLowerCase().includes(searchLower)
+      );
     }
     
-    const params = new URLSearchParams();
-    Object.entries(filters).forEach(([key, value]) => {
-      if (value) params.append(key, value);
-    });
-    return this.request(`/api/items?${params}`);
+    return items;
   }
 
   async getItem(id) {
@@ -464,19 +429,8 @@ class ApiService {
   }
 
   async getCategories() {
-    try {
-      return await this.request('/api/items/categories');
-    } catch (error) {
-      console.error('Failed to get categories:', error);
-      return [
-        { id: 1, name: 'Books' },
-        { id: 2, name: 'Electronics' },
-        { id: 3, name: 'Clothing' },
-        { id: 4, name: 'Furniture' },
-        { id: 5, name: 'Sports' },
-        { id: 6, name: 'Other' }
-      ];
-    }
+    const { mockCategories } = await import('../data/mockData.js');
+    return mockCategories;
   }
 
   // Swaps methods
